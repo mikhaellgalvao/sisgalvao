@@ -188,7 +188,7 @@
 
         .app-body {
             display: flex;
-            transition: margin-left 0.3s ease;
+            position: relative; /* Para o main-content não empurrar a nav */
         }
         nav {
             width: 200px;
@@ -197,15 +197,45 @@
             padding: 20px 0;
             border-right: 1px solid var(--dark-grey);
             transition: transform 0.3s ease;
+            box-sizing: border-box; /* Garante que padding não adicione largura */
         }
-        .app-body.nav-hidden nav {
-            transform: translateX(-100%);
-            width: 0;
-            min-width: 0;
-            padding: 20px 0;
-            overflow: hidden;
+        /* Oculta nav por padrão no mobile, prepara para slide-in */
+        @media (max-width: 768px) {
+            nav {
+                position: fixed; /* Fixa a nav sobre o conteúdo */
+                top: 0; /* Ajuste para logo abaixo do header se necessário */
+                left: 0;
+                height: 100vh; /* Altura total da viewport */
+                width: 250px; /* Largura da nav quando aberta */
+                min-width: 250px;
+                transform: translateX(-100%); /* Começa fora da tela (escondida) */
+                z-index: 999; /* Garante que fique acima de outros elementos */
+                box-shadow: 2px 0 5px rgba(0,0,0,0.2); /* Sombra para destacar */
+                padding-top: 80px; /* Espaço para o cabeçalho do app, se a nav começar do topo */
+                border-right: 1px solid var(--dark-grey); /* Mantém borda */
+            }
+            nav.nav-open { /* Classe para quando a nav está aberta */
+                transform: translateX(0); /* Desliza para dentro da tela */
+            }
+            .nav-header {
+                display: flex; /* Mostra o cabeçalho da nav no mobile */
+                position: absolute; /* Fixa o cabeçalho no topo da nav */
+                top: 0;
+                width: 100%;
+                background-color: var(--dark-grey); /* Cor de fundo para o cabeçalho da nav */
+                padding: 15px 20px;
+                box-sizing: border-box;
+            }
+             .nav-header span {
+                flex-grow: 1;
+                text-align: center;
+                margin-left: -20px; /* Ajuste para centralizar o texto "Menu" */
+            }
+            .app-body {
+                flex-direction: column; /* Pilha itens verticalmente no mobile */
+            }
         }
-
+        
         nav button {
             display: block;
             width: 100%;
@@ -244,6 +274,37 @@
             position: relative;
             transition: margin-left 0.3s ease;
         }
+        @media (max-width: 768px) {
+            main {
+                padding: 20px;
+                max-height: calc(100vh - 120px); /* Ajusta a altura da área de conteúdo */
+                width: 100%; /* Ocupa a largura total */
+            }
+            header {
+                padding: 10px 15px;
+            }
+            header h1 {
+                font-size: 20px;
+            }
+            #logout-button {
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+            #nav-toggle-btn {
+                margin-right: 0; /* Remove a margem extra no mobile */
+                z-index: 1000; /* Garante que o botão esteja sempre visível no topo */
+            }
+            .header-left {
+                gap: 10px;
+                flex-grow: 1; /* Permite que o welcome message ocupe o espaço */
+            }
+            #welcome-message {
+                margin-left: 0; /* Ajusta a margem para telas menores */
+                flex-grow: 1; /* Permite que ocupe o espaço */
+            }
+        }
+
+
         .content-section {
             display: none;
         }
@@ -368,65 +429,6 @@
         .delete-btn { background-color: var(--danger-color); }
 
         .hidden { display: none !important; }
-
-        /* --- Responsividade --- */
-        @media (max-width: 768px) {
-            .app-body {
-                flex-direction: column;
-            }
-            nav {
-                width: 100%;
-                min-width: 100%;
-                border-right: none;
-                border-bottom: 1px solid var(--dark-grey);
-                transform: translateX(0); /* Garante que a nav não comece escondida no mobile */
-                height: auto;
-                max-height: 0; /* Começa escondida no mobile */
-                overflow: hidden;
-                padding: 0;
-            }
-            .app-body.nav-hidden nav { /* Este é o estado quando a nav está expandida */
-                max-height: 250px; /* Altura máxima para mostrar a navegação */
-                padding: 20px 0;
-            }
-            /* Mostra o cabeçalho da nav no mobile */
-            .nav-header {
-                display: flex; 
-            }
-            nav button {
-                padding: 12px 20px;
-            }
-            main {
-                padding: 20px;
-                max-height: calc(100vh - 120px); /* Ajusta a altura da área de conteúdo */
-            }
-            header {
-                padding: 10px 15px;
-            }
-            header h1 {
-                font-size: 20px;
-            }
-            #logout-button {
-                padding: 6px 10px;
-                font-size: 14px;
-            }
-            #nav-toggle-btn {
-                margin-right: 0; /* Remove a margem extra no mobile */
-            }
-            .header-left {
-                gap: 10px;
-                flex-grow: 1; /* Permite que o welcome message ocupe o espaço */
-            }
-            #welcome-message {
-                margin-left: 0; /* Ajusta a margem para telas menores */
-                flex-grow: 1; /* Permite que ocupe o espaço */
-            }
-            /* Ocultar o título do portal na nav mobile quando expandido, se necessário */
-            .app-body.nav-hidden header .portal-title {
-                display: none;
-            }
-        }
-
     </style>
 </head>
 <body>
@@ -455,7 +457,7 @@
             <div class="app-body">
                 <nav>
                     <div class="nav-header">
-                        <button id="nav-toggle-btn">☰</button>
+                        <button id="nav-toggle-btn-close" class="nav-toggle-btn">✕</button>
                         <span>Menu</span>
                     </div>
                     <button class="nav-button active" data-section="info-section">Info Empresa</button>
@@ -469,7 +471,7 @@
                         <h2>Informações da Empresa</h2>
                         <div class="card info-card">
                             <p><strong>Nome da Empresa:</strong> Galvão Drones</p>
-                            ${currentUser && currentUser.isVisitor ? '' : '<p><strong>CNPJ:</strong> 60.102.179/0001-10</p>'}
+                            <p id="cnpj-display-line"><strong>CNPJ:</strong> 60.102.179/0001-10</p>
                             <p><strong>Endereço:</strong> Rua 16, nº 304 – Setor Aeroviário, Goiânia – GO, CEP: 74435-240</p>
                             <p><a href="https://www.google.com/maps/search/?api=1&query=Galv%C3%A3o+Drones+Goi%C3%A2nia+Goi%C3%A1s" target="_blank" class="action-button google-maps-button" style="width: auto; padding: 10px 15px; margin-right: 10px;">Ver no Google Maps</a></p>
                             <p><strong>Contato:</strong> (62) 3636-0668</p>
@@ -702,6 +704,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const generalCalculatorResult = document.getElementById('general-calculator-result');
 
     const navToggleButton = document.getElementById('nav-toggle-btn');
+    const navToggleButtonClose = document.getElementById('nav-toggle-btn-close'); // Novo botão para fechar a nav
+    const navElement = document.querySelector('nav'); // O elemento nav
     const appBody = document.querySelector('.app-body');
     const headerElement = document.querySelector('header'); // Adicionado para controle de classe
 
@@ -777,11 +781,8 @@ document.addEventListener('DOMContentLoaded', () => {
         passwordInput.value = '';
         // Limpa a classe de visitante do cabeçalho ao sair
         headerElement.classList.remove('visitor-header');
-        // Reseta o estado da barra de navegação para o padrão (escondida no mobile)
-        appBody.classList.remove('nav-hidden');
-        if (window.innerWidth <= 768) { // Apenas se estiver em mobile
-            navToggleButton.textContent = '☰';
-        }
+        // Fecha a nav mobile se estiver aberta
+        closeMobileNav();
     }
 
     function setupAppForUser() {
@@ -815,19 +816,33 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isVisitor) {
             welcomeMessage.style.display = 'none'; // Oculta a mensagem de boas-vindas no modo visitante
             logoutButton.style.display = 'none'; // Oculta o botão de logout no modo visitante
-            // Certifica-se de que a navegação lateral esteja visível para o visitante
-            appBody.classList.remove('nav-hidden'); // Mostrar nav no modo visitante
-             if (window.innerWidth <= 768) { // No mobile, se for visitante e nav não estiver "hidden" por padrão, esconda o toggle.
-                navToggleButton.style.display = 'none'; // Não precisa do toggle se só tem uma opção
-            }
         } else {
             welcomeMessage.style.display = 'inline';
             logoutButton.style.display = 'inline';
-            if (window.innerWidth <= 768) {
-                navToggleButton.style.display = 'inline'; // Mostra o toggle novamente para usuários logados no mobile
-            }
         }
 
+        // --- CNPJ Display (FIX) ---
+        const cnpjDisplayLine = document.getElementById('cnpj-display-line');
+        if (cnpjDisplayLine) {
+            if (currentUser.isVisitor) {
+                cnpjDisplayLine.style.display = 'none';
+            } else {
+                cnpjDisplayLine.style.display = 'block'; // Garante que é exibido para usuários não visitantes
+            }
+        }
+        // --- FIM CNPJ Display (FIX) ---
+
+        // Configura o botão do menu hamburger/fechar no header
+        if (window.innerWidth <= 768) {
+            // No mobile, o botão "☰" ou "✕" deve ser visível no header
+            navToggleButton.style.display = 'block'; 
+            navToggleButton.textContent = '☰'; // Inicia com o ícone de menu
+            closeMobileNav(); // Garante que a nav esteja fechada ao fazer login
+        } else {
+            // Em desktop, o botão de toggle da nav não é necessário no header
+            navToggleButton.style.display = 'none';
+        }
+        
         if (isTempUser) {
             showTemporaryUserWarning();
         }
@@ -983,6 +998,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(newSectionId).classList.add('active');
         document.querySelector(`.nav-button[data-section="${newSectionId}"]`).classList.add('active');
         activeSectionId = newSectionId;
+
+        // Fecha o menu lateral no mobile ao selecionar uma opção
+        if (window.innerWidth <= 768) {
+            closeMobileNav();
+        }
     }
 
     // --- GESTÃO DE USUÁRIOS TEMPORÁRIOS ---
@@ -1255,10 +1275,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Toggle Nav Button
+    // Toggle Nav Button no header (☰)
     navToggleButton.addEventListener('click', () => {
-        appBody.classList.toggle('nav-hidden');
-        navToggleButton.textContent = appBody.classList.contains('nav-hidden') ? '☰' : '✕';
+        navElement.classList.toggle('nav-open');
+        navToggleButton.textContent = navElement.classList.contains('nav-open') ? '✕' : '☰';
+    });
+
+    // Close button inside nav (✕)
+    navToggleButtonClose.addEventListener('click', () => {
+        closeMobileNav();
+    });
+
+    // Função para fechar a nav mobile
+    function closeMobileNav() {
+        if (window.innerWidth <= 768) { // Apenas em mobile
+            navElement.classList.remove('nav-open');
+            navToggleButton.textContent = '☰';
+        }
+    }
+
+    // Fechar nav clicando fora dela no mobile (se for overlay)
+    window.addEventListener('click', (event) => {
+        if (window.innerWidth <= 768 && navElement.classList.contains('nav-open') &&
+            !navElement.contains(event.target) && !navToggleButton.contains(event.target) && !headerElement.contains(event.target)) {
+            closeMobileNav();
+        }
     });
 });
 </script>
