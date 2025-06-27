@@ -313,6 +313,40 @@
         .result-parcelado { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--dark-grey); }
         .result-parcelado small { font-size: 0.9em; font-weight: normal; color: #555; }
         
+        /* Estilos para o desconto à vista */
+        .discount-option {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative; /* Para posicionar o texto opaco */
+        }
+        .discount-option input[type="number"] {
+            width: 80px; /* Ajuste a largura conforme necessário */
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            background-color: transparent; /* Permite ver o fundo com a marca d'água */
+            position: relative; /* Para estar acima do pseudo-elemento */
+            z-index: 1; /* Garante que o input esteja por cima */
+        }
+        .discount-option label {
+            margin-bottom: 0; /* Remover margem inferior do label */
+        }
+        /* Texto opaco de "max. 15%" */
+        .discount-option::after {
+            content: "max. 15%";
+            position: absolute;
+            left: 105px; /* Ajuste para alinhar com o input */
+            color: #ccc; /* Cor do texto opaco */
+            font-size: 0.8em;
+            opacity: 0.8; /* Opacidade do texto */
+            pointer-events: none; /* Não interfere com o input */
+            white-space: nowrap; /* Evita quebra de linha */
+            transform: translateY(2px); /* Pequeno ajuste vertical */
+            z-index: 0; /* Fica abaixo do input */
+        }
+
 
         /* --- MODAL E SCROLL TO TOP --- */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); padding-top: 60px; }
@@ -437,9 +471,9 @@
                             <p><strong>Nome da Empresa:</strong> Galvão Drones</p>
                             <p><strong>CNPJ:</strong> 60.102.179/0001-10</p>
                             <p><strong>Endereço:</strong> Rua 16, nº 304 – Setor Aeroviário, Goiânia – GO, CEP: 74435-240</p>
-                            <p><a href="https://www.google.com/maps/search/?api=1&query=Galvão+Drones+Goiânia+Goiás" target="_blank" class="action-button google-maps-button" style="width: auto; padding: 10px 15px; margin-right: 10px;">Ver no Google Maps</a></p>
+                            <p><a href="https://www.google.com/maps/search/?api=1&query=Galv%C3%A3o+Drones+Goi%C3%A2nia+Goi%C3%A1s" target="_blank" class="action-button google-maps-button" style="width: auto; padding: 10px 15px; margin-right: 10px;">Ver no Google Maps</a></p>
                             <p><strong>Contato:</strong> (62) 3636-0668</p>
-                            <div class="contact-buttons-container" style="display: flex; gap: 10px; margin-top: 15px;">
+                            <div class="contact-buttons-container" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
                                 <a href="https://www.instagram.com/galvao_drones" target="_blank" class="action-button instagram-button" style="width: auto; padding: 10px 15px;">Instagram</a>
                                 <a href="https://wa.me/556236360668" target="_blank" class="action-button whatsapp-button" style="width: auto; padding: 10px 15px;">WhatsApp</a>
                             </div>
@@ -504,7 +538,7 @@
 
     <div id="main-modal" class="modal">
         <div class="modal-content">
-            <span class="close-button">&times;</span>
+            <span class="close-button">×</span>
             <h3 id="modal-title">Aviso</h3>
             <div id="modal-body"></div>
         </div>
@@ -514,16 +548,19 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- BANCO DE DADOS SIMULADO ---
-    const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getFullYear(); 
+
     const USERS = {
-        'Mikhaell': { password: 'mik' + currentYear, role: 'admin', type: 'permanent' },
+        'mikhaell': { password: 'mk0639', role: 'admin', type: 'permanent' }, 
         'Maikhon':  { password: 'maik' + currentYear, role: 'admin', type: 'permanent' },
         'Ryan':     { password: 'ryan' + currentYear, role: 'admin', type: 'permanent' },
         'Fineias':  { password: 'fin' + currentYear, role: 'seller', type: 'permanent' },
         'Rafael':   { password: 'raf' + currentYear, role: 'seller', type: 'permanent' },
-        'mikhaellven': { password: 'mikh' + currentYear, role: 'seller', type: 'permanent' },
-        'maikven':     { password: 'maik' + currentYear, role: 'seller', type: 'permanent' },
-        'ryanven':     { password: 'ryan' + currentYear, role: 'seller', type: 'permanent' }
+        
+        // Usuários de venda atualizados com senhas seguindo o padrão das 3 primeiras letras + ano atual
+        'mikhaellven': { password: 'mik' + currentYear, role: 'seller', type: 'permanent' },
+        'maikhonven':  { password: 'mai' + currentYear, role: 'seller', type: 'permanent' },
+        'ryanven':     { password: 'rya' + currentYear, role: 'seller', type: 'permanent' }
     };
     const CONFIDENTIAL_CODE = '@0639';
     const PRODUCTS = [
@@ -627,33 +664,60 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- ELEMENTOS DO HTML (DOM) ---
-    const loginScreen = document.getElementById('login-screen'); const appScreen = document.getElementById('app-screen'); const loginButton = document.getElementById('login-button'); const logoutButton = document.getElementById('logout-button'); const usernameInput = document.getElementById('username'); const passwordInput = document.getElementById('password'); const loginError = document.getElementById('login-error'); const welcomeMessage = document.getElementById('welcome-message');
+    const loginScreen = document.getElementById('login-screen');
+    const appScreen = document.getElementById('app-screen');
+    const loginButton = document.getElementById('login-button');
+    const logoutButton = document.getElementById('logout-button');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const loginError = document.getElementById('login-error');
+    const welcomeMessage = document.getElementById('welcome-message');
     const visitorModeButton = document.getElementById('visitor-mode-button'); // Novo botão
-    const navButtons = document.querySelectorAll('.nav-button'); const contentSections = document.querySelectorAll('.content-section'); const suppliersNavButton = document.getElementById('suppliers-nav-button'); const settingsNavButton = document.getElementById('settings-nav-button');
-    const productList = document.getElementById('product-list'); const supplierList = document.getElementById('supplier-list'); const productSearchInput = document.getElementById('product-search');
-    const mainModal = document.getElementById('main-modal'); const modalTitle = document.getElementById('modal-title'); const modalBody = document.getElementById('modal-body'); const closeModalButton = document.querySelector('.close-button');
-    const createTempUserForm = document.getElementById('create-temp-user-form'); const tempUserFeedback = document.getElementById('temp-user-feedback');
-    const mainContent = document.getElementById('main-content'); const scrollToTopButton = document.getElementById('scroll-to-top');
+
+    const navButtons = document.querySelectorAll('.nav-button');
+    const contentSections = document.querySelectorAll('.content-section');
+    const suppliersNavButton = document.getElementById('suppliers-nav-button');
+    const settingsNavButton = document.getElementById('settings-nav-button');
+
+    const productList = document.getElementById('product-list');
+    const supplierList = document.getElementById('supplier-list');
+    const productSearchInput = document.getElementById('product-search');
+
+    const mainModal = document.getElementById('main-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    const closeModalButton = document.querySelector('.close-button');
+
+    const createTempUserForm = document.getElementById('create-temp-user-form');
+    const tempUserFeedback = document.getElementById('temp-user-feedback');
+    const mainContent = document.getElementById('main-content');
+    const scrollToTopButton = document.getElementById('scroll-to-top');
     const tempUserListContainer = document.getElementById('temp-user-list');
+
     const generalCalcValorBase = document.getElementById('general-valor-base');
     const generalCalcPaymentRadios = document.querySelectorAll('input[name="general-payment-method"]');
     const generalCalcInstallmentsContainer = document.getElementById('general-installments-container');
     const generalCalcParcelasSelect = document.getElementById('general-parcelas');
     const generalCalculateButton = document.getElementById('general-calculate-button');
     const generalCalculatorResult = document.getElementById('general-calculator-result');
+
     const navToggleButton = document.getElementById('nav-toggle-btn');
     const appBody = document.querySelector('.app-body');
     const headerElement = document.querySelector('header'); // Adicionado para controle de classe
 
-    let currentUser = null; let activeSectionId = 'info-section'; let tempUserInterval;
+    let currentUser = null;
+    let activeSectionId = 'info-section';
+    let tempUserInterval;
 
     // --- FUNÇÕES DA API GEMINI ---
     async function callGeminiAPI(prompt, title) { 
         modalTitle.textContent = title;
         modalBody.innerHTML = '<div class="loader"></div>';
         openModal();
-        const apiKey = "AIzaSyA2BSEzqzXw-qhtQh1Ar_o4WaVzmdZKJQw";
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        // AVISO DE SEGURANÇA: Chaves de API expostas no frontend não são seguras para produção.
+        // Por favor, considere usar um servidor backend para proteger sua chave em um ambiente real.
+        const apiKey = "AIzaSyBQr00SKusVdv1sR7cjaJbFsfY5YaHQbH0"; 
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`; 
         const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
         try {
             const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -713,6 +777,11 @@ document.addEventListener('DOMContentLoaded', () => {
         passwordInput.value = '';
         // Limpa a classe de visitante do cabeçalho ao sair
         headerElement.classList.remove('visitor-header');
+        // Reseta o estado da barra de navegação para o padrão (escondida no mobile)
+        appBody.classList.remove('nav-hidden');
+        if (window.innerWidth <= 768) { // Apenas se estiver em mobile
+            navToggleButton.textContent = '☰';
+        }
     }
 
     function setupAppForUser() {
@@ -738,17 +807,25 @@ document.addEventListener('DOMContentLoaded', () => {
             } else { // Usuário permanente logado
                 btn.classList.remove('hidden');
                 suppliersNavButton.classList.toggle('hidden', !isAdmin);
-                settingsNavButton.classList.toggle('hidden', currentUser.username !== 'Mikhaell');
+                settingsNavButton.classList.toggle('hidden', currentUser.username !== 'mikhaell'); 
             }
         });
 
-        // Configura o cabeçalho
+        // Configura o cabeçalho para o modo visitante/logado
         if (isVisitor) {
             welcomeMessage.style.display = 'none'; // Oculta a mensagem de boas-vindas no modo visitante
             logoutButton.style.display = 'none'; // Oculta o botão de logout no modo visitante
+            // Certifica-se de que a navegação lateral esteja visível para o visitante
+            appBody.classList.remove('nav-hidden'); // Mostrar nav no modo visitante
+             if (window.innerWidth <= 768) { // No mobile, se for visitante e nav não estiver "hidden" por padrão, esconda o toggle.
+                navToggleButton.style.display = 'none'; // Não precisa do toggle se só tem uma opção
+            }
         } else {
             welcomeMessage.style.display = 'inline';
             logoutButton.style.display = 'inline';
+            if (window.innerWidth <= 768) {
+                navToggleButton.style.display = 'inline'; // Mostra o toggle novamente para usuários logados no mobile
+            }
         }
 
         if (isTempUser) {
@@ -790,7 +867,12 @@ document.addEventListener('DOMContentLoaded', () => {
             productCard.dataset.productId = product.id;
             const showCostPrice = currentUser.role === 'admin';
             
+            // Determina o texto do "Valor de Venda"
+            const salePriceLabel = currentUser.role === 'seller' ? 'V Salor' : 'Valor de Venda';
+            
             let adminInfo = '';
+            // A opção de desconto agora é sempre incluída no HTML para admins, mas hidden
+            // e revelada no clique do botão calcular.
             if (showCostPrice) {
                 adminInfo = `
                     <p class="cost-price">Valor de Custo: ${product.costPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
@@ -801,7 +883,7 @@ document.addEventListener('DOMContentLoaded', () => {
             productCard.innerHTML = `
                 <h3>${product.name}</h3>
                 <p class="product-spec"><strong>Especificações:</strong><br>${product.spec}</p>
-                <p class="price">Valor de Venda: ${product.salePrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                <p class="price">${salePriceLabel}: ${product.salePrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                 ${adminInfo}
                 <div class="action-buttons-container">
                     <button class="gemini-button desc-button">✨ Gerar Descrição</button>
@@ -816,6 +898,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         <input type="radio" id="payment-parcelado-${product.id}" name="payment-method-${product.id}" value="parcelado">
                         <label for="payment-parcelado-${product.id}">Parcelado</label>
                     </div>
+                    ${showCostPrice ? `
+                    <div class="discount-option hidden" id="discount-option-${product.id}">
+                        <label for="discount-percentage-${product.id}">Desconto (%):</label>
+                        <input type="number" id="discount-percentage-${product.id}" min="0" max="15" value="0">
+                    </div>
+                    ` : ''}
                     <div class="installments-container hidden">
                         <label for="parcelas-${product.id}">Parcelas:</label>
                         <select class="parcelas-select">
@@ -830,7 +918,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function calculate(baseValue, numInstallments, paymentMethod) {
+    function calculate(baseValue, numInstallments, paymentMethod, discountPercentage = 0) {
         const valor = parseFloat(baseValue);
         if (isNaN(valor) || valor <= 0) {
             return '<p style="color:red;">Valor base inválido.</p>';
@@ -841,6 +929,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Para "À vista", usamos a taxa de 1 parcela
         taxa = INSTALLMENT_RATES[1] || 0;
         valorFinal = valor * (1 + taxa);
+
+        // Aplica o desconto se o usuário for admin e o desconto for válido para pagamento à vista
+        if (currentUser.role === 'admin' && paymentMethod === 'vista' && discountPercentage > 0 && discountPercentage <= 15) {
+            valorFinal = valorFinal * (1 - (discountPercentage / 100));
+            // Arredonda para duas casas decimais
+            valorFinal = parseFloat(valorFinal.toFixed(2)); 
+        }
+
         let resultHTML = `<div class="result-vista">Valor à Vista: ${valorFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>`;
         
         if (paymentMethod === 'parcelado') {
@@ -864,14 +960,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function switchTab(newSectionId) {
         // Bloqueia acesso a seções para visitantes e usuários temporários
-        if (currentUser && currentUser.isVisitor && newSectionId !== 'info-section') return;
-        if (currentUser && currentUser.type === 'temporary' && !['info-section', 'products-section', 'calculator-section'].includes(newSectionId)) return;
+        if (currentUser && currentUser.isVisitor && newSectionId !== 'info-section') {
+            alert('Apenas a seção "Info Empresa" está disponível no Modo Visitante.');
+            return;
+        }
+        if (currentUser && currentUser.type === 'temporary' && !['info-section', 'products-section', 'calculator-section'].includes(newSectionId)) {
+            alert('Esta seção não está disponível para usuários temporários.');
+            return;
+        }
         
         if (newSectionId === 'suppliers-section' && (!currentUser || !showSuppliers())) { 
              document.querySelector(`.nav-button[data-section="${activeSectionId}"]`).classList.add('active');
             return; 
         }
-        if (newSectionId === 'settings-section' && (!currentUser || currentUser.username !== 'Mikhaell')) {
+        if (newSectionId === 'settings-section' && (!currentUser || currentUser.username !== 'mikhaell')) { 
             document.querySelector(`.nav-button[data-section="${activeSectionId}"]`).classList.add('active');
             return;
         }
@@ -994,7 +1096,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const salePrice = product.salePrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
         const message = `Olá! 👋\n\nEstou a enviar os detalhes sobre o *${product.name}* que conversámos. É um equipamento fantástico! 🚀\n\n*Especificações Principais:*\n${product.spec}\n\n*Valor de Venda:* ${salePrice}\n\nQualquer dúvida, estou à disposição!\n- Equipa Galvão Drones`;
         const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+        const whatsappUrl = `https://wa.me/556236360668?text=${encodedMessage}`; // Número fixo para o WhatsApp
         window.open(whatsappUrl, '_blank');
     }
 
@@ -1041,7 +1143,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openModal() { mainModal.style.display = 'block'; }
     function closeModal() { mainModal.style.display = 'none'; modalBody.innerHTML = ''; clearInterval(tempUserInterval); }
-    function handleScroll() { scrollToTopButton.style.display = mainContent.scrollTop > 200 ? "block" : "none"; }
+    function handleScroll() { mainContent.scrollTop > 200 ? scrollToTopButton.style.display = "block" : scrollToTopButton.style.display = "none"; }
     function scrollTop() { mainContent.scrollTo({ top: 0, behavior: 'smooth' }); }
 
     // --- EVENT LISTENERS ---
@@ -1081,7 +1183,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 const resultContainer = productCard.querySelector('.product-calculator-result');
                 const paymentMethod = productCard.querySelector(`input[name="payment-method-${productId}"]:checked`).value;
                 const numInstallments = productCard.querySelector('.parcelas-select').value;
-                resultContainer.innerHTML = calculate(product.salePrice, numInstallments, paymentMethod);
+                
+                let discountPercentage = 0;
+                // Se for administrador e o método for à vista, tenta pegar o desconto
+                if (currentUser.role === 'admin' && paymentMethod === 'vista') {
+                    const discountInput = productCard.querySelector(`#discount-percentage-${product.id}`);
+                    const discountOptionDiv = productCard.querySelector(`#discount-option-${product.id}`);
+                    
+                    if (discountInput && discountOptionDiv) {
+                        discountPercentage = parseFloat(discountInput.value);
+                        // Torna a opção de desconto visível após o primeiro cálculo à vista
+                        discountOptionDiv.classList.remove('hidden');
+                    }
+                }
+
+                resultContainer.innerHTML = calculate(product.salePrice, numInstallments, paymentMethod, discountPercentage);
             }
         }
     });
@@ -1090,7 +1206,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.matches('input[name^="payment-method-"]')) {
             const card = e.target.closest('.product-card');
             const installmentsDiv = card.querySelector('.installments-container');
+            const discountOptionDiv = card.querySelector('.discount-option');
+
             installmentsDiv.classList.toggle('hidden', e.target.value !== 'parcelado');
+            
+            // Esconde a opção de desconto se o método não for "à vista" ou se não for admin.
+            // A exibição inicial será feita pelo clique no botão calcular.
+            if (discountOptionDiv && (currentUser.role !== 'admin' || e.target.value !== 'vista')) {
+                discountOptionDiv.classList.add('hidden');
+            }
         }
     });
 
@@ -1114,7 +1238,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const baseValue = generalCalcValorBase.value;
         const paymentMethod = document.querySelector('input[name="general-payment-method"]:checked').value;
         const numInstallments = generalCalcParcelasSelect.value;
-        generalCalculatorResult.innerHTML = calculate(baseValue, numInstallments, paymentMethod);
+        
+        let discountPercentage = 0;
+        // A calculadora geral não tem a opção de desconto à vista por produto, então não aplicamos aqui
+        // Se precisar adicionar, seria necessário um campo similar ao do produto
+
+        generalCalculatorResult.innerHTML = calculate(baseValue, numInstallments, paymentMethod, discountPercentage);
     });
 
     generalCalcPaymentRadios.forEach(radio => {
