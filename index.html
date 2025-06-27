@@ -369,8 +369,30 @@
         
         /* --- ESTILOS DOS CARDS --- */
         .card {
-            border: 1px solid #ddd; padding: 20px; margin-bottom: 15px; border-radius: 5px; background-color: #fff; transition: box-shadow 0.3s;
-        }
+    position: relative; /* Necessário para o pseudo-elemento */
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    transition: box-shadow 0.3s;
+    z-index: 1; /* Garante que o conteúdo fique acima do background */
+}
+
+.card::before {
+    content: ""; /* Fundamental para o pseudo-elemento aparecer */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("logo.png");
+    background-size: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.15; /* Ajuste este valor para a opacidade desejada */
+    z-index: -1; /* Envia o background para trás do conteúdo */
+    border-radius: 5px; /* Mantém o mesmo border-radius do card */
+}
         .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
         .card h3 { margin-top: 0; color: var(--secondary-color); border: none; font-size: 1.3em; } /* Ajuste de fonte */
         .product-card { border-left: 5px solid var(--primary-color); }
@@ -604,11 +626,12 @@ document.addEventListener('DOMContentLoaded', () => {
         'Ryan':     { password: 'ryan' + currentYear, role: 'admin', type: 'permanent' },
         'Fineias':  { password: 'fin' + currentYear, role: 'seller', type: 'permanent' },
         'Rafael':   { password: 'raf' + currentYear, role: 'seller', type: 'permanent' },
+        'Eduardo': { password: 'edu' + currentYear, role: 'seller', type: 'permanent' },
         
         // Usuários de venda atualizados com senhas seguindo o padrão das 3 primeiras letras + ano atual
         'mikhaellven': { password: 'mik' + currentYear, role: 'seller', type: 'permanent' },
         'maikhonven':  { password: 'mai' + currentYear, role: 'seller', type: 'permanent' },
-        'ryanven':     { password: 'rya' + currentYear, role: 'seller', type: 'permanent' }
+        'ryanven':     { password: 'rya' + currentYear, role: 'seller', type: 'permanent' },
     };
     const CONFIDENTIAL_CODE = '@0639';
     const PRODUCTS = [
@@ -979,7 +1002,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isSeller = currentUser.role === 'seller';
             
             // Determina o texto do "Valor de Venda"
-            const salePriceLabel = isSeller ? 'V Salor' : 'Valor de Venda';
+            const salePriceLabel = isSeller ? 'Valor' : 'Valor de Venda';
             
             let adminCostInfo = '';
             if (isAdmin) { // Valor de custo SÓ para administradores
