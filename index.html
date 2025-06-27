@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal de Consultas Internas - Galvão Drones</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230E5847'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v4h4v2h-4v4h-2v-4H7v-2h4V8z'%3E%3C/path%3E%3Cpath d='M13.25 7.15c-.24-.24-.58-.36-.92-.36s-.68.12-.92.36L8.4 9.16c-.24.24-.36.58-.36.92s.12.68.36.92l.71.71c.24.24.58.36.92.36s.68-.12.92-.36l2.93-2.93c.24-.24.36-.58.36-.92s-.12-.68-.36-.92l-.71-.71zM10.75 16.85c.24.24.58.36.92.36s.68-.12.92-.36l2.93-2.93c.24-.24.36-.58.36-.92s-.12-.68-.36-.92l-.71-.71c-.24-.24-.58-.36-.92-.36s-.68.12-.92.36l-2.93 2.93c-.24.24-.36.58-.36.92s.12.68.36.92l.71.71zM18.8 8.4l-.71-.71c-.24-.24-.58-.36-.92-.36s-.68.12-.92.36L13.3 9.77c-.24.24-.36.58-.36.92s.12.68.36.92l.71.71c.24.24.58.36.92.36s.68-.12.92-.36l3.85-3.85c.24-.24.36-.58.36-.92s-.12-.68-.36-.92zM5.2 15.6l.71.71c.24.24.58.36.92.36s.68-.12.92-.36l3.85-3.85c.24-.24.36-.58.36-.92s-.12-.68-.36-.92l-.71-.71c-.24-.24-.58-.36-.92-.36s-.68.12-.92.36L5.2 14.68c-.24.24-.36.58-.36.92s.12.68.36.92z'%3E%3C/path%3E%3C/svg%3E" type="image/svg+xml">
     <style>
         /* --- ESTILOS GERAIS (CSS) COM A PALETA GALVÃO DRONES --- */
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
@@ -16,6 +17,7 @@
             --dark-grey: #bdc3c7;
             --danger-color: #e74c3c;
             --whatsapp-color: #25D366;
+            --instagram-color: #C13584; /* Cor do Instagram */
             --help-color: #5865F2;
         }
 
@@ -110,6 +112,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin-top: 10px; /* Adicionado para separar botões */
         }
         .action-button:hover {
             opacity: 0.9;
@@ -120,6 +123,13 @@
             font-weight: 500;
             display: none;
         }
+        #visitor-mode-button {
+            background-color: var(--dark-grey);
+        }
+        #visitor-mode-button:hover {
+            background-color: #95a5a6;
+        }
+
 
         /* --- TELA PRINCIPAL DO APP --- */
         #app-screen {
@@ -138,6 +148,20 @@
             justify-content: space-between;
             align-items: center;
         }
+        .header-left { 
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
+        }
+        #nav-toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0 10px;
+            margin-right: 15px; /* Adicionado para separar do título */
+        }
         header h1 {
             margin: 0;
             font-size: 24px;
@@ -155,15 +179,33 @@
         #logout-button:hover {
             background-color: #c0392b;
         }
+
+        /* Estilos específicos para o cabeçalho no modo visitante */
+        .visitor-header #welcome-message,
+        .visitor-header #logout-button {
+            display: none;
+        }
+
         .app-body {
             display: flex;
+            transition: margin-left 0.3s ease;
         }
         nav {
             width: 200px;
+            min-width: 200px;
             background-color: var(--medium-grey);
             padding: 20px 0;
             border-right: 1px solid var(--dark-grey);
+            transition: transform 0.3s ease;
         }
+        .app-body.nav-hidden nav {
+            transform: translateX(-100%);
+            width: 0;
+            min-width: 0;
+            padding: 20px 0;
+            overflow: hidden;
+        }
+
         nav button {
             display: block;
             width: 100%;
@@ -181,12 +223,26 @@
             color: var(--secondary-color);
             font-weight: 700;
         }
+        /* Oculta o cabeçalho da nav no desktop */
+        .nav-header {
+            display: none; 
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--dark-grey);
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+        .nav-header span {
+            margin-left: 10px;
+        }
+
         main {
             flex-grow: 1;
             padding: 30px;
             max-height: 70vh;
             overflow-y: auto;
             position: relative;
+            transition: margin-left 0.3s ease;
         }
         .content-section {
             display: none;
@@ -222,11 +278,11 @@
             border: 1px solid #ddd; padding: 20px; margin-bottom: 15px; border-radius: 5px; background-color: #fff; transition: box-shadow 0.3s;
         }
         .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-        .card h3 { margin-top: 0; color: var(--secondary-color); border: none; }
+        .card h3 { margin-top: 0; color: var(--secondary-color); border: none; font-size: 1.3em; } /* Ajuste de fonte */
         .product-card { border-left: 5px solid var(--primary-color); }
         .supplier-card { border-left: 5px solid var(--secondary-color); }
         .info-card { border-left: 5px solid var(--secondary-color); }
-        .product-spec { white-space: pre-wrap; line-height: 1.6; }
+        .product-spec { white-space: pre-wrap; line-height: 1.6; font-size: 0.95em; } /* Ajuste de fonte */
 
         .price { font-size: 1.2em; font-weight: 700; color: #27ae60; }
         .cost-price { font-size: 1.1em; font-weight: 700; color: var(--danger-color); background-color: #fdd; padding: 5px; border-radius: 4px; display: inline-block; margin-top: 10px; }
@@ -236,15 +292,19 @@
         .action-buttons-container { margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px; }
         .action-buttons-container button {
             color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: 500; transition: background-color 0.3s;
+            font-size: 0.9em; /* Ajuste de fonte */
         }
         .gemini-button { background-color: var(--secondary-color); }
         .whatsapp-button { background-color: var(--whatsapp-color); }
+        .instagram-button { background-color: var(--instagram-color); } /* Estilo para botão Instagram */
+        .google-maps-button { background-color: #4285F4; } /* Estilo para botão Google Maps */
+
         .help-button { background-color: var(--help-color); }
         .action-buttons-container button:hover { opacity: 0.9; }
 
         /* --- CALCULADORA --- */
         .calculator-container { margin-top: 20px; padding-top: 20px; border-top: 1px dashed var(--dark-grey); }
-        .payment-method-selector label { display: inline-block; margin-right: 15px; cursor: pointer; }
+        .payment-method-selector label { display: inline-block; margin-right: 15px; cursor: pointer; font-size: 0.95em; }
         .payment-method-selector input { margin-right: 5px; }
         .installments-container { margin-top: 10px; }
         .calculate-product-btn { background-color: var(--secondary-color); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-top: 10px;}
@@ -274,26 +334,96 @@
         .delete-btn { background-color: var(--danger-color); }
 
         .hidden { display: none !important; }
+
+        /* --- Responsividade --- */
+        @media (max-width: 768px) {
+            .app-body {
+                flex-direction: column;
+            }
+            nav {
+                width: 100%;
+                min-width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--dark-grey);
+                transform: translateX(0); /* Garante que a nav não comece escondida no mobile */
+                height: auto;
+                max-height: 0; /* Começa escondida no mobile */
+                overflow: hidden;
+                padding: 0;
+            }
+            .app-body.nav-hidden nav { /* Este é o estado quando a nav está expandida */
+                max-height: 250px; /* Altura máxima para mostrar a navegação */
+                padding: 20px 0;
+            }
+            /* Mostra o cabeçalho da nav no mobile */
+            .nav-header {
+                display: flex; 
+            }
+            nav button {
+                padding: 12px 20px;
+            }
+            main {
+                padding: 20px;
+                max-height: calc(100vh - 120px); /* Ajusta a altura da área de conteúdo */
+            }
+            header {
+                padding: 10px 15px;
+            }
+            header h1 {
+                font-size: 20px;
+            }
+            #logout-button {
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+            #nav-toggle-btn {
+                margin-right: 0; /* Remove a margem extra no mobile */
+            }
+            .header-left {
+                gap: 10px;
+                flex-grow: 1; /* Permite que o welcome message ocupe o espaço */
+            }
+            #welcome-message {
+                margin-left: 0; /* Ajusta a margem para telas menores */
+                flex-grow: 1; /* Permite que ocupe o espaço */
+            }
+            /* Ocultar o título do portal na nav mobile quando expandido, se necessário */
+            .app-body.nav-hidden header .portal-title {
+                display: none;
+            }
+        }
+
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- TELA DE LOGIN -->
         <div id="login-screen">
             <h1 id="company-title">Galvão Drones</h1>
             <h2 id="portal-subtitle">Portal Interno</h2>
             <div class="input-group"><label for="username">Usuário</label><input type="text" id="username" placeholder="Digite seu nome"></div>
             <div class="input-group"><label for="password">Senha</label><input type="password" id="password" placeholder="Sua senha"></div>
             <button id="login-button" class="action-button">Entrar</button>
+            <button id="visitor-mode-button" class="action-button">Modo Visitante</button>
             <p id="login-error">Usuário ou senha inválidos.</p>
         </div>
 
-        <!-- TELA DO APLICATIVO -->
         <div id="app-screen">
-            <header><h1>Portal Interno - Galvão Drones</h1><div><span id="welcome-message"></span><button id="logout-button">Sair</button></div></header>
+            <header>
+                <div class="header-left">
+                    <span id="welcome-message"></span>
+                    <h1>Portal Interno</h1>
+                </div>
+                <div>
+                    <button id="logout-button">Sair</button>
+                </div>
+            </header>
             <div class="app-body">
                 <nav>
+                    <div class="nav-header">
+                        <button id="nav-toggle-btn">☰</button>
+                        <span>Menu</span>
+                    </div>
                     <button class="nav-button active" data-section="info-section">Info Empresa</button>
                     <button class="nav-button" data-section="products-section">Produtos</button>
                     <button class="nav-button" data-section="calculator-section">Calculadora</button>
@@ -307,8 +437,13 @@
                             <p><strong>Nome da Empresa:</strong> Galvão Drones</p>
                             <p><strong>CNPJ:</strong> 60.102.179/0001-10</p>
                             <p><strong>Endereço:</strong> Rua 16, nº 304 – Setor Aeroviário, Goiânia – GO, CEP: 74435-240</p>
+                            <p><a href="https://www.google.com/maps/search/?api=1&query=Galvão+Drones+Goiânia+Goiás" target="_blank" class="action-button google-maps-button" style="width: auto; padding: 10px 15px; margin-right: 10px;">Ver no Google Maps</a></p>
                             <p><strong>Contato:</strong> (62) 3636-0668</p>
-                            <p><strong>Website:</strong> www.galvaodrones.com.br</p>
+                            <div class="contact-buttons-container" style="display: flex; gap: 10px; margin-top: 15px;">
+                                <a href="https://www.instagram.com/galvao_drones" target="_blank" class="action-button instagram-button" style="width: auto; padding: 10px 15px;">Instagram</a>
+                                <a href="https://wa.me/556236360668" target="_blank" class="action-button whatsapp-button" style="width: auto; padding: 10px 15px;">WhatsApp</a>
+                            </div>
+                            <p><strong>Website:</strong> <a href="http://www.galvaodrones.com.br" target="_blank">www.galvaodrones.com.br</a></p>
                         </div>
                     </section>
                     <section id="products-section" class="content-section">
@@ -367,7 +502,6 @@
     
     <button id="scroll-to-top" title="Voltar ao topo">⬆</button>
 
-    <!-- MODAIS -->
     <div id="main-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
@@ -382,7 +516,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- BANCO DE DADOS SIMULADO ---
     const currentYear = new Date().getFullYear();
     const USERS = {
-        'Mikhaell': { password: 'mk0639', role: 'admin', type: 'permanent' }, 'Maikhon':  { password: 'mai' + currentYear, role: 'admin', type: 'permanent' }, 'Ryan':     { password: 'rya' + currentYear, role: 'admin', type: 'permanent' }, 'Fineias':  { password: 'fin' + currentYear, role: 'seller', type: 'permanent' }, 'Rafael':   { password: 'raf' + currentYear, role: 'seller', type: 'permanent' }
+        'Mikhaell': { password: 'mik' + currentYear, role: 'admin', type: 'permanent' },
+        'Maikhon':  { password: 'maik' + currentYear, role: 'admin', type: 'permanent' },
+        'Ryan':     { password: 'ryan' + currentYear, role: 'admin', type: 'permanent' },
+        'Fineias':  { password: 'fin' + currentYear, role: 'seller', type: 'permanent' },
+        'Rafael':   { password: 'raf' + currentYear, role: 'seller', type: 'permanent' },
+        'mikhaellven': { password: 'mikh' + currentYear, role: 'seller', type: 'permanent' },
+        'maikven':     { password: 'maik' + currentYear, role: 'seller', type: 'permanent' },
+        'ryanven':     { password: 'ryan' + currentYear, role: 'seller', type: 'permanent' }
     };
     const CONFIDENTIAL_CODE = '@0639';
     const PRODUCTS = [
@@ -391,7 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 3, name: 'DJI Mini 3 (sem tela)', spec: '🛸 DJI Mini 3\n🎥 Grava em 4K HDR a 30fps\n⏱️ Até 38 minutos de voo\n📡 Distância de até 18 km\n⚖️ Peso leve: 249 g\n🎮 Controle com ou sem tela (duas versões)', salePrice: 3990, costPrice: 2990, supplier: 'Arroba Celulares' },
         { id: 4, name: 'DJI Mini 3 (com tela)', spec: '🛸 DJI Mini 3\n🎥 Grava em 4K HDR a 30fps\n⏱️ Até 38 minutos de voo\n📡 Distância de até 18 km\n⚖️ Peso leve: 249 g\n🎮 Controle com ou sem tela (duas versões)', salePrice: 4785, costPrice: 3785, supplier: 'Arroba Celulares' },
         { id: 5, name: 'DJI Flip Fly More Combo (com tela)', spec: '🛸 DJI Flip\n🎥 4K a 60fps (com slow motion de até 100fps!)\n⏱️ Até 31 minutos no ar\n📡 Alcance médio de 13 km\n⚖️ Menos de 249 g\n🎮 Disponível com ou sem controle com tela', salePrice: 7990, costPrice: 5320, supplier: 'DJI Grupo Multi' },
-        { id: 64, name: 'DJI Mini 4 Pro Fly More Combo Plus (com tela)', spec: '🛸 DJI Mini 4 Pro\n🎥 Incrível 4K HDR a 100fps + fotos de 48 MP\n⏱️ Até 45 minutos no ar\n📡 Alcance de até 25 km\n⚖️ Abaixo de 249 g\n🎮 Controle com tela (DJI RC 2)', salePrice: 9000.00, costPrice: 6990.00, supplier: 'DJI Grupo Multi' },
+        { id: 64, name: 'DJI Mini 4 Pro Fly More Combo Plus (com tela)', spec: '🛸 DJI Mini 4 Pro\n🎥 Incrível 4K HDR a 100fps + fotos de 48 MP\n⏱️ Até 45 minutos no air\n📡 Alcance de até 25 km\n⚖️ Abaixo de 249 g\n🎮 Controle com tela (DJI RC 2)', salePrice: 9000.00, costPrice: 6990.00, supplier: 'DJI Grupo Multi' },
         { id: 67, name: 'DJI Avata 2 Fly More Combo (1 bateria)', spec: '🛸 DJI Avata 2\n🎥 Gravação 4K 60fps com lente ultrawide\n⏱️ Até 23 minutos de voo imersivo\n📡 Alcance de até 13 km\n⚖️ Peso de 377 g\n🎮 Controle por movimento + óculos FPV (sem tela)', salePrice: 10590.00, costPrice: 7069.91, supplier: 'DJI Grupo Multi' },
         { id: 68, name: 'DJI Avata 2 Fly More Combo (3 baterias)', spec: '🛸 DJI Avata 2\n🎥 Gravação 4K 60fps com lente ultrawide\n⏱️ Até 23 minutos de voo imersivo\n📡 Alcance de até 13 km\n⚖️ Peso de 377 g\n🎮 Controle por movimento + óculos FPV (sem tela)', salePrice: 12990.00, costPrice: 8674.53, supplier: 'DJI Grupo Multi' },
         { id: 65, name: 'DJI Air 3S Standard (sem tela)', spec: '🛸 DJI Air 3S (Versão Standard)\n🎥 4K 60fps com sensores duplos (wide + tele)\n⏱️ Até 45 minutos no ar\n📡 Alcance insano de 32 km\n⚖️ Peso de 724 g\n🎮 Controle sem tela (standard)', salePrice: 12790.00, costPrice: 8532.92, supplier: 'DJI Grupo Multi' },
@@ -487,6 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- ELEMENTOS DO HTML (DOM) ---
     const loginScreen = document.getElementById('login-screen'); const appScreen = document.getElementById('app-screen'); const loginButton = document.getElementById('login-button'); const logoutButton = document.getElementById('logout-button'); const usernameInput = document.getElementById('username'); const passwordInput = document.getElementById('password'); const loginError = document.getElementById('login-error'); const welcomeMessage = document.getElementById('welcome-message');
+    const visitorModeButton = document.getElementById('visitor-mode-button'); // Novo botão
     const navButtons = document.querySelectorAll('.nav-button'); const contentSections = document.querySelectorAll('.content-section'); const suppliersNavButton = document.getElementById('suppliers-nav-button'); const settingsNavButton = document.getElementById('settings-nav-button');
     const productList = document.getElementById('product-list'); const supplierList = document.getElementById('supplier-list'); const productSearchInput = document.getElementById('product-search');
     const mainModal = document.getElementById('main-modal'); const modalTitle = document.getElementById('modal-title'); const modalBody = document.getElementById('modal-body'); const closeModalButton = document.querySelector('.close-button');
@@ -499,6 +641,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const generalCalcParcelasSelect = document.getElementById('general-parcelas');
     const generalCalculateButton = document.getElementById('general-calculate-button');
     const generalCalculatorResult = document.getElementById('general-calculator-result');
+    const navToggleButton = document.getElementById('nav-toggle-btn');
+    const appBody = document.querySelector('.app-body');
+    const headerElement = document.querySelector('header'); // Adicionado para controle de classe
 
     let currentUser = null; let activeSectionId = 'info-section'; let tempUserInterval;
 
@@ -529,54 +674,101 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FUNÇÕES PRINCIPAIS DO APP ---
     function handleLogin() {
-        const username = usernameInput.value.trim(); const password = passwordInput.value; const user = USERS[username];
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+        const user = USERS[username];
+
         if (user && user.password === password) {
             if (user.type === 'temporary' && Date.now() > user.expiresAt) {
-                loginError.textContent = 'Este usuário temporário expirou.'; loginError.style.display = 'block';
-                delete USERS[username]; return;
+                loginError.textContent = 'Este usuário temporário expirou.';
+                loginError.style.display = 'block';
+                delete USERS[username];
+                return;
             }
-            currentUser = { ...user, username };
-            loginScreen.style.display = 'none'; appScreen.style.display = 'block'; loginError.style.display = 'none'; setupAppForUser();
-        } else { loginError.textContent = 'Usuário ou senha inválidos.'; loginError.style.display = 'block'; }
+            currentUser = { ...user, username, isVisitor: false }; // Usuário logado
+            loginScreen.style.display = 'none';
+            appScreen.style.display = 'block';
+            loginError.style.display = 'none';
+            setupAppForUser();
+        } else {
+            loginError.textContent = 'Usuário ou senha inválidos.';
+            loginError.style.display = 'block';
+        }
+    }
+
+    function handleVisitorMode() {
+        currentUser = { username: 'Visitante', role: 'visitor', type: 'permanent', isVisitor: true }; // Modo visitante
+        loginScreen.style.display = 'none';
+        appScreen.style.display = 'block';
+        loginError.style.display = 'none';
+        setupAppForUser();
     }
 
     function handleLogout() {
-        currentUser = null; clearInterval(tempUserInterval);
-        appScreen.style.display = 'none'; loginScreen.style.display = 'block'; usernameInput.value = ''; passwordInput.value = '';
+        currentUser = null;
+        clearInterval(tempUserInterval);
+        appScreen.style.display = 'none';
+        loginScreen.style.display = 'block';
+        usernameInput.value = '';
+        passwordInput.value = '';
+        // Limpa a classe de visitante do cabeçalho ao sair
+        headerElement.classList.remove('visitor-header');
     }
 
     function setupAppForUser() {
-        welcomeMessage.textContent = `Bem-vindo(a), ${currentUser.username}!`;
+        if (currentUser.isVisitor) {
+            welcomeMessage.textContent = 'Modo Visitante';
+            headerElement.classList.add('visitor-header'); // Adiciona classe para esconder elementos
+        } else {
+            welcomeMessage.textContent = `Bem-vindo(a), ${currentUser.username}!`;
+            headerElement.classList.remove('visitor-header');
+        }
+
         const isAdmin = currentUser.role === 'admin';
         const isTempUser = currentUser.type === 'temporary';
+        const isVisitor = currentUser.isVisitor;
         
-        suppliersNavButton.classList.toggle('hidden', !isAdmin);
-        settingsNavButton.classList.toggle('hidden', currentUser.username !== 'Mikhaell');
-        
+        // Esconde ou mostra botões da navegação lateral
         navButtons.forEach(btn => {
             const section = btn.dataset.section;
-            if(isTempUser && !['info-section', 'products-section', 'calculator-section'].includes(section)) {
-                btn.classList.add('hidden');
-            } else {
-                 if (section === 'settings-section' && currentUser.username !== 'Mikhaell') {
-                    btn.classList.add('hidden');
-                } else if (section === 'suppliers-section' && !isAdmin) {
-                    btn.classList.add('hidden');
-                }
-                else {
-                    btn.classList.remove('hidden');
-                }
+            if (isVisitor) {
+                btn.classList.toggle('hidden', section !== 'info-section');
+            } else if (isTempUser) {
+                btn.classList.toggle('hidden', !['info-section', 'products-section', 'calculator-section'].includes(section));
+            } else { // Usuário permanente logado
+                btn.classList.remove('hidden');
+                suppliersNavButton.classList.toggle('hidden', !isAdmin);
+                settingsNavButton.classList.toggle('hidden', currentUser.username !== 'Mikhaell');
             }
         });
-        if(isTempUser) showTemporaryUserWarning();
 
-        renderProducts(); switchTab('info-section');
+        // Configura o cabeçalho
+        if (isVisitor) {
+            welcomeMessage.style.display = 'none'; // Oculta a mensagem de boas-vindas no modo visitante
+            logoutButton.style.display = 'none'; // Oculta o botão de logout no modo visitante
+        } else {
+            welcomeMessage.style.display = 'inline';
+            logoutButton.style.display = 'inline';
+        }
+
+        if (isTempUser) {
+            showTemporaryUserWarning();
+        }
+
+        renderProducts();
+        switchTab('info-section'); // Sempre começa na Info Empresa para visitantes e outros
     }
 
     function renderProducts(searchTerm = '') {
         productList.innerHTML = '';
         const lowerCaseSearchTerm = searchTerm.toLowerCase();
         let productsToShow = [];
+
+        // No modo visitante, não renderiza produtos
+        if (currentUser.isVisitor) {
+            productList.innerHTML = '<p>Funcionalidade de produtos não disponível no modo visitante.</p>';
+            return;
+        }
 
         if (currentUser.type === 'temporary') {
             if (!searchTerm) {
@@ -671,12 +863,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function switchTab(newSectionId) {
-        if (currentUser.type === 'temporary' && !['info-section', 'products-section', 'calculator-section'].includes(newSectionId)) return;
-        if (newSectionId === 'suppliers-section' && !showSuppliers()) { 
+        // Bloqueia acesso a seções para visitantes e usuários temporários
+        if (currentUser && currentUser.isVisitor && newSectionId !== 'info-section') return;
+        if (currentUser && currentUser.type === 'temporary' && !['info-section', 'products-section', 'calculator-section'].includes(newSectionId)) return;
+        
+        if (newSectionId === 'suppliers-section' && (!currentUser || !showSuppliers())) { 
              document.querySelector(`.nav-button[data-section="${activeSectionId}"]`).classList.add('active');
             return; 
         }
-        if (newSectionId === 'settings-section' && currentUser.username !== 'Mikhaell') {
+        if (newSectionId === 'settings-section' && (!currentUser || currentUser.username !== 'Mikhaell')) {
             document.querySelector(`.nav-button[data-section="${activeSectionId}"]`).classList.add('active');
             return;
         }
@@ -851,6 +1046,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- EVENT LISTENERS ---
     loginButton.addEventListener('click', handleLogin);
+    visitorModeButton.addEventListener('click', handleVisitorMode); // Evento para o modo visitante
     passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLogin(); });
     logoutButton.addEventListener('click', handleLogout);
     
@@ -858,6 +1054,11 @@ document.addEventListener('DOMContentLoaded', () => {
     mainContent.addEventListener('click', (e) => {
         const target = e.target;
         const productCard = target.closest('.product-card');
+
+        // Bloqueia ações de produto para visitantes
+        if (currentUser && currentUser.isVisitor) {
+            return; 
+        }
 
         if (productCard) {
             const productId = parseInt(productCard.dataset.productId);
@@ -893,7 +1094,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    navButtons.forEach(button => button.addEventListener('click', () => switchTab(button.dataset.section)));
+    navButtons.forEach(button => button.addEventListener('click', () => {
+        // Se for modo visitante, só permite clicar em "Info Empresa"
+        if (currentUser && currentUser.isVisitor && button.dataset.section !== 'info-section') {
+            return;
+        }
+        switchTab(button.dataset.section);
+    }));
+
     closeModalButton.addEventListener('click', closeModal);
     window.addEventListener('click', (event) => { if (event.target == mainModal) { closeModal(); } });
     productSearchInput.addEventListener('input', (e) => renderProducts(e.target.value));
@@ -913,6 +1121,12 @@ document.addEventListener('DOMContentLoaded', () => {
         radio.addEventListener('change', (e) => {
             generalCalcInstallmentsContainer.classList.toggle('hidden', e.target.value !== 'parcelado');
         });
+    });
+
+    // Toggle Nav Button
+    navToggleButton.addEventListener('click', () => {
+        appBody.classList.toggle('nav-hidden');
+        navToggleButton.textContent = appBody.classList.contains('nav-hidden') ? '☰' : '✕';
     });
 });
 </script>
