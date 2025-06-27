@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal de Consultas Internas - Galvão Drones</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230E5847'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v4h4v2h-4v4h-2v-4H7v-2h4V8z'%3E%3C/path%3E%3Cpath d='M13.25 7.15c-.24-.24-.58-.36-.92-.36s-.68.12-.92.36L8.4 9.16c-.24.24-.36.58-.36.92s.12.68.36.92l.71.71c.24.24.58.36.92.36s.68-.12.92-.36l2.93-2.93c.24-.24.36-.58.36-.92s-.12-.68-.36-.92l-.71-.71zM10.75 16.85c.24.24.58.36.92.36s.68-.12.92-.36l2.93-2.93c.24-.24.36-.58.36-.92s-.12-.68-.36-.92l-.71-.71c-.24-.24-.58-.36-.92-.36s-.68.12-.92.36l-2.93 2.93c-.24.24-.36.58-.36.92s.12.68.36.92l.71.71zM18.8 8.4l-.71-.71c-.24-.24-.58-.36-.92-.36s-.68.12-.92.36L13.3 9.77c-.24.24-.36.58-.36.92s.12.68.36.92l.71.71c.24.24.58.36.92.36s.68-.12.92-.36l3.85-3.85c.24-.24.36-.58.36-.92s-.12-.68-.36-.92zM5.2 15.6l.71.71c.24.24.58.36.92.36s.68-.12.92-.36l3.85-3.85c.24-.24.36-.58.36-.92s-.12-.68-.36-.92l-.71-.71c-.24-.24-.58-.36-.92-.36s-.68.12-.92.36L5.2 14.68c-.24.24-.36.58-.36.92s.12.68.36.92z'%3E%3C/path%3E%3C/svg%3E" type="image/svg+xml">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230E5847'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v4h4v2h-4v4h-2v-4H7v-2h4V8z'%3E%3C/path%3E%3Cpath d='M13.25 7.15c-.24-.24-.58-.36-.92-.36s-.68.12-.92.36L8.4 9.16c-.24.24-.36.58-.36.92s.12.68.36.92l.71.71c.24.24.58.36.92.36s.68-.12.92-.36l2.93-2.93c.24-.24.36-.58.36-.92s-.12-.68-.36-.92l-.71-.71zM10.75 16.85c.24.24.58.36.92.36s.68-.12.92-.36l2.93-2.93c.24-.24.36-.58.36-.92s-.12-.68-.36-.92l-.71-.71c-.24-.24-.58-.36-.92-.36s-.68.12-.92.36l-2.93 2.93c-.24.24-.36.58-.36.92s.12.68.36.92l.71.71zM18.8 8.4l-.71-.71c-.24-.24-.58-.36-.92-.36s-.68.12-.92.36L13.3 9.77c-.24.24-.36.58-.36.92s.12.68.36.92l.71.71c.24.24.58.36.92.36s.68-.12.92-.36l3.85-3.85c.24-.24.36-.58.36-.92s-.12-.68-.36-.92zM5.2 15.6l.71.71c.24.24.58.36.92.36s.68-.12.92.36l3.85-3.85c.24-.24.36-.58.36-.92s-.12-.68-.36-.92l-.71-.71c-.24-.24-.58-.36-.92-.36s-.68.12-.92.36L5.2 14.68c-.24.24-.36.58-.36.92s.12.68.36.92z'%3E%3C/path%3E%3C/svg%3E" type="image/svg+xml">
     <style>
         /* --- ESTILOS GERAIS (CSS) COM A PALETA GALVÃO DRONES --- */
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
@@ -18,6 +18,7 @@
             --danger-color: #e74c3c;
             --whatsapp-color: #25D366;
             --instagram-color: #C13584; /* Cor do Instagram */
+            --youtube-color: #FF0000; /* Cor do YouTube */
             --help-color: #5865F2;
         }
 
@@ -47,7 +48,18 @@
             background-repeat: no-repeat;
             opacity: 0.1; /* Opacidade da imagem de fundo */
             z-index: -1;
+            transition: background-image 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Adiciona transição */
         }
+
+        /* Nova classe para o fundo do modo visitante */
+        body.visitor-mode-bg::before {
+            background-image: url('https://i.imgur.com/b3lg2eE.png'); /* URL da sua logo no Imgur */
+            background-size: contain; /* Ajusta a imagem para caber sem cortar */
+            background-position: center center; /* Centraliza a imagem */
+            background-repeat: no-repeat; /* Evita repetição */
+            opacity: 0.5; /* Ajuste a opacidade conforme preferir */
+        }
+
 
         .container {
             width: 100%;
@@ -68,12 +80,11 @@
             transition: opacity 0.5s ease;
             margin: auto; /* Garante centralização */
         }
-        #company-title {
-            color: var(--secondary-color);
-            margin-bottom: 10px;
-            font-size: 2.2em;
-            font-weight: 700;
-            letter-spacing: 1px;
+        #company-logo {
+            max-width: 300px; /* Ajuste a largura máxima conforme necessário */
+            width: 80%;
+            display: block;
+            margin: 0 auto 10px auto; /* Centraliza a imagem e adiciona margem inferior */
         }
         #portal-subtitle {
              color: #555;
@@ -147,11 +158,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 60px; /* Altura fixa para o header */
         }
         .header-left { 
             display: flex; 
             align-items: center; 
             gap: 20px; 
+            height: 100%; /* Ocupa a altura do header */
         }
         #nav-toggle-btn {
             background: none;
@@ -161,6 +174,10 @@
             cursor: pointer;
             padding: 0 10px;
             margin-right: 15px; /* Adicionado para separar do título */
+            height: 100%; /* Para alinhar verticalmente */
+            display: flex; /* Para alinhar o ícone */
+            align-items: center; /* Para alinhar o ícone */
+            z-index: 1001; /* Acima do menu para ser clicável */
         }
         header h1 {
             margin: 0;
@@ -189,6 +206,7 @@
         .app-body {
             display: flex;
             position: relative; /* Para o main-content não empurrar a nav */
+            min-height: calc(100vh - 60px); /* Ajusta a altura para caber o header */
         }
         nav {
             width: 200px;
@@ -198,12 +216,15 @@
             border-right: 1px solid var(--dark-grey);
             transition: transform 0.3s ease;
             box-sizing: border-box; /* Garante que padding não adicione largura */
+            display: flex; /* Para controlar a ordem dos botões com flex-order */
+            flex-direction: column; /* Para empilhar os botões verticalmente */
+            flex-shrink: 0; /* Previne que a nav encolha */
         }
         /* Oculta nav por padrão no mobile, prepara para slide-in */
         @media (max-width: 768px) {
             nav {
                 position: fixed; /* Fixa a nav sobre o conteúdo */
-                top: 0; /* Ajuste para logo abaixo do header se necessário */
+                top: 0; /* Começa no topo da viewport */
                 left: 0;
                 height: 100vh; /* Altura total da viewport */
                 width: 250px; /* Largura da nav quando aberta */
@@ -211,7 +232,7 @@
                 transform: translateX(-100%); /* Começa fora da tela (escondida) */
                 z-index: 999; /* Garante que fique acima de outros elementos */
                 box-shadow: 2px 0 5px rgba(0,0,0,0.2); /* Sombra para destacar */
-                padding-top: 80px; /* Espaço para o cabeçalho do app, se a nav começar do topo */
+                padding-top: 60px; /* Espaço para o cabeçalho do app, que tem 60px de altura */
                 border-right: 1px solid var(--dark-grey); /* Mantém borda */
             }
             nav.nav-open { /* Classe para quando a nav está aberta */
@@ -222,20 +243,33 @@
                 position: absolute; /* Fixa o cabeçalho no topo da nav */
                 top: 0;
                 width: 100%;
-                background-color: var(--dark-grey); /* Cor de fundo para o cabeçalho da nav */
+                height: 60px; /* Mesma altura do header principal */
+                background-color: var(--secondary-color); /* Cor de fundo para o cabeçalho da nav */
+                color: white;
                 padding: 15px 20px;
                 box-sizing: border-box;
+                align-items: center;
+            }
+            .nav-header #nav-toggle-btn-close {
+                font-size: 24px;
+                background: none;
+                border: none;
+                color: white;
+                cursor: pointer;
+                padding: 0 10px;
             }
              .nav-header span {
                 flex-grow: 1;
                 text-align: center;
                 margin-left: -20px; /* Ajuste para centralizar o texto "Menu" */
+                font-size: 1.2em; /* Tamanho do título do menu */
             }
             .app-body {
                 flex-direction: column; /* Pilha itens verticalmente no mobile */
+                min-height: calc(100vh - 60px); /* Reduz min-height para acomodar o header fixo */
             }
         }
-        
+
         nav button {
             display: block;
             width: 100%;
@@ -269,7 +303,7 @@
         main {
             flex-grow: 1;
             padding: 30px;
-            max-height: 70vh;
+            max-height: calc(100vh - 60px); /* Ajusta max-height para acomodar o header fixo */
             overflow-y: auto;
             position: relative;
             transition: margin-left 0.3s ease;
@@ -277,18 +311,17 @@
         @media (max-width: 768px) {
             main {
                 padding: 20px;
-                max-height: calc(100vh - 120px); /* Ajusta a altura da área de conteúdo */
+                max-height: calc(100vh - 60px); /* Ajusta a altura da área de conteúdo para caber o header */
                 width: 100%; /* Ocupa a largura total */
             }
             header {
                 padding: 10px 15px;
+                position: sticky; /* Fixa o header no topo */
+                top: 0;
+                z-index: 100; /* Garante que o header fique sobre o conteúdo */
             }
             header h1 {
                 font-size: 20px;
-            }
-            #logout-button {
-                padding: 6px 10px;
-                font-size: 14px;
             }
             #nav-toggle-btn {
                 margin-right: 0; /* Remove a margem extra no mobile */
@@ -351,17 +384,22 @@
         
         /* --- BOTÕES DE AÇÃO DO PRODUTO --- */
         .action-buttons-container { margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px; }
-        .action-buttons-container button {
+        .action-buttons-container button, .action-buttons-container a.action-button {
             color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: 500; transition: background-color 0.3s;
             font-size: 0.9em; /* Ajuste de fonte */
+            text-decoration: none; /* Para os links */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         .gemini-button { background-color: var(--secondary-color); }
         .whatsapp-button { background-color: var(--whatsapp-color); }
         .instagram-button { background-color: var(--instagram-color); } /* Estilo para botão Instagram */
+        .youtube-button { background-color: var(--youtube-color); } /* Estilo para botão YouTube */
         .google-maps-button { background-color: #4285F4; } /* Estilo para botão Google Maps */
 
         .help-button { background-color: var(--help-color); }
-        .action-buttons-container button:hover { opacity: 0.9; }
+        .action-buttons-container button:hover, .action-buttons-container a.action-button:hover { opacity: 0.9; }
 
         /* --- CALCULADORA --- */
         .calculator-container { margin-top: 20px; padding-top: 20px; border-top: 1px dashed var(--dark-grey); }
@@ -435,7 +473,7 @@
 
     <div class="container">
         <div id="login-screen">
-            <h1 id="company-title">Galvão Drones</h1>
+            <img src="https://i.imgur.com/b3lg2eE.png" alt="Logotipo Galvão Drones" id="company-logo">
             <h2 id="portal-subtitle">Portal Interno</h2>
             <div class="input-group"><label for="username">Usuário</label><input type="text" id="username" placeholder="Digite seu nome"></div>
             <div class="input-group"><label for="password">Senha</label><input type="password" id="password" placeholder="Sua senha"></div>
@@ -447,6 +485,7 @@
         <div id="app-screen">
             <header>
                 <div class="header-left">
+                    <button id="nav-toggle-btn" class="nav-toggle-btn">☰</button>
                     <span id="welcome-message"></span>
                     <h1>Portal Interno</h1>
                 </div>
@@ -460,28 +499,14 @@
                         <button id="nav-toggle-btn-close" class="nav-toggle-btn">✕</button>
                         <span>Menu</span>
                     </div>
-                    <button class="nav-button active" data-section="info-section">Info Empresa</button>
-                    <button class="nav-button" data-section="products-section">Produtos</button>
-                    <button class="nav-button" data-section="calculator-section">Calculadora</button>
-                    <button class="nav-button hidden" id="suppliers-nav-button" data-section="suppliers-section">Fornecedores</button>
-                    <button class="nav-button hidden" id="settings-nav-button" data-section="settings-section">Configurações</button>
+                    <button class="nav-button" data-section="products-section" style="order: 1;">Produtos</button>
+                    <button class="nav-button" data-section="calculator-section" style="order: 2;">Calculadora</button>
+                    <button class="nav-button" data-section="suppliers-section" style="order: 3;">Fornecedores</button>
+                    <button class="nav-button" data-section="settings-section" style="order: 4;">Configurações</button>
+                    <button class="nav-button" data-section="drones-visitor-section" style="order: 5;">Drones</button>
+                    <button class="nav-button" data-section="info-section" style="order: 6;">Info Empresa</button>
                 </nav>
                 <main id="main-content">
-                    <section id="info-section" class="content-section active">
-                        <h2>Informações da Empresa</h2>
-                        <div class="card info-card">
-                            <p><strong>Nome da Empresa:</strong> Galvão Drones</p>
-                            <p id="cnpj-display-line"><strong>CNPJ:</strong> 60.102.179/0001-10</p>
-                            <p><strong>Endereço:</strong> Rua 16, nº 304 – Setor Aeroviário, Goiânia – GO, CEP: 74435-240</p>
-                            <p><a href="https://www.google.com/maps/search/?api=1&query=Galv%C3%A3o+Drones+Goi%C3%A2nia+Goi%C3%A1s" target="_blank" class="action-button google-maps-button" style="width: auto; padding: 10px 15px; margin-right: 10px;">Ver no Google Maps</a></p>
-                            <p><strong>Contato:</strong> (62) 3636-0668</p>
-                            <div class="contact-buttons-container" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                                <a href="https://www.instagram.com/galvao_drones" target="_blank" class="action-button instagram-button" style="width: auto; padding: 10px 15px;">Instagram</a>
-                                <a href="https://wa.me/556236360668" target="_blank" class="action-button whatsapp-button" style="width: auto; padding: 10px 15px;">WhatsApp</a>
-                            </div>
-                            <p><strong>Website:</strong> <a href="http://www.galvaodrones.com.br" target="_blank">www.galvaodrones.com.br</a></p>
-                        </div>
-                    </section>
                     <section id="products-section" class="content-section">
                         <h2>Consulta de Produtos</h2>
                         <div class="search-bar"><input type="text" id="product-search" placeholder="Pesquisar por nome ou especificação..."></div>
@@ -529,6 +554,27 @@
                         <div id="temp-user-list-container">
                             <h3>Gerir Usuários Temporários</h3>
                             <div id="temp-user-list" class="card"></div>
+                        </div>
+                    </section>
+                    <section id="drones-visitor-section" class="content-section">
+                        <h2>Modelos de Drones</h2>
+                        <div class="search-bar"><input type="text" id="drone-visitor-search" placeholder="Pesquisar por modelo ou especificação..."></div>
+                        <div id="drone-visitor-list"></div>
+                    </section>
+                    <section id="info-section" class="content-section">
+                        <h2>Informações da Empresa</h2>
+                        <div class="card info-card">
+                            <p><strong>Nome da Empresa:</strong> Galvão Drones</p>
+                            <p id="cnpj-display-line"><strong>CNPJ:</strong> 60.102.179/0001-10</p>
+                            <p><strong>Endereço:</strong> Rua 16, nº 304 – Setor Aeroviário, Goiânia – GO, CEP: 74435-240</p>
+                            <p><a href="https://www.google.com/maps/search/Galv%C3%A3o+Drones+em+Goi%C3%A2nia+Goi%C3%A1s" target="_blank" class="action-button google-maps-button" style="width: auto; padding: 10px 15px; margin-right: 10px;">Ver no Google Maps</a></p>
+                            <p><strong>Contato:</strong> (62) 3636-0668</p>
+                            <div class="contact-buttons-container" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                                <a href="https://www.instagram.com/galvao_drones" target="_blank" class="action-button instagram-button" style="width: auto; padding: 10px 15px;">Instagram</a>
+                                <a href="https://wa.me/556236360668" target="_blank" class="action-button whatsapp-button" style="width: auto; padding: 10px 15px;">WhatsApp</a>
+                                <a href="https://www.youtube.com/@Galv%C3%A3oDronesofc" target="_blank" class="action-button youtube-button" style="width: auto; padding: 10px 15px;">YouTube</a>
+                            </div>
+                            <p><strong>Website:</strong> <a href="http://www.galvaodrones.com.br" target="_blank">www.galvaodrones.com.br</a></p>
                         </div>
                     </section>
                 </main>
@@ -588,7 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 45, name: 'SKYFEND HUNTER', spec: '🌩️ Skyfend Hunter (AFA100)\nUm jammer portátil com detecção e contra-ação integrada, típico “gun”:\n📡 Detecção omnidirecional: até 2 km\n🚫 Jamming direcional: até 3 km\n📶 Cobertura de frequência: 400 MHz–6 GHz (RF + GNSS: GPS, Glonass, Beidou, Galileo)\n⏱️ Autonomia: até 8 h em espera e 1 h com jamming ativo\n🕌 Tela: touchscreen 3,5”\n🔄 Adaptabilidade: adaptação automática de frequência\n⚙️ IP: IP65\n⚖️ Peso: aprox. 6,5 kg', salePrice: 379749, costPrice: 265822.10, supplier: 'GoHobby Distribuidora de VANT LTDA' },
         { id: 46, name: 'SKYFEND BLADER', spec: '⚡ Skyfend Blader\nUm jammer portátil de alta potência, enxuto e focado na neutralização:\n🌐 Alcance de jamming: até 1,5 km\n📶 Cobertura de frequência: 868 MHz, 915 MHz, 1.2 GHz, 1.4 GHz, 1.6 GHz, 2.4 GHz, 4.95 GHz, 5.2–5.8 GHz\n⏱️ Jamming ativado: até 30 min\n🧭 Direção e campo de visão: azimute ±15°, pitch ±10°\n⚖️ Peso: ≈ 4 kg\n⚙️ IP: IP65', salePrice: 147898.28, costPrice: 106328.80, supplier: 'GoHobby Distribuidora de VANT LTDA' },
         { id: 31, name: 'Câmera DJI Osmo Pocket 3 Standard', spec: '📷 DJI Osmo Pocket 3 Standard\n🎥 Gravação em 4K com sensor grande\n📱 Tela articulada touchscreen\n🔁 Gimbal mecânico de 3 eixos\n💡 Ideal para criadores que filmam em movimento\n🔋 Autonomia de até 120 minutos\n📦 Compacta e leve: cabe no bolso', salePrice: 6990, costPrice: 4658.47, supplier: 'Arroba Celulares' },
-        { id: 92, name: 'Câmera DJI Osmo Action 4 Adventure Combo', spec: '📷 DJI Osmo Action 4 Adventure Combo\n🎥 Vídeos em 4K HDR a 120 fps\n🌊 À prova d’água até 18 metros (sem case)\n🔋 Inclui 2 baterias extras + suporte de carregamento\n📱 Controle via app DJI Mimo\n📦 Pensada para esportes e ambientes extremos', salePrice: 4790.00, costPrice: 3194.13, supplier: 'DJI Grupo Multi' },
+        { id: 92, name: 'Câmera DJI Osmo Action 4 Adventure Combo', spec: '📷 DJI Osmo Action 4 Adventure Combo\n🎥 Vídeos em 4K HDR a 120 fps\n🌊 À prova d’agua até 18 metros (sem case)\n🔋 Inclui 2 baterias extras + suporte de carregamento\n📱 Controle via app DJI Mimo\n📦 Pensada para esportes e ambientes extremos', salePrice: 4790.00, costPrice: 3194.13, supplier: 'DJI Grupo Multi' },
         { id: 94, name: 'Câmera DJI Osmo Action 4 Standard Combo', spec: '📷 DJI Osmo Action 4 Standard Combo\n🎥 4K ultra amplo com estabilização RockSteady\n🎯 Lente grande angular com excelente captação de luz\n📱 Integração total com o app DJI\n🧳 Compacta, ideal para vloggers e aventureiros iniciantes', salePrice: 3490.00, costPrice: 2400.00, supplier: 'DJI Grupo Multi' },
         { id: 93, name: 'Câmera DJI Osmo Action 5 Pro Standard Combo', spec: '📷 DJI Osmo Action 5 Pro Standard Combo\n🎥 4K a 120 fps com sensor aprimorado para pouca luz\n🌀 Estabilização RockSteady 3.0 + HorizonSteady\n🔋 Bateria de longa duração com carregamento rápido\n🎧 Áudio com 3 microfones e cancelamento de ruído\n📦 Perfeita para profissionais e criadores exigentes', salePrice: 4490.00, costPrice: 2992.69, supplier: 'DJI Grupo Multi' },
         { id: 97, name: 'Estabilizador DJI Osmo Mobile 7P', spec: '🎮 DJI Osmo Mobile 7P BR\n📱 Compatível com celulares grandes\n🌀 Modos de acompanhamento e gestos\n🔋 Bateria para até 10h de uso', salePrice: 2090.00, costPrice: 1396.50, supplier: 'Arroba Celulares' },
@@ -603,7 +649,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 19, name: 'Controle DJI RC', spec: '🎮 DJI RC\n📱 Suporte para smartphone\n📡 Alcance até 10 km\n⚖️ Design leve e ergonômico', salePrice: 3290, costPrice: 2195.65, supplier: 'Arroba Celulares' },
         { id: 20, name: 'Controle DJI RC 2', spec: '🎮 DJI RC 2\n📺 Tela HD integrada\n📡 Alcance de até 20 km\n🔋 Autonomia de 4h', salePrice: 3590, costPrice: 2395.43, supplier: 'DJI Grupo Multi' },
         { id: 21, name: 'Controle DJI RC Pro (HDMI)', spec: '🎮 DJI RC Pro (HDMI)\n🎥 Saída HDMI e sistema Android\n📡 Ultra responsivo com controle DJI Fly\n📺 Tela de alto brilho com 1000 nits', salePrice: 10990, costPrice: 7330.69, supplier: 'GoHobby Distribuidora de VANT LTDA' },
-        { id: 100, name: 'Microfone DJI Mic 2 (2 TX + 1 RX + Case)', spec: '🎤 DJI Mic 2 (2 transmissores + 1 receptor + case)\n🎧 Áudio estéreo digital de altíssima fidelidade (24-bit)\n🔋 Gravação interna com backup automático\n📡 Alcance de até 250 metros em área aberta\n🧳 Case com recarga rápida e transporte seguro\n🔗 Compatível com câmeras DSLR, celulares e computadores', salePrice: 4090.00, costPrice: 2731.69, supplier: 'Arroba Celulares' },
+        { id: 100, name: 'Microfone DJI Mic 2 (2 TX + 1 RX + Case)', spec: '🎤 DJI Mic 2 (2 transmissores + 1 receptor + case)\n🎧 Áudio estéreo digital de altíssima fidelidade (24-bit)\n🔋 Gravação interna com backup automático\n📡 Alcance de até 250 metros em área aberto\n🧳 Case com recarga rápida e transporte seguro\n🔗 Compatível com câmeras DSLR, celulares e computadores', salePrice: 4090.00, costPrice: 2731.69, supplier: 'Arroba Celulares' },
         { id: 36, name: 'Microfone DJI Mic Mini (1 TX + 1 RX)', spec: '🎤 DJI Mic Mini (1 transmissor + 1 receptor)\n🎧 Super compacto e leve – ideal para creators\n🔋 Autonomia de até 6 horas por unidade\n📦 Sem case de recarga – prático para uso imediato\n🎯 Plug and play com portas USB-C e Lightning', salePrice: 859, costPrice: 523.29, supplier: 'Arroba Celulares' },
         { id: 37, name: 'Microfone DJI Mic Mini (2 TX + 1 RX + Case)', spec: '🎤 DJI Mic Mini (2 transmissores + 1 receptor + case)\n🎧 Gravação estéreo dupla com sincronização inteligente\n🔋 Case de transporte com recarga automática\n📡 Conexão simultânea com dispositivos duplos\n📱 Perfeito para entrevistas, podcasts e vídeos de equipe.', salePrice: 1590, costPrice: 1062.43, supplier: 'Arroba Celulares' },
         { id: 115, name: 'Bateria DJI Neo', spec: '🔋 Bateria DJI Neo\n⏱️ Autonomia de até 18 minutos por carga\n⚡ Tecnologia LiPo com proteção inteligente\n🔌 Recarga via hub ou carregador USB-C\n📦 Compatível exclusivamente com o DJI Neo', salePrice: 0, costPrice: 0, supplier: 'Arroba Celulares' },
@@ -633,7 +679,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 16, name: 'Estação de Energia DJI Power 1000', spec: '🔌 DJI Power 1000\n⚡ Potência total: 1000W\n🔋 Bateria interna de longa duração (1024 Wh)\n🔌 Diversas saídas: USB-C, AC, DC e carregamento solar\n📦 Ideal para operações em campo, emergências e drones de grande porte\n🧳 Design robusto, com alça retrátil e tela inteligente', salePrice: 9590, costPrice: 6314.47, supplier: 'DJI Grupo Multi' },
         { id: 17, name: 'Estação de Energia DJI Power 500', spec: '🔌 DJI Power 500\n⚡ Potência total: 500W\n🔋 Capacidade de 512 Wh\n🔌 Entradas e saídas para múltiplos dispositivos simultâneos\n📦 Portátil e eficiente para filmagens externas, inspeções ou backup em locais remotos\n🧳 Compacta e fácil de transportar', salePrice: 6190, costPrice: 4071.35, supplier: 'DJI Grupo Multi' },
         { id: 80, name: 'Sistema DJI Focus Pro – All-In-One Combo', spec: '🎯 Sistema DJI Focus Pro – All-In-One Combo\n🎥 Foco automático inteligente para câmeras profissionais\n📡 Controle remoto de alta precisão com delay ultrabaixo\n🔋 Motor silencioso com bateria integrada de longa duração\n⚙️ Compatível com estabilizadores da linha RS e câmeras DSLR/cinema\n🧠 Modos: foco manual, automático e via reconhecimento facial\n📦 Inclui motor, controle, cabo de dados e acessórios profissionais\n🧳 Ideal para produções de alto nível, cinema, comerciais e conteúdo técnico', salePrice: 16990.00, costPrice: 11133.54, supplier: 'GoHobby Distribuidora de VANT LTDA' },
-        { id: 86, name: 'Sistema DJI SDR Transmission Combo', spec: '📶 Sistema DJI SDR Transmission Combo\n📡 Transmissão de vídeo em tempo real com ultra baixa latência\n📺 Entrada HDMI para câmeras externas (profissionais ou drone FPV customizado)\n📱 Compatível com smartphones ou tablets via suportes dedicados\n🔌 Alimentação via bateria integrada ou fonte externa\n🎯 Ideal para transmissões ao vivo, monitoramento técnico ou gravações de precisão\n📦 Combo inclui receptor SDR, cabos, suporte de fixação e encaixes ajustáveis', salePrice: 5990.00, costPrice: 4004.27, supplier: 'Arroba Celulares' },
+        { id: 86, name: 'Sistema DJI SDR Transmission Combo', spec: '📶 Sistema DJI SDR Transmission Combo\n📡 Transmissão de vídeo em tempo real com ultra baixa latência\n📺 Entrada HDMI para câmeras externas (profissionais ou drone FPV customizado)\n📱 Compatível com smartphones ou tablets via suportes dedicados\n🔌 Alimentação via bateria integrada ou ou fonte externa\n🎯 Ideal para transmissões ao vivo, monitoramento técnico ou gravações de precisão\n📦 Combo inclui receptor SDR, cabos, suporte de fixação e encaixes ajustáveis', salePrice: 5990.00, costPrice: 4004.27, supplier: 'Arroba Celulares' },
         { id: 84, name: 'Suporte de Telefone SDR', spec: '📱 Suporte de Telefone SDR\n🧲 Suporte magnético com ajuste de ângulo e altura\n📦 Compatível com celulares de até 7”', salePrice: 579.00, costPrice: 257.45, supplier: 'Arroba Celulares' },
         { id: 85, name: 'Suporte de Tablet SDR', spec: '💻 Suporte de Tablet SDR\n📐 Estrutura expandida para tablets de até 10”\n⚙️ Base firme com regulagem personalizada\n🧳 Ideal para visualização ampla em campo', salePrice: 579.00, costPrice: 500.09, supplier: 'Arroba Celulares' },
         { id: 89, name: 'Hard Case Mavic Air 2 / Air 2S', spec: '🎒 Hard Case Mavic Air 2 / Air 2S\n💼 Proteção rígida + interior espumado', salePrice: 599.00, costPrice: 339.72, supplier: 'Arroba Celulares' },
@@ -680,10 +726,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const contentSections = document.querySelectorAll('.content-section');
     const suppliersNavButton = document.getElementById('suppliers-nav-button');
     const settingsNavButton = document.getElementById('settings-nav-button');
+    const dronesVisitorNavButton = document.getElementById('drones-visitor-nav-button'); // Novo botão Drones para visitante
+    const infoEmpresaNavButton = document.querySelector('[data-section="info-section"]'); // Seleciona o botão Info Empresa
 
     const productList = document.getElementById('product-list');
     const supplierList = document.getElementById('supplier-list');
     const productSearchInput = document.getElementById('product-search');
+    const droneVisitorList = document.getElementById('drone-visitor-list'); // Lista de drones para visitante
+    const droneVisitorSearchInput = document.getElementById('drone-visitor-search'); // Campo de busca para visitante
 
     const mainModal = document.getElementById('main-modal');
     const modalTitle = document.getElementById('modal-title');
@@ -708,13 +758,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const navElement = document.querySelector('nav'); // O elemento nav
     const appBody = document.querySelector('.app-body');
     const headerElement = document.querySelector('header'); // Adicionado para controle de classe
+    const bodyElement = document.body; // Referência ao body para alterar a classe
 
     let currentUser = null;
-    let activeSectionId = 'info-section';
+    let activeSectionId = 'products-section'; // Define a seção inicial padrão para usuários logados
     let tempUserInterval;
 
     // --- FUNÇÕES DA API GEMINI ---
-    async function callGeminiAPI(prompt, title) { 
+    async function callGeminiAPI(prompt, title, isProductHelp = false, productSpecs = '') { 
         modalTitle.textContent = title;
         modalBody.innerHTML = '<div class="loader"></div>';
         openModal();
@@ -722,7 +773,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Por favor, considere usar um servidor backend para proteger sua chave em um ambiente real.
         const apiKey = "AIzaSyBQr00SKusVdv1sR7cjaJbFsfY5YaHQbH0"; 
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`; 
-        const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+        
+        let fullPrompt = prompt;
+        if (isProductHelp) {
+            fullPrompt = `R2D2: Responda de forma direta e clara (máximo 3 frases) à seguinte dúvida do cliente sobre o produto "${productSpecs}". Dúvida do cliente: "${prompt}"`;
+        } else {
+             fullPrompt = `R2D2: ${prompt}`;
+        }
+
+        const payload = { contents: [{ role: "user", parts: [{ text: fullPrompt }] }] };
+        
         try {
             const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
             if (!response.ok) {
@@ -781,6 +841,8 @@ document.addEventListener('DOMContentLoaded', () => {
         passwordInput.value = '';
         // Limpa a classe de visitante do cabeçalho ao sair
         headerElement.classList.remove('visitor-header');
+        // Remove a classe do modo visitante do body
+        bodyElement.classList.remove('visitor-mode-bg'); 
         // Fecha a nav mobile se estiver aberta
         closeMobileNav();
     }
@@ -789,28 +851,56 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentUser.isVisitor) {
             welcomeMessage.textContent = 'Modo Visitante';
             headerElement.classList.add('visitor-header'); // Adiciona classe para esconder elementos
+            bodyElement.classList.add('visitor-mode-bg'); // Adiciona classe para mudar o fundo
         } else {
             welcomeMessage.textContent = `Bem-vindo(a), ${currentUser.username}!`;
             headerElement.classList.remove('visitor-header');
+            bodyElement.classList.remove('visitor-mode-bg'); // Remove a classe do fundo
         }
 
         const isAdmin = currentUser.role === 'admin';
         const isTempUser = currentUser.type === 'temporary';
         const isVisitor = currentUser.isVisitor;
         
-        // Esconde ou mostra botões da navegação lateral
-        navButtons.forEach(btn => {
-            const section = btn.dataset.section;
-            if (isVisitor) {
-                btn.classList.toggle('hidden', section !== 'info-section');
-            } else if (isTempUser) {
-                btn.classList.toggle('hidden', !['info-section', 'products-section', 'calculator-section'].includes(section));
-            } else { // Usuário permanente logado
-                btn.classList.remove('hidden');
-                suppliersNavButton.classList.toggle('hidden', !isAdmin);
-                settingsNavButton.classList.toggle('hidden', currentUser.username !== 'mikhaell'); 
-            }
-        });
+        // Esconde ou mostra e reordena botões da navegação lateral conforme o tipo de usuário
+        const navProduct = document.querySelector('[data-section="products-section"]');
+        const navCalculator = document.querySelector('[data-section="calculator-section"]');
+        const navSuppliers = document.querySelector('[data-section="suppliers-section"]');
+        const navSettings = document.querySelector('[data-section="settings-section"]');
+        
+        if (isVisitor) {
+            // Esconde todas as opções de logado
+            navProduct.classList.add('hidden');
+            navCalculator.classList.add('hidden');
+            navSuppliers.classList.add('hidden');
+            navSettings.classList.add('hidden');
+            
+            // Mostra e ordena as opções para visitante
+            dronesVisitorNavButton.classList.remove('hidden'); // Visível apenas para visitante
+            infoEmpresaNavButton.classList.remove('hidden'); // Sempre visível para visitante
+
+            dronesVisitorNavButton.style.order = 1; // Drones primeiro
+            infoEmpresaNavButton.style.order = 2; // Info Empresa segundo
+
+            // Ativa a aba "Drones" por padrão para visitantes
+            switchTab('drones-visitor-section'); // Isso também renderizará a lista de drones
+        } else { // Usuários logados (admin, seller, temp)
+            // Mostra todas as opções que devem ser visíveis para logados
+            navProduct.classList.remove('hidden');
+            navCalculator.classList.remove('hidden');
+            infoEmpresaNavButton.classList.remove('hidden');
+            dronesVisitorNavButton.classList.add('hidden'); // Escondido para usuários logados
+
+            // Restaura a ordem padrão para usuários logados
+            navProduct.style.order = 1;
+            navCalculator.style.order = 2;
+            navSuppliers.style.order = 3;
+            navSettings.style.order = 4;
+            infoEmpresaNavButton.style.order = 6; // Info Empresa é a 6ª para logados
+            
+            navSuppliers.classList.toggle('hidden', !isAdmin);
+            navSettings.classList.toggle('hidden', currentUser.username !== 'mikhaell'); 
+        }
 
         // Configura o cabeçalho para o modo visitante/logado
         if (isVisitor) {
@@ -834,21 +924,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Configura o botão do menu hamburger/fechar no header
         if (window.innerWidth <= 768) {
-            // No mobile, o botão "☰" ou "✕" deve ser visível no header
             navToggleButton.style.display = 'block'; 
-            navToggleButton.textContent = '☰'; // Inicia com o ícone de menu
-            closeMobileNav(); // Garante que a nav esteja fechada ao fazer login
+            navToggleButton.textContent = '☰'; 
+            closeMobileNav(); 
         } else {
-            // Em desktop, o botão de toggle da nav não é necessário no header
             navToggleButton.style.display = 'none';
         }
         
         if (isTempUser) {
             showTemporaryUserWarning();
         }
-
-        renderProducts();
-        switchTab('info-section'); // Sempre começa na Info Empresa para visitantes e outros
     }
 
     function renderProducts(searchTerm = '') {
@@ -856,19 +941,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const lowerCaseSearchTerm = searchTerm.toLowerCase();
         let productsToShow = [];
 
-        // No modo visitante, não renderiza produtos
+        // Esta função agora é APENAS para usuários LOGADOS (não visitantes)
         if (currentUser.isVisitor) {
-            productList.innerHTML = '<p>Funcionalidade de produtos não disponível no modo visitante.</p>';
+            productList.innerHTML = '<p>Funcionalidade de produtos não disponível no modo visitante. Use a seção "Drones".</p>';
             return;
         }
 
         if (currentUser.type === 'temporary') {
-            if (!searchTerm) {
-                productList.innerHTML = '<p>Digite o nome do produto que deseja pesquisar.</p>';
-                return;
-            }
             productsToShow = PRODUCTS.filter(p => p.name.toLowerCase().includes(lowerCaseSearchTerm) || p.spec.toLowerCase().includes(lowerCaseSearchTerm));
-        } else {
+        } else { // Admin ou vendedor permanente
             productsToShow = PRODUCTS.filter(p => p.name.toLowerCase().includes(lowerCaseSearchTerm) || p.spec.toLowerCase().includes(lowerCaseSearchTerm));
         }
 
@@ -880,16 +961,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const productCard = document.createElement('div');
             productCard.className = 'card product-card';
             productCard.dataset.productId = product.id;
-            const showCostPrice = currentUser.role === 'admin';
+            const isAdmin = currentUser.role === 'admin';
+            const isSeller = currentUser.role === 'seller';
             
             // Determina o texto do "Valor de Venda"
-            const salePriceLabel = currentUser.role === 'seller' ? 'V Salor' : 'Valor de Venda';
+            const salePriceLabel = isSeller ? 'V Salor' : 'Valor de Venda';
             
-            let adminInfo = '';
-            // A opção de desconto agora é sempre incluída no HTML para admins, mas hidden
-            // e revelada no clique do botão calcular.
-            if (showCostPrice) {
-                adminInfo = `
+            let adminCostInfo = '';
+            if (isAdmin) { // Valor de custo SÓ para administradores
+                adminCostInfo = `
                     <p class="cost-price">Valor de Custo: ${product.costPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                     <p class="supplier-info">📦 Fornecedor: ${product.supplier || 'Não especificado'}</p>
                 `;
@@ -899,11 +979,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3>${product.name}</h3>
                 <p class="product-spec"><strong>Especificações:</strong><br>${product.spec}</p>
                 <p class="price">${salePriceLabel}: ${product.salePrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
-                ${adminInfo}
+                ${adminCostInfo}
                 <div class="action-buttons-container">
                     <button class="gemini-button desc-button">✨ Gerar Descrição</button>
                     <button class="gemini-button args-button">✨ Criar Argumentos</button>
-                    <button class="whatsapp-button">💬 WhatsApp</button>
+                    <button class="whatsapp-button" data-product-name="${product.name}" data-product-spec="${product.spec}">💬 WhatsApp</button>
                     <button class="help-button">💡 Ajudar Cliente</button>
                 </div>
                 <div class="calculator-container">
@@ -913,7 +993,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <input type="radio" id="payment-parcelado-${product.id}" name="payment-method-${product.id}" value="parcelado">
                         <label for="payment-parcelado-${product.id}">Parcelado</label>
                     </div>
-                    ${showCostPrice ? `
+                    ${isAdmin ? `
                     <div class="discount-option hidden" id="discount-option-${product.id}">
                         <label for="discount-percentage-${product.id}">Desconto (%):</label>
                         <input type="number" id="discount-percentage-${product.id}" min="0" max="15" value="0">
@@ -932,6 +1012,35 @@ document.addEventListener('DOMContentLoaded', () => {
             productList.appendChild(productCard);
         });
     }
+
+    // --- Nova função para renderizar produtos para VISITANTES ---
+    function renderDroneVisitorList(searchTerm = '') {
+        droneVisitorList.innerHTML = '';
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+        const dronesToShow = PRODUCTS.filter(p => p.name.toLowerCase().includes(lowerCaseSearchTerm) || p.spec.toLowerCase().includes(lowerCaseSearchTerm));
+
+        if (dronesToShow.length === 0) {
+            droneVisitorList.innerHTML = '<p>Nenhum drone encontrado com esse termo.</p>';
+        }
+
+        dronesToShow.forEach(product => {
+            const droneCard = document.createElement('div');
+            droneCard.className = 'card product-card'; // Reutiliza estilo de card de produto
+            droneCard.dataset.productId = product.id; // Mantém ID para referência
+            
+            droneCard.innerHTML = `
+                <h3>${product.name}</h3>
+                <p class="product-spec"><strong>Especificações:</strong><br>${product.spec}</p>
+                <p class="price" style="color: var(--secondary-color);">Consultar valor e disponibilidade</p>
+                <div class="action-buttons-container">
+                    <a href="https://wa.me/556236360668?text=${encodeURIComponent('Olá, gostaria de saber mais sobre o ' + product.name + ' e sua disponibilidade.')}" target="_blank" class="action-button whatsapp-button" style="width: auto;">Consultar via WhatsApp</a>
+                    <button class="action-button help-product-visitor-btn" data-product-name="${product.name}" data-product-spec="${product.spec}">Precisa de ajuda com esse produto?</button>
+                </div>
+            `;
+            droneVisitorList.appendChild(droneCard);
+        });
+    }
+
 
     function calculate(baseValue, numInstallments, paymentMethod, discountPercentage = 0) {
         const valor = parseFloat(baseValue);
@@ -975,11 +1084,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function switchTab(newSectionId) {
         // Bloqueia acesso a seções para visitantes e usuários temporários
-        if (currentUser && currentUser.isVisitor && newSectionId !== 'info-section') {
-            alert('Apenas a seção "Info Empresa" está disponível no Modo Visitante.');
+        if (currentUser && currentUser.isVisitor && newSectionId !== 'info-section' && newSectionId !== 'drones-visitor-section') {
+            alert('Apenas as seções "Drones" e "Info Empresa" estão disponíveis no Modo Visitante.');
             return;
         }
-        if (currentUser && currentUser.type === 'temporary' && !['info-section', 'products-section', 'calculator-section'].includes(newSectionId)) {
+        if (currentUser && currentUser.type === 'temporary' && !['products-section', 'calculator-section', 'info-section'].includes(newSectionId)) {
             alert('Esta seção não está disponível para usuários temporários.');
             return;
         }
@@ -1002,6 +1111,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fecha o menu lateral no mobile ao selecionar uma opção
         if (window.innerWidth <= 768) {
             closeMobileNav();
+        }
+
+        // Renderiza a lista de drones novamente se a seção for "Drones"
+        if (newSectionId === 'drones-visitor-section') {
+            renderDroneVisitorList();
         }
     }
 
@@ -1051,13 +1165,6 @@ document.addEventListener('DOMContentLoaded', () => {
             item.querySelector('.delete-btn').addEventListener('click', () => deleteTempUser(username));
             tempUserListContainer.appendChild(item);
         });
-    }
-
-    function deleteTempUser(username) {
-        if (confirm(`Tem a certeza que deseja excluir o usuário temporário "${username}"?`)) {
-            delete USERS[username];
-            renderTempUserList();
-        }
     }
 
     function openEditTempUserModal(username) {
@@ -1116,7 +1223,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const salePrice = product.salePrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
         const message = `Olá! 👋\n\nEstou a enviar os detalhes sobre o *${product.name}* que conversámos. É um equipamento fantástico! 🚀\n\n*Especificações Principais:*\n${product.spec}\n\n*Valor de Venda:* ${salePrice}\n\nQualquer dúvida, estou à disposição!\n- Equipa Galvão Drones`;
         const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/556236360668?text=${encodedMessage}`; // Número fixo para o WhatsApp
+        // Sem número fixo para permitir ao usuário escolher o contato
+        const whatsappUrl = `https://wa.me/?text=${encodedMessage}`; 
         window.open(whatsappUrl, '_blank');
     }
 
@@ -1135,11 +1243,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const customerQuestion = document.getElementById('customer-question').value;
              if (customerQuestion && customerQuestion.trim() !== '') {
                 const title = "Sugestão de Resposta para Cliente";
-                const prompt = `Aja como um especialista de suporte ao cliente da Galvão Drones. Um cliente fez a seguinte pergunta sobre o produto "${product.name}":\n\n"${customerQuestion}"\n\nCom base nas especificações do produto abaixo, forneça a melhor e mais completa resposta possível para o cliente. Seja cordial, técnico e preciso.\n\nEspecificações:\n${product.spec}`;
+                // A IA agora se chama R2D2 e a prompt é mais direta
+                const prompt = `R2D2: Responda de forma direta e clara (máximo 3 frases) à seguinte dúvida do cliente, considerando estas especificações do produto: "${product.spec}". Dúvida do cliente: "${customerQuestion}"`;
                 callGeminiAPI(prompt, title);
             }
         });
     }
+
+    // Função para o botão "Precisa de ajuda com esse produto?" no modo visitante
+    function handleVisitorProductHelp(productName, productSpec) {
+        modalTitle.textContent = `Ajuda sobre: ${productName}`;
+        modalBody.innerHTML = `
+            <div class="input-group">
+                <label for="visitor-product-question">Qual sua dúvida sobre o ${productName}?</label>
+                <textarea id="visitor-product-question" rows="4"></textarea>
+            </div>
+            <button id="ask-gemini-visitor-product-button" class="action-button">Obter Ajuda da IA</button>
+        `;
+        openModal();
+
+        document.getElementById('ask-gemini-visitor-product-button').addEventListener('click', () => {
+            const visitorQuestion = document.getElementById('visitor-product-question').value;
+            if (visitorQuestion && visitorQuestion.trim() !== '') {
+                const title = "Resposta da Galvão Drones";
+                callGeminiAPI(visitorQuestion, title, true, productSpec); // true para isProductHelp
+            }
+        });
+    }
+
 
     function showSuppliers() {
         const code = prompt("Para aceder a esta área, digite o código de acesso administrativo:");
@@ -1177,6 +1308,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = e.target;
         const productCard = target.closest('.product-card');
 
+        // Lógica para o modo visitante (seção Drones)
+        if (currentUser && currentUser.isVisitor && target.classList.contains('help-product-visitor-btn')) {
+            const productName = target.dataset.productName;
+            const productSpec = target.dataset.productSpec;
+            handleVisitorProductHelp(productName, productSpec);
+            return; // Impede que o clique continue para a lógica de produtos normais
+        }
+
+
         // Bloqueia ações de produto para visitantes
         if (currentUser && currentUser.isVisitor) {
             return; 
@@ -1189,14 +1329,17 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (target.classList.contains('desc-button')) {
                 const title = `Descrição para: ${product.name}`;
-                const prompt = `Aja como um especialista em marketing. Crie uma descrição de venda curta, apelativa e amigável para um cliente, baseada no seguinte produto. Foque nos benefícios e use uma linguagem que gere interesse. Não inclua o preço.\n\nProduto: ${product.name}\nEspecificações: ${product.spec}`;
+                const prompt = `R2D2: Gere uma descrição de venda curta e apelativa para o produto "${product.name}", focando nos benefícios e usando as especificações: ${product.spec}. Não inclua o preço.`;
                 callGeminiAPI(prompt, title);
             } else if (target.classList.contains('args-button')) {
                 const title = `Argumentos para: ${product.name}`;
-                const prompt = `Aja como um coach de vendas. Liste 3 a 4 argumentos de venda fortes e concisos para o seguinte produto, em formato de lista (bullet points). Para cada argumento, explique brevemente por que ele é importante para o cliente.\n\nProduto: ${product.name}\nEspecificações: ${product.spec}`;
+                const prompt = `R2D2: Liste 3 a 4 argumentos de venda concisos para o produto "${product.name}", explicando brevemente por que cada um é importante para o cliente, com base nas especificações: ${product.spec}.`;
                 callGeminiAPI(prompt, title);
             } else if (target.classList.contains('whatsapp-button')) {
-                handleWhatsAppShare(product);
+                // WhatsApp para equipe interna: sem número fixo, permite selecionar contato
+                const message = `Olá! 👋\n\nEstou a enviar os detalhes sobre o *${product.name}* que conversámos. É um equipamento fantástico! 🚀\n\n*Especificações Principais:*\n${product.spec}\n\n*Valor de Venda:* ${product.salePrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\n\nQualquer dúvida, estou à disposição!\n- Equipa Galvão Drones`;
+                const encodedMessage = encodeURIComponent(message);
+                window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
             } else if (target.classList.contains('help-button')) {
                 handleCustomerHelp(product);
             } else if (target.classList.contains('calculate-product-btn')) {
@@ -1242,8 +1385,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     navButtons.forEach(button => button.addEventListener('click', () => {
-        // Se for modo visitante, só permite clicar em "Info Empresa"
-        if (currentUser && currentUser.isVisitor && button.dataset.section !== 'info-section') {
+        // Se for modo visitante, só permite clicar em "Info Empresa" ou "Drones"
+        if (currentUser && currentUser.isVisitor && button.dataset.section !== 'info-section' && button.dataset.section !== 'drones-visitor-section') {
             return;
         }
         switchTab(button.dataset.section);
@@ -1252,6 +1395,7 @@ document.addEventListener('DOMContentLoaded', () => {
     closeModalButton.addEventListener('click', closeModal);
     window.addEventListener('click', (event) => { if (event.target == mainModal) { closeModal(); } });
     productSearchInput.addEventListener('input', (e) => renderProducts(e.target.value));
+    droneVisitorSearchInput.addEventListener('input', (e) => renderDroneVisitorList(e.target.value)); // Evento para pesquisa de drones no modo visitante
     createTempUserForm.addEventListener('submit', createTemporaryUser);
     mainContent.addEventListener('scroll', handleScroll);
     scrollToTopButton.addEventListener('click', scrollTop);
