@@ -66,14 +66,19 @@
             transition: opacity 0.5s ease;
             margin: auto; /* Garante centralização */
         }
-        #login-logo {
-            max-width: 250px;
-            margin-bottom: 30px;
-        }
-        #login-screen h1 {
+        #company-title {
             color: var(--secondary-color);
-            margin-bottom: 25px;
-            font-size: 1.5em; /* Ajuste para não competir com o logo */
+            margin-bottom: 10px;
+            font-size: 2.2em;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        #portal-subtitle {
+             color: #555;
+             margin-top: 0;
+             margin-bottom: 40px;
+             font-size: 1.2em;
+             font-weight: 400;
         }
         .input-group {
             margin-bottom: 20px;
@@ -85,13 +90,14 @@
             font-weight: 500;
             color: #555;
         }
-        .input-group input, .input-group select {
+        .input-group input, .input-group select, .input-group textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
             font-size: 16px;
+            font-family: 'Roboto', sans-serif;
         }
         .action-button {
             width: 100%;
@@ -275,8 +281,8 @@
     <div class="container">
         <!-- TELA DE LOGIN -->
         <div id="login-screen">
-            <img id="login-logo" src="https://i.imgur.com/GZAB93C.png" alt="Logo Galvão Drones" onerror="this.onerror=null;this.src='https://placehold.co/250x80/0E5847/FFFFFF?text=Galvão+Drones&font=roboto';">
-            <h1>Portal Interno</h1>
+            <h1 id="company-title">Galvão Drones</h1>
+            <h2 id="portal-subtitle">Portal Interno</h2>
             <div class="input-group"><label for="username">Usuário</label><input type="text" id="username" placeholder="Digite seu nome"></div>
             <div class="input-group"><label for="password">Senha</label><input type="password" id="password" placeholder="Sua senha"></div>
             <button id="login-button" class="action-button">Entrar</button>
@@ -427,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 105, name: 'Bateria Mini 3 Pro Plus', spec: '🔋 Bateria DJI Plus Mini 3 / Mini 4 Pro (Alta Capacidade)\n⏱️ Até 45 minutos por carga\n⚡ Ideal para voos longos e gravações contínuas\n🔋 Compatível com DJI Fly – modo “max performance”\n📦 Leve e resistente', salePrice: 1190.00, costPrice: 825.00, supplier: 'Arroba Celulares' },
         { id: 15, name: 'Bateria DJI Air 3S / Air 3', spec: '🔋 Bateria DJI Air 3S / Air 3\n⏱️ Até 45 minutos por carga\n⚡ Células de alta densidade e vida útil prolongada\n📦 Compatível com modo de priorização de carga via hub\n🔋 Recarga otimizada via carregador 100W', salePrice: 1890, costPrice: 1261.94, supplier: 'DJI Grupo Multi' },
         { id: 82, name: 'Bateria DJI Mini 2 / SE / 2 SE / 4K', spec: '🔋 Bateria DJI Mini 2 / SE / 2 SE / 4K\n⏱️ Entre 22 e 31 minutos de voo (varia conforme o modelo)\n⚡ Bateria compacta, estável e eficiente\n📦 Ideal para pilotos iniciantes ou voos recreativos\n🔋 Recarregável via hub Mini 2', salePrice: 649.00, costPrice: 433.38, supplier: 'Arroba Celulares' },
-        { id: 83, name: 'Bateria TB51 DJI Inspire 3', spec: '� Bateria TB51 (Inspire 3)\n⏱️ Performance profissional com tempo estendido de voo\n📦 Sistema avançado de aquecimento automático\n⚡ Compatível com estação de carga DJI BS51\n🔋 Controle inteligente de ciclo e temperatura', salePrice: 3999.00, costPrice: 2669.76, supplier: 'GoHobby Distribuidora de VANT LTDA' },
+        { id: 83, name: 'Bateria TB51 DJI Inspire 3', spec: '🔋 Bateria TB51 (Inspire 3)\n⏱️ Performance profissional com tempo estendido de voo\n📦 Sistema avançado de aquecimento automático\n⚡ Compatível com estação de carga DJI BS51\n🔋 Controle inteligente de ciclo e temperatura', salePrice: 3999.00, costPrice: 2669.76, supplier: 'GoHobby Distribuidora de VANT LTDA' },
         { id: 81, name: 'Bateria de alta capacidade DJI RS BG70', spec: '🔋 Bateria DJI RS BG70 (para RS 4 Pro)\n⏱️ Até 12 horas de autonomia contínua\n⚙️ Fixação direta no estabilizador RS 4 Pro\n📦 Indicador de status em tempo real\n🔋 Recarga via conector magnético de alta voltagem', salePrice: 1490.00, costPrice: 996.07, supplier: 'GoHobby Distribuidora de VANT LTDA' },
         { id: 79, name: 'Protetores de Hélices DJI Neo', spec: '🛡️ Protetores de Hélice DJI Neo\n⚙️ Leves, seguros e ideais para indoor', salePrice: 119.00, costPrice: 100.00, supplier: 'Arroba Celulares' },
         { id: 78, name: 'Protetores de Hélices DJI Mini 3', spec: '🛡️ Protetores de Hélice DJI Mini 3\n⚙️ Encaixe rápido, protege hélices em espaços apertados', salePrice: 379.00, costPrice: 285.00, supplier: 'Arroba Celulares' },
@@ -683,17 +689,161 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- GESTÃO DE USUÁRIOS TEMPORÁRIOS ---
-    function createTemporaryUser(event) { /* ... (código existente sem alterações) ... */ }
-    function renderTempUserList() { /* ... (código existente sem alterações) ... */ }
-    function deleteTempUser(username) { /* ... (código existente sem alterações) ... */ }
-    function openEditTempUserModal(username) { /* ... (código existente sem alterações) ... */ }
-    function getRemainingTime(expiry) { /* ... (código existente sem alterações) ... */ return { hours:0, minutes:0, seconds:0 }; }
-    function showTemporaryUserWarning() { /* ... (código existente sem alterações) ... */ }
+    function createTemporaryUser(event) {
+        event.preventDefault();
+        const username = document.getElementById('temp-username').value;
+        const password = document.getElementById('temp-password').value;
+        const durationHours = parseInt(document.getElementById('temp-duration').value);
+        
+        if (USERS[username]) {
+            tempUserFeedback.textContent = 'Erro: Nome de usuário já existe.'; tempUserFeedback.style.color = 'red'; return;
+        }
+
+        const expiresAt = Date.now() + durationHours * 60 * 60 * 1000;
+        USERS[username] = { password, role: 'seller', type: 'temporary', expiresAt };
+
+        tempUserFeedback.textContent = `Usuário "${username}" criado com sucesso!`; tempUserFeedback.style.color = 'green';
+        createTempUserForm.reset(); renderTempUserList();
+        setTimeout(() => tempUserFeedback.textContent = '', 5000);
+    }
+    
+    function renderTempUserList() {
+        tempUserListContainer.innerHTML = '';
+        const tempUsers = Object.entries(USERS).filter(([_, user]) => user.type === 'temporary');
+
+        if(tempUsers.length === 0) {
+            tempUserListContainer.innerHTML = '<p>Nenhum usuário temporário criado.</p>';
+            return;
+        }
+
+        tempUsers.forEach(([username, user]) => {
+            const item = document.createElement('div');
+            item.className = 'temp-user-item';
+            const expires = new Date(user.expiresAt).toLocaleString('pt-BR');
+            item.innerHTML = `
+                <div class="user-info">
+                    <p><strong>${username}</strong></p>
+                    <p><small>Expira em: ${expires}</small></p>
+                </div>
+                <div class="user-actions">
+                    <button class="edit-btn" data-username="${username}">Editar</button>
+                    <button class="delete-btn" data-username="${username}">Excluir</button>
+                </div>
+            `;
+            item.querySelector('.edit-btn').addEventListener('click', () => openEditTempUserModal(username));
+            item.querySelector('.delete-btn').addEventListener('click', () => deleteTempUser(username));
+            tempUserListContainer.appendChild(item);
+        });
+    }
+
+    function deleteTempUser(username) {
+        if (confirm(`Tem a certeza que deseja excluir o usuário temporário "${username}"?`)) {
+            delete USERS[username];
+            renderTempUserList();
+        }
+    }
+
+    function openEditTempUserModal(username) {
+        const user = USERS[username];
+        modalTitle.textContent = `Editar Usuário: ${username}`;
+        modalBody.innerHTML = `
+            <form id="edit-temp-user-form">
+                <div class="input-group"><label for="edit-temp-password">Nova Senha</label><input type="text" id="edit-temp-password" value="${user.password}" required></div>
+                <div class="input-group"><label for="edit-temp-duration">Estender Duração (a partir de agora)</label><select id="edit-temp-duration">
+                    <option value="1">1 Hora</option><option value="8">8 Horas</option><option value="24">24 Horas</option><option value="72">72 Horas</option>
+                </select></div>
+                <button type="submit" class="action-button">Salvar Alterações</button>
+            </form>
+        `;
+        openModal();
+        document.getElementById('edit-temp-user-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newPassword = document.getElementById('edit-temp-password').value;
+            const newDuration = parseInt(document.getElementById('edit-temp-duration').value);
+            USERS[username].password = newPassword;
+            USERS[username].expiresAt = Date.now() + newDuration * 60 * 60 * 1000;
+            closeModal();
+            renderTempUserList();
+        });
+    }
+
+    function getRemainingTime(expiry) {
+        const total = expiry - Date.now();
+        const seconds = Math.floor((total / 1000) % 60);
+        const minutes = Math.floor((total / 1000 / 60) % 60);
+        const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+        return { hours, minutes, seconds };
+    }
+    
+    function showTemporaryUserWarning() {
+        clearInterval(tempUserInterval);
+        function updateWarning() {
+            const { hours, minutes, seconds } = getRemainingTime(currentUser.expiresAt);
+            if (hours < 0 || minutes < 0 || seconds < 0) {
+                modalBody.innerHTML = '<h2>Acesso Expirado</h2><p>O seu tempo de acesso terminou. A sessão será encerrada.</p>';
+                setTimeout(handleLogout, 3000);
+                clearInterval(tempUserInterval);
+            } else {
+                modalBody.innerHTML = `<h2>Acesso Temporário</h2><p>Esta é uma conta de convidado. O seu acesso irá expirar em:</p>
+                <h3 style="text-align:center;">${hours}h ${minutes}m ${seconds}s</h3>`;
+            }
+        }
+        updateWarning();
+        modalTitle.textContent = "Aviso";
+        openModal();
+        tempUserInterval = setInterval(updateWarning, 1000);
+    }
     
     // --- FUNÇÕES DE UTILIDADE E NOVAS FUNCIONALIDADES ---
-    function handleWhatsAppShare(product) { /* ... (código existente sem alterações) ... */ }
-    function handleCustomerHelp(product) { /* ... (código existente sem alterações) ... */ }
-    function showSuppliers() { /* ... (código existente sem alterações) ... */ return false;}
+    function handleWhatsAppShare(product) {
+        const salePrice = product.salePrice.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+        const message = `Olá! 👋\n\nEstou a enviar os detalhes sobre o *${product.name}* que conversámos. É um equipamento fantástico! 🚀\n\n*Especificações Principais:*\n${product.spec}\n\n*Valor de Venda:* ${salePrice}\n\nQualquer dúvida, estou à disposição!\n- Equipa Galvão Drones`;
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+        window.open(whatsappUrl, '_blank');
+    }
+
+    function handleCustomerHelp(product) {
+        modalTitle.textContent = `Assistente para: ${product.name}`;
+        modalBody.innerHTML = `
+            <div class="input-group">
+                <label for="customer-question">Copie e cole a pergunta do cliente abaixo:</label>
+                <textarea id="customer-question" rows="4"></textarea>
+            </div>
+            <button id="ask-gemini-button" class="action-button">Perguntar à IA</button>
+        `;
+        openModal();
+
+        document.getElementById('ask-gemini-button').addEventListener('click', () => {
+            const customerQuestion = document.getElementById('customer-question').value;
+             if (customerQuestion && customerQuestion.trim() !== '') {
+                const title = "Sugestão de Resposta para Cliente";
+                const prompt = `Aja como um especialista de suporte ao cliente da Galvão Drones. Um cliente fez a seguinte pergunta sobre o produto "${product.name}":\n\n"${customerQuestion}"\n\nCom base nas especificações do produto abaixo, forneça a melhor e mais completa resposta possível para o cliente. Seja cordial, técnico e preciso.\n\nEspecificações:\n${product.spec}`;
+                callGeminiAPI(prompt, title);
+            }
+        });
+    }
+
+    function showSuppliers() {
+        const code = prompt("Para aceder a esta área, digite o código de acesso administrativo:");
+        if (code === CONFIDENTIAL_CODE) {
+            supplierList.innerHTML = '';
+            SUPPLIERS.forEach(supplier => {
+                const supplierCard = document.createElement('div');
+                supplierCard.className = 'card supplier-card';
+                supplierCard.innerHTML = `
+                    <h3>${supplier.name}</h3>
+                    <p><strong>Detalhes:</strong> ${supplier.details}</p>
+                    <div><strong>Pagamento:</strong><br>${supplier.payment.replace(/\n/g, '<br>')}</div>
+                    <p><strong>Produtos Principais:</strong> ${supplier.products}</p>
+                `;
+                supplierList.appendChild(supplierCard);
+            });
+            return true;
+        } else if (code !== null && code !== "") { alert('Código incorreto!'); return false; }
+        return false;
+    }
+
     function openModal() { mainModal.style.display = 'block'; }
     function closeModal() { mainModal.style.display = 'none'; modalBody.innerHTML = ''; clearInterval(tempUserInterval); }
     function handleScroll() { scrollToTopButton.style.display = mainContent.scrollTop > 200 ? "block" : "none"; }
@@ -769,4 +919,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
-�
