@@ -1185,17 +1185,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const numInstallments = productCard.querySelector('.parcelas-select').value;
                 
                 let discountPercentage = 0;
-                // Se for administrador e o método for à vista, tenta pegar o desconto
-                if (currentUser.role === 'admin' && paymentMethod === 'vista') {
+                const discountOptionDiv = productCard.querySelector(`#discount-option-${product.id}`);
+
+                // Se for administrador e o método for à vista, tenta pegar o desconto e exibe o campo
+                if (currentUser.role === 'admin' && paymentMethod === 'vista' && discountOptionDiv) {
                     const discountInput = productCard.querySelector(`#discount-percentage-${product.id}`);
-                    const discountOptionDiv = productCard.querySelector(`#discount-option-${product.id}`);
-                    
-                    if (discountInput && discountOptionDiv) {
+                    if (discountInput) {
                         discountPercentage = parseFloat(discountInput.value);
-                        // Torna a opção de desconto visível após o primeiro cálculo à vista
-                        discountOptionDiv.classList.remove('hidden');
                     }
+                    discountOptionDiv.classList.remove('hidden'); // Torna visível
+                } else if (discountOptionDiv) {
+                    discountOptionDiv.classList.add('hidden'); // Esconde se não for admin ou não for à vista
                 }
+
 
                 resultContainer.innerHTML = calculate(product.salePrice, numInstallments, paymentMethod, discountPercentage);
             }
@@ -1210,9 +1212,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             installmentsDiv.classList.toggle('hidden', e.target.value !== 'parcelado');
             
-            // Esconde a opção de desconto se o método não for "à vista" ou se não for admin.
-            // A exibição inicial será feita pelo clique no botão calcular.
-            if (discountOptionDiv && (currentUser.role !== 'admin' || e.target.value !== 'vista')) {
+            // Aqui, a lógica de esconder a caixa de desconto é mais simples:
+            // Se o método de pagamento não for "à vista" OU não for um admin, esconde a caixa de desconto.
+            // A exibição ao clicar no botão "Calcular" no modo "À vista" (para admin) já foi tratada acima.
+            if (discountOptionDiv && (e.target.value !== 'vista' || currentUser.role !== 'admin')) {
                 discountOptionDiv.classList.add('hidden');
             }
         }
