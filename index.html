@@ -499,12 +499,12 @@
                         <button id="nav-toggle-btn-close" class="nav-toggle-btn">✕</button>
                         <span>Menu</span>
                     </div>
-                    <button class="nav-button" data-section="products-section" style="order: 1;">Produtos</button>
-                    <button class="nav-button" data-section="calculator-section" style="order: 2;">Calculadora</button>
-                    <button class="nav-button" data-section="suppliers-section" style="order: 3;">Fornecedores</button>
-                    <button class="nav-button" data-section="settings-section" style="order: 4;">Configurações</button>
-                    <button class="nav-button" data-section="drones-visitor-section" style="order: 5;">Drones</button>
-                    <button class="nav-button" data-section="info-section" style="order: 6;">Info Empresa</button>
+                    <button class="nav-button" data-section="products-section" id="products-nav-button" style="order: 1;">Produtos</button>
+                    <button class="nav-button" data-section="calculator-section" id="calculator-nav-button" style="order: 2;">Calculadora</button>
+                    <button class="nav-button" data-section="suppliers-section" id="suppliers-nav-button" style="order: 3;">Fornecedores</button>
+                    <button class="nav-button" data-section="settings-section" id="settings-nav-button" style="order: 4;">Configurações</button>
+                    <button class="nav-button" data-section="drones-visitor-section" id="drones-nav-button" style="order: 5;">Drones</button>
+                    <button class="nav-button" data-section="info-section" id="info-empresa-nav-button" style="order: 6;">Info Empresa</button>
                 </nav>
                 <main id="main-content">
                     <section id="products-section" class="content-section">
@@ -724,10 +724,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const navButtons = document.querySelectorAll('.nav-button');
     const contentSections = document.querySelectorAll('.content-section');
+    const productsNavButton = document.getElementById('products-nav-button'); // Adicionado
+    const calculatorNavButton = document.getElementById('calculator-nav-button'); // Adicionado
     const suppliersNavButton = document.getElementById('suppliers-nav-button');
     const settingsNavButton = document.getElementById('settings-nav-button');
-    const dronesVisitorNavButton = document.getElementById('drones-visitor-nav-button'); // Novo botão Drones para visitante
-    const infoEmpresaNavButton = document.querySelector('[data-section="info-section"]'); // Seleciona o botão Info Empresa
+    const dronesNavButton = document.getElementById('drones-nav-button'); // Renomeado para mais clareza para logados
+    const infoEmpresaNavButton = document.getElementById('info-empresa-nav-button'); // Usando ID agora
 
     const productList = document.getElementById('product-list');
     const supplierList = document.getElementById('supplier-list');
@@ -859,47 +861,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const isAdmin = currentUser.role === 'admin';
+        const isSeller = currentUser.role === 'seller'; // Novo: Para identificar usuários de venda
         const isTempUser = currentUser.type === 'temporary';
         const isVisitor = currentUser.isVisitor;
         
         // Esconde ou mostra e reordena botões da navegação lateral conforme o tipo de usuário
-        const navProduct = document.querySelector('[data-section="products-section"]');
-        const navCalculator = document.querySelector('[data-section="calculator-section"]');
-        const navSuppliers = document.querySelector('[data-section="suppliers-section"]');
-        const navSettings = document.querySelector('[data-section="settings-section"]');
         
-        if (isVisitor) {
-            // Esconde todas as opções de logado
-            navProduct.classList.add('hidden');
-            navCalculator.classList.add('hidden');
-            navSuppliers.classList.add('hidden');
-            navSettings.classList.add('hidden');
-            
-            // Mostra e ordena as opções para visitante
-            dronesVisitorNavButton.classList.remove('hidden'); // Visível apenas para visitante
-            infoEmpresaNavButton.classList.remove('hidden'); // Sempre visível para visitante
+        // Esconde tudo por padrão e depois mostra o que é relevante
+        navButtons.forEach(button => button.classList.add('hidden'));
 
-            dronesVisitorNavButton.style.order = 1; // Drones primeiro
-            infoEmpresaNavButton.style.order = 2; // Info Empresa segundo
+        if (isVisitor) {
+            // Mostra e ordena as opções para visitante
+            dronesNavButton.classList.remove('hidden'); 
+            infoEmpresaNavButton.classList.remove('hidden'); 
+
+            dronesNavButton.style.order = 1; 
+            infoEmpresaNavButton.style.order = 2; 
 
             // Ativa a aba "Drones" por padrão para visitantes
             switchTab('drones-visitor-section'); // Isso também renderizará a lista de drones
-        } else { // Usuários logados (admin, seller, temp)
-            // Mostra todas as opções que devem ser visíveis para logados
-            navProduct.classList.remove('hidden');
-            navCalculator.classList.remove('hidden');
+        } else if (isSeller) { // Usuários de Venda
+            productsNavButton.classList.remove('hidden');
+            calculatorNavButton.classList.remove('hidden');
+            dronesNavButton.classList.remove('hidden');
             infoEmpresaNavButton.classList.remove('hidden');
-            dronesVisitorNavButton.classList.add('hidden'); // Escondido para usuários logados
 
-            // Restaura a ordem padrão para usuários logados
-            navProduct.style.order = 1;
-            navCalculator.style.order = 2;
-            navSuppliers.style.order = 3;
-            navSettings.style.order = 4;
-            infoEmpresaNavButton.style.order = 6; // Info Empresa é a 6ª para logados
+            productsNavButton.style.order = 1;
+            calculatorNavButton.style.order = 2;
+            dronesNavButton.style.order = 3;
+            infoEmpresaNavButton.style.order = 4;
             
-            navSuppliers.classList.toggle('hidden', !isAdmin);
-            navSettings.classList.toggle('hidden', currentUser.username !== 'mikhaell'); 
+            // Ativa a aba "Produtos" por padrão para vendedores
+            switchTab('products-section');
+        } 
+        else { // Usuários Admin (ou outros que talvez existam no futuro)
+            productsNavButton.classList.remove('hidden');
+            calculatorNavButton.classList.remove('hidden');
+            suppliersNavButton.classList.remove('hidden');
+            settingsNavButton.classList.remove('hidden');
+            dronesNavButton.classList.remove('hidden');
+            infoEmpresaNavButton.classList.remove('hidden');
+
+            // Restaura a ordem padrão para usuários logados completos
+            productsNavButton.style.order = 1;
+            calculatorNavButton.style.order = 2;
+            suppliersNavButton.style.order = 3;
+            settingsNavButton.style.order = 4;
+            dronesNavButton.style.order = 5;
+            infoEmpresaNavButton.style.order = 6;
+            
+            // Ativa a aba "Produtos" por padrão para administradores
+            switchTab('products-section');
         }
 
         // Configura o cabeçalho para o modo visitante/logado
@@ -947,11 +959,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (currentUser.type === 'temporary') {
-            productsToShow = PRODUCTS.filter(p => p.name.toLowerCase().includes(lowerCaseSearchTerm) || p.spec.toLowerCase().includes(lowerCaseSearchTerm));
-        } else { // Admin ou vendedor permanente
-            productsToShow = PRODUCTS.filter(p => p.name.toLowerCase().includes(lowerCaseSearchTerm) || p.spec.toLowerCase().includes(lowerCaseSearchTerm));
-        }
+        // A filtragem por tipo de usuário para `productsToShow` não é mais necessária aqui
+        // pois a navegação já garante que esta função só será chamada para usuários logados
+        // e, para vendedores e admins, todos os produtos são visíveis.
+        productsToShow = PRODUCTS.filter(p => 
+            p.name.toLowerCase().includes(lowerCaseSearchTerm) || 
+            p.spec.toLowerCase().includes(lowerCaseSearchTerm)
+        );
 
         if (productsToShow.length === 0) {
             productList.innerHTML = '<p>Nenhum produto encontrado.</p>';
@@ -1013,11 +1027,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Nova função para renderizar produtos para VISITANTES ---
+    // --- Nova função para renderizar produtos para VISITANTES (agora chamada "Drones") ---
     function renderDroneVisitorList(searchTerm = '') {
         droneVisitorList.innerHTML = '';
         const lowerCaseSearchTerm = searchTerm.toLowerCase();
-        const dronesToShow = PRODUCTS.filter(p => p.name.toLowerCase().includes(lowerCaseSearchTerm) || p.spec.toLowerCase().includes(lowerCaseSearchTerm));
+        // Filtra apenas os produtos que são "drones" - você pode precisar de uma propriedade 'category' nos seus produtos reais
+        const dronesToShow = PRODUCTS.filter(p => 
+            (p.name.toLowerCase().includes("dji") || p.name.toLowerCase().includes("drone") || p.name.toLowerCase().includes("mavic") || p.name.toLowerCase().includes("avata") || p.name.toLowerCase().includes("matrice") || p.name.toLowerCase().includes("skyfend") || p.name.toLowerCase().includes("sentinel") || p.name.toLowerCase().includes("neo")) &&
+            (p.name.toLowerCase().includes(lowerCaseSearchTerm) || p.spec.toLowerCase().includes(lowerCaseSearchTerm))
+        );
+
 
         if (dronesToShow.length === 0) {
             droneVisitorList.innerHTML = '<p>Nenhum drone encontrado com esse termo.</p>';
@@ -1088,12 +1107,17 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Apenas as seções "Drones" e "Info Empresa" estão disponíveis no Modo Visitante.');
             return;
         }
-        if (currentUser && currentUser.type === 'temporary' && !['products-section', 'calculator-section', 'info-section'].includes(newSectionId)) {
+        // MODIFICAÇÃO: Bloqueio para usuários de venda (seller) e temporários
+        if (currentUser && currentUser.role === 'seller' && (newSectionId === 'suppliers-section' || newSectionId === 'settings-section')) {
+            alert('Esta seção não está disponível para o seu perfil.');
+            return;
+        }
+        if (currentUser && currentUser.type === 'temporary' && !['products-section', 'calculator-section', 'drones-visitor-section', 'info-section'].includes(newSectionId)) {
             alert('Esta seção não está disponível para usuários temporários.');
             return;
         }
         
-        if (newSectionId === 'suppliers-section' && (!currentUser || !showSuppliers())) { 
+        if (newSectionId === 'suppliers-section' && (!currentUser || currentUser.role !== 'admin')) { 
              document.querySelector(`.nav-button[data-section="${activeSectionId}"]`).classList.add('active');
             return; 
         }
@@ -1105,7 +1129,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         contentSections.forEach(s => s.classList.remove('active')); navButtons.forEach(b => b.classList.remove('active'));
         document.getElementById(newSectionId).classList.add('active');
-        document.querySelector(`.nav-button[data-section="${newSectionId}"]`).classList.add('active');
+        // O ID do botão agora é usado para garantir que o correto seja ativado
+        const targetButtonId = newSectionId === 'drones-visitor-section' ? 'drones-nav-button' : (newSectionId === 'info-section' ? 'info-empresa-nav-button' : newSectionId.replace('-section', '-nav-button'));
+        document.getElementById(targetButtonId).classList.add('active');
         activeSectionId = newSectionId;
 
         // Fecha o menu lateral no mobile ao selecionar uma opção
@@ -1116,6 +1142,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Renderiza a lista de drones novamente se a seção for "Drones"
         if (newSectionId === 'drones-visitor-section') {
             renderDroneVisitorList();
+        }
+        // Se for a seção de produtos, renderiza os produtos para usuários logados
+        else if (newSectionId === 'products-section') {
+            renderProducts();
         }
     }
 
@@ -1190,6 +1220,17 @@ document.addEventListener('DOMContentLoaded', () => {
             renderTempUserList();
         });
     }
+    
+    function deleteTempUser(username) {
+        if (confirm(`Tem certeza que deseja excluir o usuário temporário "${username}"?`)) {
+            delete USERS[username];
+            renderTempUserList();
+            if (currentUser && currentUser.username === username) {
+                handleLogout(); // Se o usuário logado for o que está sendo excluído, desloga
+                alert('Sua sessão foi encerrada, pois o usuário temporário foi excluído.');
+            }
+        }
+    }
 
     function getRemainingTime(expiry) {
         const total = expiry - Date.now();
@@ -1242,15 +1283,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('ask-gemini-button').addEventListener('click', () => {
             const customerQuestion = document.getElementById('customer-question').value;
              if (customerQuestion && customerQuestion.trim() !== '') {
-                const title = "Sugestão de Resposta para Cliente";
-                // A IA agora se chama R2D2 e a prompt é mais direta
-                const prompt = `R2D2: Responda de forma direta e clara (máximo 3 frases) à seguinte dúvida do cliente, considerando estas especificações do produto: "${product.spec}". Dúvida do cliente: "${customerQuestion}"`;
-                callGeminiAPI(prompt, title);
-            }
+                 const title = "Sugestão de Resposta para Cliente";
+                 // A IA agora se chama R2D2 e a prompt é mais direta
+                 const prompt = `R2D2: Responda de forma direta e clara (máximo 3 frases) à seguinte dúvida do cliente, considerando estas especificações do produto: "${product.spec}". Dúvida do cliente: "${customerQuestion}"`;
+                 callGeminiAPI(prompt, title);
+             }
         });
     }
 
-    // Função para o botão "Precisa de ajuda com esse produto?" no modo visitante
+    // Função para o botão "Precisa de ajuda com esse produto?" no modo visitante (agora para Drones)
     function handleVisitorProductHelp(productName, productSpec) {
         modalTitle.textContent = `Ajuda sobre: ${productName}`;
         modalBody.innerHTML = `
@@ -1317,7 +1358,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
 
-        // Bloqueia ações de produto para visitantes
+        // Bloqueia ações de produto para visitantes (já coberto pela `if (currentUser.isVisitor)` acima)
+        // Se `currentUser.role === 'seller'`, as ações normais devem ser permitidas.
         if (currentUser && currentUser.isVisitor) {
             return; 
         }
@@ -1387,6 +1429,10 @@ document.addEventListener('DOMContentLoaded', () => {
     navButtons.forEach(button => button.addEventListener('click', () => {
         // Se for modo visitante, só permite clicar em "Info Empresa" ou "Drones"
         if (currentUser && currentUser.isVisitor && button.dataset.section !== 'info-section' && button.dataset.section !== 'drones-visitor-section') {
+            return;
+        }
+        // MODIFICAÇÃO: Bloqueio para usuários de venda (seller)
+        if (currentUser && currentUser.role === 'seller' && (button.dataset.section === 'suppliers-section' || button.dataset.section === 'settings-section')) {
             return;
         }
         switchTab(button.dataset.section);
