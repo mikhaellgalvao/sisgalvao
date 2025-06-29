@@ -1449,8 +1449,8 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
             if (!response.ok) {
-                   const errorData = await response.json();
-                   throw new Error(errorData.error.message || `Erro na API: ${response.statusText}`);
+                    const errorData = await response.json();
+                    throw new Error(errorData.error.message || `Erro na API: ${response.statusText}`);
             }
             const result = await response.json();
             if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts) {
@@ -1545,14 +1545,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const isMikhaell = currentUser.username === 'mikhaell';
         const isTempUser = currentUser.type === 'temporary';
         
+        // Format the username with the first letter capitalized
+        const formattedUsername = currentUser.username.charAt(0).toUpperCase() + currentUser.username.slice(1);
+        
+        // Determine the role display
+        let roleDisplay = '';
+        if (currentUser.role === 'admin') {
+            roleDisplay = '(Administrador)';
+        } else if (currentUser.role === 'seller') {
+            roleDisplay = '(Vendedor)';
+        }
+
+        // Set the welcome message
+        welcomeMessage.textContent = `Bem-vindo(a), ${formattedUsername}! ${roleDisplay}`;
+        
         // Limpa a visibilidade de todos os botões de navegação e do submenu
         navButtons.forEach(button => button.classList.add('hidden'));
         settingsSubNav.style.display = 'none'; 
         settingsOptionsGrid.innerHTML = ''; // Limpa as opções da grade ao reconfigurar
 
-        // Mensagem de boas-vindas
-        welcomeMessage.textContent = `Bem-vindo(a), ${currentUser.username}!`;
-        
         // Exibe o botão de logout para todos os usuários logados (não visitantes)
         if (!isVisitor) {
             logoutButton.style.display = 'block'; 
@@ -1903,7 +1914,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderSettingsOptionsGrid(); 
         }
         if (newSectionId === 'suppliers-section') {
-              showSuppliers(); 
+             showSuppliers(); 
         }
 
 
@@ -2042,7 +2053,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(tempUserInterval);
             } else {
                 modalBody.innerHTML = `<h2>Acesso Temporário</h2><p>Esta é uma conta de convidado. O seu acesso irá expirar em:</p>
-                <h3 style="text-align:center;">${hours}h ${minutes}m ${seconds}s</h3>`;
+                <h3 style="text-align:center;">${hours}h ${minutes}s</h3>`;
             }
         }
         updateWarning();
@@ -2132,7 +2143,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 listItem.style.borderBottom = '1px solid #eee';
                 listItem.style.cursor = 'pointer';
                 listItem.style.backgroundColor = 'white'; 
-                listItem.style.transition = 'background-color 0.2s';
                 
                 listItem.innerHTML = `<strong>ID: ${product.id}</strong> - ${product.name}`; 
 
