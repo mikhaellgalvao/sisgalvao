@@ -950,13 +950,26 @@
                 { name: "Equipe Marketing", username: "market", password: "123", phone: "6291234567", email: "marketing@galvaodrones.com.br", role: "Market" },
                 { name: "Acesso Consulta", username: "consultas", password: "123", phone: "6291234567", email: "consultas@galvaodrones.com.br", role: "Consultas" }
             ];
-            // Lista de fornecedores de simulação ATUALIZADA com Gran Safra
+           // INÍCIO DA ATUALIZAÇÃO DA LISTA DE FORNECEDORES
             let suppliers = [
-                { name: "GoHobby Distribuidora de VANT LTDA", address: "", details: "A GoHobby é importadora exclusiva de drones profissionais e tecnologias anti-drone no Brasil.", phone: "62999999999", paymentMethods: ["Cartão"], productTypes: ["Equipamentos", "Peças", "Acessórios"], productLines: ["Consumer", "Enterprise", "Agriculture"] },
-                { name: "DroneTech Suprimentos", address: "Av. Inovação, 123", details: "Fornecedor de componentes eletrônicos e peças de reposição para drones.", phone: "62888888888", paymentMethods: ["Pix", "15 dias"], productTypes: ["Peças", "Acessórios"], productLines: [] },
-                { name: "AgroDrone Solutions", address: "Fazenda Boa Vista", details: "Especializado em drones agrícolas e soluções para o campo.", phone: "62777777777", paymentMethods: ["30 dias", "Cartão"], productTypes: ["Equipamentos"], productLines: ["Agriculture"] },
-                { name: "Gran Safra", address: "Rua do Agribusiness, 456", details: "Fornecedor de uma vasta linha de produtos DJI.", phone: "62777777778", paymentMethods: ["Pix", "Cartão", "15 dias"], productTypes: ["Equipamentos", "Peças", "Acessórios"], productLines: ["Consumer", "FPV", "Enterprise", "Acessórios", "Universal"] }
-            ];
+                { 
+                    name: "GOHOBBY FUTURE TECHNOLOGY LTDA", 
+                    address: "AVENIDA MARGINAL PROJETADA N.1652 - GALPÃO 11 SALA 14, FAZENDA TAMBORE, BARUERI - SP - CEP:06460200", 
+                    details: "A GOHOBBY é importadora exclusiva de drones profissionais e tecnologias anti-drone no Brasil. Foco em Enterprise.", 
+                    phone: "11955973434", 
+                    paymentMethods: ["Pix", "Transferência"], 
+                    productTypes: ["Equipamentos", "Acessórios"], 
+                    productLines: ["Enterprise"] 
+                },
+                { 
+                    name: "GranSafra", 
+                    address: "Campinas", 
+                    details: "Foco na linha Consumer DJI.", 
+                    phone: "62981145767", 
+                    paymentMethods: ["Dinheiro", "Pix"], 
+                    productTypes: ["Equipamentos", "Acessórios"], 
+                    productLines: ["Consumer"] 
+                }
             
             // LISTA DE PRODUTOS ATUALIZADA com base nos dados do usuário
             let idCounter = 1000;
