@@ -700,7 +700,7 @@
         </div>
     </div>
 
-    <!-- NOVO MODAL DE PRÉ-VISUALIZAÇÃO E ENVIOS DE ORÇAMENTO -->
+    <!-- NOVO MODAL DE PRÉ-VISUALIZAÇÃO E ENVIO DE ORÇAMENTO -->
     <div id="quote-send-preview-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md relative max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
@@ -940,17 +940,15 @@
             };
 
             let loggedInUser = null;
-            // Usuários de simulação (Atualizado conforme o último input do usuário)
+            // Usuários de simulação
             let users = [
-                { name: "Mikhaell Galvão", username: "mikhaell", password: "mk0639", phone: "62984710639", email: "mikhaell.erik@gmail.com.br", role: "Administrador" },
-                 { name: "Maikhon Galvão", username: "maikhon", password: "0639", phone: "62933001865", email: "maikhonvnc@gmail.com", role: "Administrador" },
-                 { name: "Ryan Rodrigues", username: "ryan", password: "0639", phone: "62920007396", email: "ryanrodriques@gmail.com", role: "Administrador" },
+                { name: "Mikhaell Galvão", username: "mikhaell", password: "mk0639", phone: "62984710639", email: "mikhaell@galvaodrones.com.br", role: "Administrador" },
                 { name: "Equipe Vendas", username: "vendas", password: "123", phone: "6291234567", email: "vendas@galvaodrones.com.br", role: "Vendedor" },
-                 { name: "Rafael", username: "rafael", password: "rf123", phone: "6293344356", email: " ", role: "Vendedor" },
                 { name: "Equipe Marketing", username: "market", password: "123", phone: "6291234567", email: "marketing@galvaodrones.com.br", role: "Market" },
                 { name: "Acesso Consulta", username: "consultas", password: "123", phone: "6291234567", email: "consultas@galvaodrones.com.br", role: "Consultas" }
             ];
-           // INÍCIO DA ATUALIZAÇÃO DA LISTA DE FORNECEDORES
+            
+            // INÍCIO DA ATUALIZAÇÃO DA LISTA DE FORNECEDORES
             let suppliers = [
                 { 
                     name: "GOHOBBY FUTURE TECHNOLOGY LTDA", 
@@ -970,8 +968,10 @@
                     productTypes: ["Equipamentos", "Acessórios"], 
                     productLines: ["Consumer"] 
                 }
+            ];
+            // FIM DA ATUALIZAÇÃO DA LISTA DE FORNECEDORES
             
-            // LISTA DE PRODUTOS ATUALIZADA com base nos dados do usuário
+            // LISTA DE PRODUTOS (mantida para consistência dos dados de custo)
             let idCounter = 1000;
             const newProductsData = [
                 // Drones
@@ -1046,14 +1046,25 @@
                 }
                 
                 const baseSpec = `${p.icon} ${p.name.replace(p.icon, '').trim()}`;
+                
+                // Determina qual fornecedor é mais apropriado para o custo (GranSafra para Consumer/FPV, GoHobby para Enterprise)
+                let supplierNameForCost;
+                if (p.line === "Enterprise") {
+                    supplierNameForCost = "GOHOBBY FUTURE TECHNOLOGY LTDA";
+                } else if (p.line === "Consumer" || p.line === "FPV" || p.line === "Acessórios" || p.line === "Universal") {
+                    supplierNameForCost = "GranSafra";
+                } else {
+                    supplierNameForCost = "GranSafra"; // Padrão
+                }
+
 
                 return {
                     id: (idCounter++).toString(),
                     name: p.name,
                     spec: `${baseSpec}.\nLinha: ${p.line}\nDetalhe: ${specContent}`,
                     price: parseBRL(p.sell),
-                    // Fornecedor Gran Safra
-                    suppliers: [{ name: "Gran Safra", cost: parseBRL(p.cost) }],
+                    // ATUALIZAÇÃO: O fornecedor principal do custo agora é dinâmico (GranSafra ou GoHobby)
+                    suppliers: [{ name: supplierNameForCost, cost: parseBRL(p.cost) }],
                     productTypes: [p.type],
                     productLines: [p.line]
                 };
@@ -1398,8 +1409,8 @@
             function showProductListTab() {
                 createProductTab.classList.remove("active");
                 listProductTab.classList.add("active");
-                productListContainer.classList.add("hidden");
-                createProductContainer.classList.remove("hidden");
+                createProductContainer.classList.add("hidden");
+                productListContainer.classList.remove("hidden");
                 renderProductList();
             }
 
@@ -1492,8 +1503,8 @@
                             <p class="text-sm font-medium dark:text-gray-400">Valor de Venda: <span class="font-bold text-lg text-brand-green dark:text-brand-orange">${currencyFormatter.format(product.price)}</span></p>
                     `;
                     
-                    // NOVO: Cálculo e exibição do preço com NF (apenas na página Consultas e Produtos)
-                    if (currentPagePrefix === 'consultas' || currentPagePrefix === 'produtos') {
+                    // NOVO: Cálculo e exibição do preço com NF (apenas na página Consultas)
+                    if (currentPagePrefix === 'consultas') {
                         const sellingPrice = parseFloat(product.price);
                         const nfPrice = sellingPrice * 1.06; // Preço + 6%
                         cardContent += `
@@ -1504,8 +1515,8 @@
                     cardContent += `</div>`; // Fecha a div interna
                 }
 
-                // ATUALIZAÇÃO: Mostra custos internos APENAS se estiver na página "Produtos" E o usuário for "Administrador"
-                if (currentPagePrefix === "produtos" && loggedInUser && loggedInUser.role === "Administrador") {
+                // Mostra custos internos apenas se estiver na página "Produtos"
+                if (currentPagePrefix === "produtos" && loggedInUser && (loggedInUser.role === "Administrador" || loggedInUser.role === "Vendedor")) {
                     cardContent += `
                         <div class="mt-2">
                             <p class="text-sm font-semibold dark:text-gray-300">Custos por Fornecedor:</p>
