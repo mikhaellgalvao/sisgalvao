@@ -434,10 +434,10 @@
     <div id="product-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl relative max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
-                    <div class="flex border-b border-gray-200 dark:border-gray-700">
-                        <button id="create-product-tab" class="modal-tab py-2 px-4 border-b-2 font-medium text-sm">Criar Produto</button>
-                        <button id="list-product-tab" class="modal-tab py-2 px-4 border-b-2 font-medium text-sm">Listar Produtos</button>
-                    </div>
+                <div class="flex border-b border-gray-200 dark:border-gray-700">
+                    <button id="create-product-tab" class="modal-tab py-2 px-4 border-b-2 font-medium text-sm">Criar Produto</button>
+                    <button id="list-product-tab" class="modal-tab py-2 px-4 border-b-2 font-medium text-sm">Listar Produtos</button>
+                </div>
                 <button id="close-product-modal" class="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white text-2xl">&times;</button>
             </div>
             <div class="p-6 overflow-y-auto">
@@ -530,7 +530,7 @@
                         </div>
                     </div>
                 </div>
-        </div>
+            </div>
     </div>
     
     <!-- MODAL COMPARTILHAR PERFIL -->
@@ -587,9 +587,10 @@
         </div>
         <div id="popup-calculator-results" class="bg-gray-50 dark:bg-gray-900 p-3 mt-4 rounded-lg hidden">
             <div class="space-y-2 text-gray-700 dark:text-gray-300">
-                <div id="popup-base-value-row" class="flex justify-between items-baseline border-b pb-1 dark:border-gray-700 hidden"><span class="font-medium text-xs">Valor Base:</span><span id="popup-base-value" class="font-semibold text-sm">R$ 0,00</span></div>
+                <!-- LINHA ALTERADA: Garante que o usuário logado veja o cálculo detalhado de 6% -->
+                <div id="popup-base-value-row" class="flex justify-between items-baseline border-b pb-1 dark:border-gray-700 hidden"><span class="font-medium text-xs">Valor Base (S/NF):</span><span id="popup-base-value" class="font-semibold text-sm">R$ 0,00</span></div>
                 <div id="popup-nf-fee-row" class="flex justify-between items-baseline border-b pb-1 dark:border-gray-700 hidden"><span class="font-medium text-xs">Taxa NF (6%):</span><span id="popup-nf-fee-value" class="font-semibold text-sm text-red-500">R$ 0,00</span></div>
-                <div class="flex justify-between items-baseline border-b pb-1 dark:border-gray-700"><span class="font-medium text-xs">Valor para Cartão:</span><span id="popup-final-base-value" class="font-semibold text-sm text-blue-500">R$ 0,00</span></div>
+                <div class="flex justify-between items-baseline border-b pb-1 dark:border-gray-700"><span class="font-medium text-xs">Valor para Cartão (c/NF):</span><span id="popup-final-base-value" class="font-semibold text-sm text-blue-500">R$ 0,00</span></div>
                 <div class="flex justify-between items-baseline border-b pb-1 dark:border-gray-700"><span class="font-medium text-xs">Taxa Cartão:</span><span id="popup-fee-value" class="font-semibold text-sm">R$ 0,00</span></div>
                 <div class="flex justify-between items-baseline border-b pb-1 dark:border-gray-700"><span class="font-medium text-xs">Parcela:</span><span id="popup-installment-value" class="font-semibold text-sm">R$ 0,00</span></div>
                 <div class="flex justify-between items-baseline"><span class="font-medium text-xs">Total Venda:</span><span id="popup-total-value" class="font-bold text-md text-brand-green dark:text-brand-orange">R$ 0,00</span></div>
@@ -700,7 +701,7 @@
         </div>
     </div>
 
-    <!-- NOVO MODAL DE PRÉ-VISUALIZAÇÃO E ENVIO DE ORÇAMENTO -->
+    <!-- NOVO MODAL DE PRÉ-VISUALIZAÇÃO E ENVIAR WHATSAPP (Orçamento) -->
     <div id="quote-send-preview-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md relative max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
@@ -927,6 +928,7 @@
                 if (brlString.includes('R$')) {
                     brlString = brlString.replace('R$ ', '').trim();
                 }
+                // Handle cases like R$ 10.000,00 -> 10000.00
                 return parseFloat(brlString.replace(/\./g, '').replace(',', '.'));
             }
 
@@ -943,10 +945,11 @@
             // Usuários de simulação
             let users = [
                 { name: "Mikhaell Galvão", username: "mikhaell", password: "mk0639", phone: "62984710639", email: "mikhaell@galvaodrones.com.br", role: "Administrador" },
-                { name: "Equipe Vendas", username: "vendas", password: "123", phone: "6291234567", email: "vendas@galvaodrones.com.br", role: "Vendedor" },
-                { name: "Equipe Marketing", username: "market", password: "123", phone: "6291234567", email: "marketing@galvaodrones.com.br", role: "Market" },
-                { name: "Acesso Consulta", username: "consultas", password: "123", phone: "6291234567", email: "consultas@galvaodrones.com.br", role: "Consultas" }
+                { name: "Rafael Gomes", username: "rafael", password: "rf123", phone: "62993344356", email: "sem e-mail", role: "Vendedor" },
+                { name: "Maikhon Galvão", username: "maikhon", password: "0639", phone: "62933001865", email: "maikhonvnc@gmail.com.br", role: "Administrador" },
+                { name: "Ryan", username: "ryan", password: "0639", phone: "62920007396", email: "ryanrodriques@gmail.com.br", role: "Administrador" }
             ];
+
             
             // INÍCIO DA ATUALIZAÇÃO DA LISTA DE FORNECEDORES
             let suppliers = [
@@ -1190,18 +1193,23 @@
                 let finalBaseValue = baseSaleValue;
                 let nfFee = 0;
 
+                // 1. Cálculo do Valor Base + NF (6%)
                 if (baseSaleValue > 0 && includeNF) {
                     nfFee = baseSaleValue * 0.06;
                     finalBaseValue = baseSaleValue + nfFee;
+                    
+                    // Exibir detalhes para o usuário logado
                     document.getElementById(`${prefix}-base-value`).textContent = currencyFormatter.format(baseSaleValue);
                     document.getElementById(`${prefix}-nf-fee-value`).textContent = currencyFormatter.format(nfFee);
                     popupBaseValueRow.classList.remove("hidden");
                     popupNFeeRow.classList.remove("hidden");
                 } else {
+                    // Esconder detalhes se NF não for inclusa
                     popupBaseValueRow.classList.add("hidden");
                     popupNFeeRow.classList.add("hidden");
                 }
 
+                // 2. Cálculo do Cartão
                 if (baseSaleValue > 0 && installments > 0) {
                     const feeRate = installmentRates[installments];
                     const feeAmount = finalBaseValue * (feeRate / 100);
@@ -1227,6 +1235,49 @@
                     option.textContent = `${installments}x (${installmentRates[installments].toString().replace(".", ",")}%)`;
                     selectElement.appendChild(option);
                 }
+            }
+
+            // Função para converter string BRL (ex: "1.351,50") para float
+            function parseBRLForShare(brlString) {
+                // Remove R$ e espaços, substitui ponto por nada e vírgula por ponto.
+                return parseFloat(brlString.replace('R$', '').trim().replace(/\./g, '').replace(',', '.'));
+            }
+
+            // FUNÇÃO ALTERADA PARA O REQUISITO 2: Ocultar o imposto (NF) na simulação enviada ao cliente
+            function shareCalculationOnWhatsApp() {
+                const saleValueInput = document.getElementById("popup-sale-value");
+                const installmentsSelect = document.getElementById("popup-installments");
+                const baseSaleValue = parseFloat(saleValueInput.value) || 0;
+                const installments = installmentsSelect.value;
+                const includeNF = document.getElementById("popup-include-nf")?.checked || false;
+
+                // Obtendo valores finais do DOM (que já foram calculados)
+                const totalValue = document.getElementById("popup-total-value").textContent;
+                const feeValue = document.getElementById("popup-fee-value").textContent;
+                const installmentValue = document.getElementById("popup-installment-value").textContent.replace(/.*de /, ""); 
+                const finalBaseValue = document.getElementById("popup-final-base-value").textContent; // Valor do produto + NF (se aplicável)
+
+                let message = `*Simulação de Pagamento - Galvão Drones*\n\n`;
+
+                // 1. Definição do Valor da Venda apresentado ao cliente (mascarando a NF se inclusa)
+                if (includeNF) {
+                    // Se incluir NF, mostramos o valor final do produto (Base + NF) como "Valor do Produto".
+                    // Isso inclui o custo do imposto sem discriminá-lo.
+                    message += `*Valor do Produto:* ${finalBaseValue}\n`;
+                    message += `(Este valor já inclui impostos de venda)\n`;
+                } else {
+                    // Se NÃO incluir NF, mostra o valor base como Valor do Produto.
+                    message += `*Valor do Produto:* ${currencyFormatter.format(baseSaleValue)}\n`;
+                }
+
+                // 2. Detalhamento do parcelamento e total (sem mencionar a NF novamente)
+                message += `*Parcelamento:* ${installments}x\n\n`;
+                message += `*Resultado da Simulação:*\n`;
+                message += `- Taxa Cartão: *${feeValue}*\n`;
+                message += `- Valor da Parcela: *${installmentValue}*\n`;
+                message += `- Valor Total a Prazo: *${totalValue}*\n\n_Valores baseados na taxa atual da máquina de cartão._`;
+
+                shareOnWhatsApp("", message);
             }
 
             // Função genérica para compartilhar no WhatsApp
@@ -1451,38 +1502,9 @@
                 createProductContainer.classList.remove("hidden");
             }
 
-            // Funções de Calculadora
-            function shareCalculationOnWhatsApp() {
-                const baseSaleValue = parseFloat(document.getElementById("popup-sale-value").value) || 0;
-                const installments = document.getElementById("popup-installments").value;
-                const totalValue = document.getElementById("popup-total-value").textContent;
-                const feeValue = document.getElementById("popup-fee-value").textContent;
-                const installmentValue = document.getElementById("popup-installment-value").textContent.replace(/.*de /, ""); 
-                const includeNF = document.getElementById("popup-include-nf")?.checked || false;
-                
-                let message = `*Simulação de Pagamento - Galvão Drones*\n\n`;
-
-                if (includeNF) {
-                    const nfFee = document.getElementById("popup-nf-fee-value").textContent;
-                    const finalBaseValue = document.getElementById("popup-final-base-value").textContent;
-
-                    message += `*Valor Base:* ${currencyFormatter.format(baseSaleValue)}\n`;
-                    message += `*Taxa NF (6%):* ${nfFee}\n`;
-                    message += `*Valor para Cartão:* ${finalBaseValue}\n`;
-                    message += `*Parcelamento:* ${installments}x\n\n`;
-                    message += `*Resultado Final (com NF):*\n`;
-                } else {
-                    message += `*Valor da Venda:* ${currencyFormatter.format(baseSaleValue)}\n`;
-                    message += `*Parcelamento:* ${installments}x\n\n`;
-                    message += `*Resultado:*\n`;
-                }
-
-                message += `- Taxa Cartão: *${feeValue}*\n`;
-                message += `- Valor da Parcela: *${installmentValue}*\n`;
-                message += `- Valor Total: *${totalValue}*\n\n_Valores baseados na taxa atual da máquina de cartão._`;
-
-                shareOnWhatsApp("", message);
-            }
+            // Funções de Calculadora (shareCalculationOnWhatsApp modificada acima)
+            // ... (implementação de shareCalculationOnWhatsApp movida para a seção de funções)
+            
 
             // Funções de Cards de Produtos (Drones/Consultas)
             function createProductCard(product, showPrice, currentPagePrefix) {
@@ -1503,8 +1525,8 @@
                             <p class="text-sm font-medium dark:text-gray-400">Valor de Venda: <span class="font-bold text-lg text-brand-green dark:text-brand-orange">${currencyFormatter.format(product.price)}</span></p>
                     `;
                     
-                    // NOVO: Cálculo e exibição do preço com NF (apenas na página Consultas)
-                    if (currentPagePrefix === 'consultas') {
+                    // NOVO: Cálculo e exibição do preço com NF (apenas na página Consultas/Produtos)
+                    if (currentPagePrefix === 'consultas' || currentPagePrefix === 'produtos') {
                         const sellingPrice = parseFloat(product.price);
                         const nfPrice = sellingPrice * 1.06; // Preço + 6%
                         cardContent += `
@@ -2261,7 +2283,7 @@
                     // Adiciona listener para reavaliar o botão de envio quando fornecedor é marcado/desmarcado
                     quoteSuppliersCheckboxesDiv.querySelectorAll('input[name="selected_supplier"]').forEach(cb => cb.addEventListener('change', updateQuoteFlowUI));
                 } else if (selectedType) {
-                     quoteSuppliersCheckboxesDiv.innerHTML = '<p class="text-sm text-red-500">Nenhum fornecedor encontrado para esta combinação.</p>';
+                       quoteSuppliersCheckboxesDiv.innerHTML = '<p class="text-sm text-red-500">Nenhum fornecedor encontrado para esta combinação.</p>';
                 }
                 updateQuoteFlowUI();
             }
@@ -2327,7 +2349,7 @@
             // Lógica de Envio de Produto pelo WhatsApp (Páginas Consultas/Produtos)
             function handleSendProductWhatsapp(productName, productSpec, productPrice) {
                 // Remove os emojis e quebras de linha das especificações para a mensagem
-                const formattedSpec = productSpec.replace(/💾 |🚁 |🔋 |🌿 |🎥 |🎛️ |🎙️ |⚡/g, '').replace(/\n/g, '\n');
+                const formattedSpec = productSpec.replace(/🛸 |🎥 |🎛️ |🎙️ |🔋 |⚡/g, '').replace(/\n/g, '\n');
                 let message = `🚀 Olá! Gostaria de te apresentar o produto:\n\n📦 Produto: *${productName}*\n\n*Especificações:*\n${formattedSpec}\n\n💰 Valor: *${currencyFormatter.format(productPrice)}*\n\nPara mais detalhes ou para fazer seu pedido, me chame aqui!`;
                 
                 whatsappMessagePreview.innerText = message;
@@ -2357,7 +2379,7 @@
                     return;
                 }
                 // Mensagem formatada para a empresa (número fixo)
-                let message = `Olá Galvão Drones! Meu nome é *${senderName}* e gostaria de consultar sobre:\n\n*Produto:* ${currentProductForAvailabilityConsult.name}\n\n*Especificações:*\n${currentProductForAvailabilityConsult.spec.replace(/💾 |🚁 |🔋 |🌿 |🎥 |🎛️ |🎙️ |⚡/g, '').replace(/\n/g, '\n')}\n\nSolicito informações sobre valores e disponibilidade.`;
+                let message = `Olá Galvão Drones! Meu nome é *${senderName}* e gostaria de consultar sobre:\n\n*Produto:* ${currentProductForAvailabilityConsult.name}\n\n*Especificações:*\n${currentProductForAvailabilityConsult.spec.replace(/🛸 |🎥 |🎛️ |🎙️ |🔋 |⚡/g, '').replace(/\n/g, '\n')}\n\nSolicito informações sobre valores e disponibilidade.`;
                 shareOnWhatsApp(companyInfo.phone, message);
                 senderNameInputModal.classList.add("hidden");
             });
