@@ -127,11 +127,53 @@
                 </div>
                 <!-- Conteúdo das Páginas -->
                 <div id="main-content" class="p-6">
-                    <div id="dashboard-page" class="page-content">
-                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                            <h2 class="text-xl font-bold text-gray-800 dark:text-white">Bem-vindo(a), <span id="welcome-user-name">Usuário</span>!</h2>
-                            <p class="mt-1 text-gray-600 dark:text-gray-400">Seu perfil de acesso é: <span class="font-semibold" id="welcome-user-role">Indefinido</span>.</p>
-                        </div>
+                   <div id="dashboard-page" class="page-content">
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                            <h2 class="text-xl font-bold text-gray-800 dark:text-white">Bem-vindo(a), <span id="welcome-user-name">Usuário</span>!</h2>
+                            <p class="mt-1 text-gray-600 dark:text-gray-400">Seu perfil de acesso é: <span class="font-semibold" id="welcome-user-role">Indefinido</span>.</p>
+                        </div>
+
+                                                <div class="mt-6">
+                            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4">Acesso Rápido</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                <a href="#" data-page="consultas" class="quick-access-link block bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-brand-green dark:text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                                    <span class="font-medium text-gray-800 dark:text-white">Consultas</span>
+                                </a>
+                                <a href="#" data-page="drones" class="quick-access-link block bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-brand-green dark:text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                                    <span class="font-medium text-gray-800 dark:text-white">Drones</span>
+                                </a>
+                                <a href="#" data-page="marketing" class="quick-access-link block bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-brand-green dark:text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-2.236 9.168-5.584C18.354 5.166 18 6.545 18 8c0 3.314-2.686 6-6 6H6.636A3.991 3.991 0 015.436 13.683z" /></svg>
+                                    <span class="font-medium text-gray-800 dark:text-white">Marketing</span>
+                                </a>
+                                <a href="#" data-page="produtos" class="quick-access-link block bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-brand-green dark:text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                                    <span class="font-medium text-gray-800 dark:text-white">Produtos</span>
+                                </a>
+                                <a href="#" data-page="perfil" class="quick-access-link block bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-brand-green dark:text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                                    <span class="font-medium text-gray-800 dark:text-white">Meu Perfil</span>
+              _                 </a>
+                                <a href="#" data-page="admin" class="quick-access-link block bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-brand-green dark:text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                                    <span class="font-medium text-gray-800 dark:text-white">Administração</span>
+                                </a>
+                                <a href="#" data-page="sobre" class="quick-access-link block bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-brand-green dark:text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><span class="font-medium text-gray-800 dark:text-white">Sobre Galvão Drones</span></a>
+                                
+                                                                <a href="https://mikhaellgalvao.github.io/portal/" target="_blank" class="block bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-brand-green dark:text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                    </svg>
+                                    <span class="font-medium text-gray-800 dark:text-white">Portal Externo</span>
+                                </a>
+                            </div>
+                        </div>
+
+                                                <div id="vendedor-content" class="hidden mt-6"><div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow"><h3 class="text-lg font-bold text-brand-green dark:text-brand-orange">Painel do Vendedor</h3><p class="mt-2 text-gray-600 dark:text-gray-400">Acesse aqui suas ferramentas de vendas, consulte o status de clientes e registre novas propostas.</p></div></div>
+                    </div>
 
                         <!-- Atalhos do Dashboard -->
                         <div class="mt-6">
