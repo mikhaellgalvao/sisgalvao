@@ -16,7 +16,7 @@
             "password": "0639",
             "role": "Administrador",
             "phone": "62933001865",
-            "avatar": ""
+            "avatar": "https://i.imgur.com/49xvSy4.jpeg"
         },
         {
             "name": "Rafael Gomes",
@@ -44,6 +44,7 @@
         }
     ]
 }
+
 
 
 
