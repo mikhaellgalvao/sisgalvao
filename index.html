@@ -58,22 +58,22 @@
         <div id="login-card" class="w-full max-w-md p-8 glass-card rounded-2xl shadow-2xl">
             <div id="login-header" class="text-center mb-8">
                 <img src="https://imgur.com/2PNy5CS.png" alt="Logo Galvão Drones" class="mx-auto mb-4 h-20 w-auto drop-shadow-lg">
-                <h1 class="text-2xl font-bold text-brand-green dark:text-gray-100">Portal Galvão Drones</h1>
+                <h1 class="text-2xl font-bold text-brand-green dark:text-gray-100 font-sans">Portal Galvão Drones</h1>
                 <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Entre com seu usuário e senha</p>
             </div>
             <form id="login-form" class="space-y-4 pt-4">
                 <div>
                     <label for="username-input" class="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Usuário</label>
-                    <input type="text" id="username-input" required class="w-full rounded-xl border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-brand-orange outline-none transition-all">
+                    <input type="text" id="username-input" required class="w-full rounded-xl border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-orange outline-none transition-all">
                 </div>
                 <div>
                     <label for="password-input" class="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Senha</label>
-                    <input type="password" id="password-input" required class="w-full rounded-xl border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-brand-orange outline-none transition-all">
+                    <input type="password" id="password-input" required class="w-full rounded-xl border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-orange outline-none transition-all">
                 </div>
                 <button type="submit" class="w-full py-3.5 bg-brand-green hover:bg-green-800 text-white font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]">Entrar</button>
                 <button type="button" id="visitor-login-button" class="w-full py-3.5 bg-gray-400 hover:bg-gray-500 text-white font-bold rounded-xl transition-all">Visitante</button>
             </form>
-            <div id="error-message" class="hidden p-4 bg-red-100 text-red-700 text-sm rounded-xl text-center font-medium">Usuário ou senha inválidos.</div>
+            <div id="error-message" class="hidden p-4 bg-red-100 text-red-700 text-sm rounded-xl text-center font-medium mt-4">Usuário ou senha inválidos.</div>
             <div id="success-message" class="hidden text-center mt-6">
                 <div class="spinner mx-auto"></div>
                 <p class="mt-4 font-bold text-brand-green dark:text-gray-200">A processar dados...</p>
@@ -98,10 +98,10 @@
             </div>
 
             <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                <a href="#" data-page="dashboard" class="sidebar-link active flex items-center px-4 py-3 rounded-xl font-bold transition-all">Dashboard</a>
-                <a href="#" data-page="consultas" class="sidebar-link flex items-center px-4 py-3 rounded-xl font-bold transition-all">Consultas de Preço</a>
-                <a href="#" data-page="marketing" class="sidebar-link flex items-center px-4 py-3 rounded-xl font-bold transition-all text-sm">Marketing</a>
-                <a href="#" data-page="produtos" class="sidebar-link flex items-center px-4 py-3 rounded-xl font-bold transition-all text-sm">Lista Interna</a>
+                <a href="#" data-page="dashboard" class="sidebar-link active flex items-center px-4 py-3 rounded-xl font-bold">Dashboard</a>
+                <a href="#" data-page="consultas" class="sidebar-link flex items-center px-4 py-3 rounded-xl font-bold">Consultas de Preço</a>
+                <a href="#" data-page="marketing" class="sidebar-link flex items-center px-4 py-3 rounded-xl font-bold text-sm">Marketing</a>
+                <a href="#" data-page="produtos" class="sidebar-link flex items-center px-4 py-3 rounded-xl font-bold text-sm">Lista Interna</a>
                 
                 <div class="pt-4 mt-4 border-t dark:border-gray-700 space-y-1">
                     <a href="#" data-page="admin" id="admin-link" class="sidebar-link hidden flex items-center px-4 py-3 rounded-xl font-bold text-red-500 transition-all text-sm tracking-tight">Administração</a>
@@ -127,7 +127,7 @@
             </header>
 
             <main id="main-content" class="p-8">
-                <!-- Dashboard Content -->
+                <!-- Page: Dashboard Content -->
                 <section id="dashboard-page" class="page-content space-y-8">
                     <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-sm border dark:border-gray-700">
                         <h2 class="text-3xl font-black dark:text-white uppercase italic tracking-tight">Olá, <span id="welcome-user-name" class="text-brand-orange"></span>!</h2>
@@ -231,13 +231,13 @@
                     <div class="bg-white dark:bg-gray-800 p-10 rounded-3xl border dark:border-gray-700 text-center space-y-6 shadow-sm">
                         <img src="https://imgur.com/2PNy5CS.png" class="h-24 mx-auto mb-4" alt="Logo">
                         <h2 class="text-3xl font-black text-brand-green uppercase italic tracking-tighter tracking-tight">Galvão Drones | Goiânia</h2>
-                        <p class="text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl mx-auto font-medium italic">Especialistas em manutenção, vendas e treinamento DJI. Atendimento Alpha para o mercado de VANTs no Brasil.</p>
+                        <p class="text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl mx-auto font-medium italic">Especialistas em manutenção, vendas e treinamento DJI no Brasil.</p>
                     </div>
                 </section>
 
                 <!-- Catalog Page: Consultas -->
                 <section id="consultas-page" class="page-content hidden space-y-6">
-                    <div class="flex gap-4"><input type="text" id="consultas-search-input" placeholder="Buscar drone no banco Galvão..." class="flex-1 p-4 rounded-2xl border dark:bg-gray-800 outline-none focus:ring-2 focus:ring-brand-green bg-white dark:text-white font-medium shadow-sm"><button id="consultas-search-button" class="bg-brand-green text-white px-8 rounded-2xl font-bold uppercase text-xs">Pesquisar</button></div>
+                    <div class="flex gap-4"><input type="text" id="consultas-search-input" placeholder="Buscar drone ou acessório..." class="flex-1 p-4 rounded-2xl border dark:bg-gray-800 outline-none focus:ring-2 focus:ring-brand-green bg-white dark:text-white font-medium shadow-sm"><button id="consultas-search-button" class="bg-brand-green text-white px-8 rounded-2xl font-bold uppercase text-xs">Pesquisar</button></div>
                     <div id="consultas-search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </section>
 
@@ -257,8 +257,8 @@
             <input type="number" id="popup-sale-value" step="0.01" placeholder="Valor Base (R$)" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 rounded-xl focus:ring-2 focus:ring-brand-orange outline-none font-bold">
             <div class="flex items-center gap-3 p-3 bg-brand-orange/5 rounded-xl border border-brand-orange/10"><input type="checkbox" id="popup-include-nf" class="w-5 h-5 rounded text-brand-orange"><label for="popup-include-nf" class="text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-zinc-400">Incluir NF (+6%)</label></div>
             <select id="popup-installments" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 rounded-xl outline-none font-bold text-sm"><option value="0">Selecionar parcelas...</option></select>
-            <div id="popup-calculator-results" class="hidden p-4 rounded-2xl bg-brand-green/5 space-y-2 border border-brand-green/10">
-                <div class="flex justify-between text-xs text-blue-600 dark:text-blue-400 font-black italic uppercase"><span>Total c/ Taxas:</span><span id="popup-total-value"></span></div>
+            <div id="popup-calculator-results" class="hidden p-4 rounded-2xl bg-brand-green/5 space-y-2 border border-brand-green/10 text-slate-800 dark:text-white">
+                <div class="flex justify-between text-xs font-black italic uppercase"><span>Total c/ Taxas:</span><span id="popup-total-value"></span></div>
                 <div class="flex justify-between items-center text-brand-orange pt-2"><span class="text-xs font-black uppercase tracking-tighter">Parcela:</span><span id="popup-installment-value" class="text-xl font-black italic tracking-tighter dark:text-white"></span></div>
             </div>
             <button onclick="shareCalc()" class="w-full py-4 bg-green-500 hover:bg-green-600 text-white font-black rounded-2xl transition-all shadow-md uppercase text-[10px] tracking-widest">Compartilhar WhatsApp</button>
@@ -274,7 +274,7 @@
             </div>
             <form id="admin-dynamic-form" class="space-y-4 max-h-[50vh] overflow-y-auto px-1"></form>
             <div class="flex gap-3 pt-4">
-                <button type="button" onclick="closeAdminModal()" class="flex-1 py-4 bg-gray-100 dark:bg-gray-700 text-gray-500 font-bold rounded-2xl uppercase text-[10px]">Voltar</button>
+                <button type="button" onclick="closeAdminModal()" class="flex-1 py-4 bg-gray-100 text-gray-500 font-bold rounded-2xl uppercase text-[10px]">Voltar</button>
                 <button type="button" id="admin-save-btn" class="flex-1 py-4 bg-brand-green text-white font-bold rounded-2xl shadow-lg uppercase text-[10px]">Confirmar Alterações</button>
             </div>
         </div>
@@ -287,7 +287,7 @@
             <form id="admin-password-form" class="space-y-4">
                 <input type="password" id="admin-password-input" required placeholder="SENHA ADMIN" class="w-full px-5 py-4 bg-gray-50 dark:bg-gray-700 rounded-2xl text-center font-black tracking-widest outline-none focus:ring-2 focus:ring-red-500 border-none uppercase">
                 <div class="flex gap-2">
-                    <button type="button" onclick="document.getElementById('admin-password-modal').classList.add('hidden')" class="flex-1 py-4 bg-gray-100 dark:bg-gray-700 rounded-2xl font-bold uppercase text-[10px]">Cancelar</button>
+                    <button type="button" onclick="document.getElementById('admin-password-modal').classList.add('hidden')" class="flex-1 py-4 bg-gray-100 rounded-2xl font-bold uppercase text-[10px]">Cancelar</button>
                     <button type="submit" class="flex-1 py-4 bg-red-600 text-white font-bold rounded-2xl shadow-lg uppercase text-[10px]">Acessar</button>
                 </div>
             </form>
@@ -314,6 +314,7 @@
             const adminPasswordInput = document.getElementById("admin-password-input");
             const calculatorPopup = document.getElementById("calculator-popup");
             const closeCalculatorPopup = document.getElementById("close-calculator-popup");
+            const errorMessage = document.getElementById("error-message");
 
             // Estados
             let products = [];
@@ -333,7 +334,7 @@
                 return parseFloat(val.replace(/\./g, '').replace(',', '.'));
             }
 
-            // CARREGA DADOS DOS FICHEIROS JSON
+            // CARREGA DADOS DOS FICHEIROS JSON COM BACKUP EM CASO DE ERRO
             async function fetchUsuarios() {
                 try {
                     const response = await fetch('usuarios.json');
@@ -341,9 +342,13 @@
                     const data = await response.json();
                     usersData = data.users || [];
                 } catch (e) {
-                    console.error("usuarios.json não encontrado.");
+                    console.warn("usuarios.json não encontrado. A usar lista de backup.");
                     usersData = [
-                        { name: "Mikhaell Galvão", username: "mikhaell", password: "mk0639", role: "Administrador", phone: "62984710639" }
+                        { name: "Mikhaell Galvão", username: "mikhaell", password: "mk0639", role: "Administrador", phone: "62984710639" },
+                        { name: "Maikhon Galvão", username: "maikhon", password: "0639", role: "Administrador", phone: "62933001865" },
+                        { name: "Rafael Gomes", username: "rafael", password: "rf123", role: "Vendedor", phone: "62993344356" },
+                        { name: "Ryan Rodrigues", username: "ryan", password: "mk0639", role: "Administrador", phone: "62920007396" },
+                        { name: "Visitante", username: "consultas", password: "", role: "Visitante", phone: "" }
                     ];
                 }
             }
@@ -351,6 +356,7 @@
             async function fetchProdutos() {
                 try {
                     const response = await fetch('produtos.json');
+                    if (!response.ok) throw new Error();
                     const data = await response.json();
                     products = data.products || [];
                 } catch (e) { console.error("Falha ao ler produtos.json"); }
@@ -359,6 +365,7 @@
             async function fetchFornecedores() {
                 try {
                     const response = await fetch('fornecedores.json');
+                    if (!response.ok) throw new Error();
                     const data = await response.json();
                     suppliers = data.suppliers || [];
                 } catch (e) { console.error("Falha ao ler fornecedores.json"); }
@@ -412,7 +419,7 @@
                         if (isVisitor) {
                             priceDisplayHtml = `
                                 <div class="mt-4 pt-4 border-t dark:border-gray-700">
-                                    <button onclick="handleSendWA('${p.name}', 0)" class="w-full bg-brand-orange/10 text-brand-orange py-3 rounded-xl font-bold uppercase text-[10px] border border-brand-orange/20 hover:bg-brand-orange hover:text-white transition-all">Consultar com Especialista</button>
+                                    <button onclick="handleSendWA('${p.name}', 0)" class="w-full bg-brand-orange/10 text-brand-orange py-3 rounded-xl font-bold uppercase text-[10px] border border-brand-orange/20 hover:bg-brand-orange hover:text-white transition-all">Consultar Especialista</button>
                                 </div>`;
                         } else {
                             priceDisplayHtml = `
@@ -428,7 +435,7 @@
                         <p class="text-[10px] text-gray-500 mt-1">${p.line || 'Linha DJI'}</p>
                         ${priceDisplayHtml}
                         <div class="mt-4 flex gap-2">
-                             <button onclick="handleSendWA('${p.name}', ${sellPrice})" class="w-full bg-brand-green text-white py-3 rounded-xl font-bold uppercase text-[9px] shadow-sm active:scale-95 transition-all">Atendimento WhatsApp</button>
+                             <button onclick="handleSendWA('${p.name}', ${sellPrice})" class="w-full bg-brand-green text-white py-3 rounded-xl font-bold uppercase text-[9px] shadow-sm active:scale-95 transition-all">WhatsApp</button>
                         </div>
                     `;
                     grid.appendChild(card);
@@ -487,13 +494,13 @@
             window.downloadUpdatedJSON = () => {
                 const data = { empresa: "Galvão Drones", suppliers: suppliers, products: products, users: usersData };
                 const blob = new Blob([JSON.stringify(data, null, 4)], { type: "application/json" });
-                const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "galvao_drones_backup.json"; a.click();
+                const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "galvao_drones_data.json"; a.click();
             };
 
             // --- LOGIN ---
             loginForm.onsubmit = async e => {
                 e.preventDefault();
-                await fetchUsuarios();
+                await fetchUsuarios(); // Carrega usuários dinamicamente
                 const user = usersData.find(x => x.username === usernameInput.value && x.password === passwordInput.value);
                 if (user) {
                     loggedInUser = user;
@@ -514,7 +521,12 @@
                         }
                         switchPage("dashboard");
                     }, 1000);
-                } else { errorMessage.classList.remove("hidden"); }
+                } else { 
+                    if(errorMessage) {
+                        errorMessage.classList.remove("hidden");
+                        setTimeout(() => errorMessage.classList.add("hidden"), 3000);
+                    }
+                }
             };
 
             // --- EVENTS ---
@@ -574,7 +586,8 @@
         });
 
         window.handleSendWA = (name, price) => {
-            const msg = `🚀 Olá Galvão Drones! Consulta de item: *${name}* - Ref: ${new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL'}).format(price)}`;
+            const priceText = price > 0 ? `Ref: ${new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL'}).format(price)}` : "(Preço sob consulta)";
+            const msg = `🚀 Olá Galvão Drones! Gostaria de consultar o item: *${name}* - ${priceText}`;
             window.open(`https://wa.me/556236360668?text=${encodeURIComponent(msg)}`, "_blank");
         };
 
@@ -585,4 +598,3 @@
     </script>
 </body>
 </html>
-
