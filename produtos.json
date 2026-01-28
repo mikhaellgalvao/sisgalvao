@@ -1,27 +1,5 @@
 {
-    "empresa": "Galvão Drones",
-    "unidade": "Goiânia - GO",
-    "last_update": "2026-01-28T13:40:00",
-    "suppliers": [
-        {
-            "name": "GOHOBBY FUTURE TECHNOLOGY LTDA",
-            "address": "AVENIDA MARGINAL PROJETADA N.1652 - GALPÃO 11 SALA 14, FAZENDA TAMBORE, BARUERI - SP - CEP:06460200",
-            "details": "A GOHOBBY é importadora exclusiva de drones profissionais e tecnologias anti-drone no Brasil. Foco em Enterprise.",
-            "phone": "11955973434",
-            "paymentMethods": ["Pix", "Transferência"],
-            "productTypes": ["Equipamentos", "Acessórios"],
-            "productLines": ["Enterprise"]
-        },
-        {
-            "name": "ARROBA CELULARES",
-            "address": "CAMPINAS",
-            "details": "DRONES E ACESSORIO CONSUMER",
-            "phone": "62981145167",
-            "paymentMethods": ["Pix", "Transferência"],
-            "productTypes": ["Equipamentos", "Acessórios"],
-            "productLines": ["CONSUMER"]
-        }
-    ],
+   
     "products": [
         { "id": 1000, "name": "Drone DJI Neo 2 Standard (Sem Controle)", "cost": "1.660,00", "sell": "2.324,00", "icon": "🛸", "type": "Equipamentos", "line": "Consumer" },
         { "id": 1001, "name": "Drone Dji Neo 2 Fly More Combo (Sem controle)", "cost": "2.300,00", "sell": "3.220,00", "icon": "🛸", "type": "Equipamentos", "line": "Consumer" },
@@ -62,3 +40,4 @@
         { "id": 1036, "name": "Protetor de helices Neo", "cost": "100,00", "sell": "140,00", "icon": "⚡", "type": "Acessórios", "line": "Consumer" }
     ]
 }
+
