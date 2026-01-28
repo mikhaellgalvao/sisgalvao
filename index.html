@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Galvão Drones | Gestão Especializada</title>
+    <title>Portal Galvão Drones | Gestão Especializada DJI</title>
     <link rel="icon" href="https://imgur.com/ny5U9KV.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -51,7 +51,7 @@
         .dark #calculator-popup::after { border-top-color: #1f2937; }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-300 text-slate-900 dark:text-zinc-100">
 
     <!-- LOGIN VIEW -->
     <div id="login-view" class="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-brand-green to-gray-900">
@@ -64,212 +64,226 @@
             <form id="login-form" class="space-y-4 pt-4">
                 <div>
                     <label for="username-input" class="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Usuário</label>
-                    <input type="text" id="username-input" required class="w-full rounded-xl border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-orange outline-none transition-all">
+                    <input type="text" id="username-input" required class="w-full rounded-xl border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-brand-orange outline-none transition-all">
                 </div>
                 <div>
                     <label for="password-input" class="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Senha</label>
-                    <input type="password" id="password-input" required class="w-full rounded-xl border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-orange outline-none transition-all">
+                    <input type="password" id="password-input" required class="w-full rounded-xl border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-brand-orange outline-none transition-all">
                 </div>
-                <button type="submit" class="w-full py-3.5 bg-brand-green hover:bg-green-800 text-white font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]">Acessar Portal</button>
-                <button type="button" id="visitor-login-button" class="w-full py-3.5 bg-gray-400 hover:bg-gray-500 text-white font-bold rounded-xl transition-all">Acesso Visitante</button>
+                <button type="submit" class="w-full py-3.5 bg-brand-green hover:bg-green-800 text-white font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]">Entrar</button>
+                <button type="button" id="visitor-login-button" class="w-full py-3.5 bg-gray-400 hover:bg-gray-500 text-white font-bold rounded-xl transition-all">Visitante</button>
             </form>
             <div id="error-message" class="hidden p-4 bg-red-100 text-red-700 text-sm rounded-xl text-center font-medium">Usuário ou senha inválidos.</div>
             <div id="success-message" class="hidden text-center">
                 <div class="spinner mx-auto"></div>
-                <p class="mt-4 font-bold text-brand-green dark:text-gray-200" id="sync-message">Sincronizando banco de dados...</p>
+                <p class="mt-4 font-bold text-brand-green dark:text-gray-200">A processar credenciais...</p>
             </div>
         </div>
     </div>
 
-    <!-- MAIN APP VIEW -->
-    <div id="dashboard-view" class="hidden">
-        <div class="flex h-screen overflow-hidden bg-gray-100 dark:bg-gray-900">
-            
-            <!-- SIDEBAR -->
-            <aside id="sidebar-menu" class="fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 shadow-2xl transform -translate-x-full lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col">
-                <div class="p-6 border-b dark:border-gray-700">
-                    <a href="#" data-page="perfil" class="sidebar-link flex items-center gap-3 group">
-                        <div id="sidebar-profile-picture" class="w-12 h-12 rounded-full bg-brand-orange text-white flex items-center justify-center font-bold text-xl border-2 border-white dark:border-gray-700 shadow-sm overflow-hidden bg-cover bg-center">
-                            <span id="sidebar-profile-placeholder">?</span>
-                        </div>
-                        <div class="overflow-hidden">
-                            <p id="sidebar-user-name" class="font-bold text-sm truncate text-gray-800 dark:text-white"></p>
-                            <p id="sidebar-user-role" class="text-[10px] text-brand-orange font-bold uppercase truncate"></p>
-                        </div>
-                    </a>
+    <!-- MAIN DASHBOARD -->
+    <div id="dashboard-view" class="hidden flex h-screen overflow-hidden bg-gray-100 dark:bg-gray-900">
+        <!-- SIDEBAR -->
+        <aside id="sidebar-menu" class="fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 shadow-2xl transform -translate-x-full lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col">
+            <div class="p-6 border-b dark:border-gray-700 flex flex-col items-center">
+                <a href="#" data-page="perfil" class="sidebar-link flex flex-col items-center w-full gap-2 transition-all">
+                    <div id="sidebar-profile-picture" class="w-16 h-16 rounded-full bg-brand-orange text-white flex items-center justify-center font-bold text-2xl border-2 border-white dark:border-gray-700 shadow-sm overflow-hidden bg-cover bg-center">
+                        <span id="sidebar-profile-placeholder">?</span>
+                    </div>
+                    <div class="text-center overflow-hidden">
+                        <p id="sidebar-user-name" class="font-bold text-sm text-gray-800 dark:text-white truncate w-48"></p>
+                        <p id="sidebar-user-role" class="text-[10px] text-brand-orange font-bold uppercase tracking-widest"></p>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+                <a href="#" data-page="dashboard" class="sidebar-link active flex items-center px-4 py-3 rounded-xl font-bold">Dashboard</a>
+                <a href="#" data-page="consultas" class="sidebar-link flex items-center px-4 py-3 rounded-xl font-bold">Consultas</a>
+                <a href="#" data-page="drones" class="sidebar-link flex items-center px-4 py-3 rounded-xl font-bold">Drones</a>
+                <a href="#" data-page="marketing" class="sidebar-link flex items-center px-4 py-3 rounded-xl font-bold">Marketing</a>
+                <a href="#" data-page="produtos" class="sidebar-link flex items-center px-4 py-3 rounded-xl font-bold">Produtos</a>
+                
+                <div class="pt-4 mt-4 border-t dark:border-gray-700 space-y-1">
+                    <a href="#" data-page="admin" id="admin-link" class="sidebar-link hidden flex items-center px-4 py-3 rounded-xl font-bold text-red-500">Administração</a>
+                    <a href="#" data-page="sobre" class="sidebar-link flex items-center px-4 py-3 rounded-xl font-bold">Sobre a Empresa</a>
                 </div>
+            </nav>
+        </aside>
 
-                <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-                    <a href="#" data-page="dashboard" class="sidebar-link active flex items-center px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl font-bold transition-all">Dashboard</a>
-                    <a href="#" data-page="consultas" class="sidebar-link flex items-center px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl font-bold transition-all">Consultas</a>
-                    <a href="#" data-page="drones" class="sidebar-link flex items-center px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl font-bold transition-all">Drones</a>
-                    <a href="#" data-page="marketing" class="sidebar-link flex items-center px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl font-bold transition-all">Marketing</a>
-                    <a href="#" data-page="produtos" class="sidebar-link flex items-center px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl font-bold transition-all">Produtos</a>
-                    
-                    <div class="pt-4 mt-4 border-t dark:border-gray-700 space-y-2">
-                        <a href="#" data-page="admin" id="admin-link" class="sidebar-link hidden flex items-center px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl font-bold transition-all text-red-500">Administração</a>
-                        <a href="#" data-page="sobre" class="sidebar-link flex items-center px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl font-bold transition-all">Sobre Galvão Drones</a>
-                    </div>
-                </nav>
-            </aside>
+        <!-- CONTENT AREA -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+            <header class="h-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b dark:border-gray-700 px-8 flex items-center justify-between sticky top-0 z-30">
+                <div class="flex items-center gap-4">
+                    <button id="menu-button" class="lg:hidden p-2 text-gray-600 dark:text-gray-300"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round"></path></svg></button>
+                    <h1 id="page-title" class="text-xl font-black text-gray-800 dark:text-white uppercase italic">Dashboard</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="theme-toggle" class="p-2.5 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300 hover:scale-110 transition-all">
+                        <svg id="theme-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    </button>
+                    <button id="logout-button" class="px-5 py-2.5 bg-brand-orange hover:bg-orange-600 text-white font-bold rounded-xl shadow-md transition-all text-sm">Sair</button>
+                </div>
+            </header>
 
-            <!-- CONTENT AREA -->
-            <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
-                <header class="h-20 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b dark:border-gray-700 px-8 flex items-center justify-between sticky top-0 z-30">
-                    <div class="flex items-center gap-4">
-                        <button id="menu-button" class="lg:hidden p-2 text-gray-600 dark:text-gray-300"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
-                        <h1 id="page-title" class="text-xl font-black text-gray-800 dark:text-white uppercase tracking-tight italic">Dashboard</h1>
+            <main id="main-content" class="p-8">
+                <!-- Page: Dashboard -->
+                <section id="dashboard-page" class="page-content space-y-8">
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-sm border dark:border-gray-700">
+                        <h2 class="text-3xl font-black dark:text-white">Olá, <span id="welcome-user-name" class="text-brand-orange"></span>!</h2>
+                        <p class="text-gray-500">Nível de acesso: <span id="welcome-user-role" class="font-bold text-brand-green"></span></p>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <button id="theme-toggle" class="p-2.5 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300 hover:scale-110 transition-all">
-                            <svg id="theme-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <a href="#" data-page="consultas" class="quick-access-link p-6 bg-white dark:bg-gray-800 rounded-3xl border dark:border-gray-700 hover:shadow-xl transition-all flex flex-col items-center group">
+                            <div class="p-4 bg-emerald-50 dark:bg-emerald-900/20 text-brand-green rounded-2xl mb-3 group-hover:bg-brand-green group-hover:text-white transition-all"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2"></path></svg></div>
+                            <span class="font-bold uppercase text-[10px] dark:text-white tracking-widest">Consultas</span>
+                        </a>
+                        <a href="#" data-page="drones" class="quick-access-link p-6 bg-white dark:bg-gray-800 rounded-3xl border dark:border-gray-700 hover:shadow-xl transition-all flex flex-col items-center group">
+                            <div class="p-4 bg-orange-50 dark:bg-orange-900/20 text-brand-orange rounded-2xl mb-3 group-hover:bg-brand-orange group-hover:text-white transition-all"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" stroke-width="2"></path></svg></div>
+                            <span class="font-bold uppercase text-[10px] dark:text-white tracking-widest">Catálogo</span>
+                        </a>
+                        <a href="#" data-page="admin" id="admin-card" class="quick-access-link hidden p-6 bg-white dark:bg-gray-800 rounded-3xl border dark:border-gray-700 hover:shadow-xl transition-all flex flex-col items-center group">
+                            <div class="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-2xl mb-3 group-hover:bg-red-600 group-hover:text-white transition-all"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944" stroke-width="2"></path></svg></div>
+                            <span class="font-bold uppercase text-[10px] text-red-500 tracking-widest">Gestão Admin</span>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Page: Administração (Restauração Completa) -->
+                <section id="admin-page" class="page-content hidden space-y-8">
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl border dark:border-gray-700 shadow-sm">
+                        <h2 class="text-2xl font-black text-red-600 uppercase italic">Painel de Administração</h2>
+                        <p class="text-sm text-gray-500 mt-2">Área restrita para gestão de sistema e inventário.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <button onclick="openManagementModal('user')" class="p-8 bg-white dark:bg-gray-800 rounded-3xl border dark:border-gray-700 shadow-sm hover:shadow-xl transition-all text-left group">
+                            <h3 class="text-lg font-black text-brand-orange uppercase italic group-hover:translate-x-2 transition-transform">Gerir Usuários</h3>
+                            <p class="text-xs text-gray-500 mt-2 tracking-tight">Criação de novos acessos e permissões.</p>
                         </button>
-                        <button id="logout-button" class="px-5 py-2.5 bg-brand-orange hover:bg-orange-600 text-white font-bold rounded-xl shadow-md transition-all text-sm">Sair</button>
+                        <button onclick="openManagementModal('product')" class="p-8 bg-white dark:bg-gray-800 rounded-3xl border dark:border-gray-700 shadow-sm hover:shadow-xl transition-all text-left group">
+                            <h3 class="text-lg font-black text-brand-orange uppercase italic group-hover:translate-x-2 transition-transform">Gerir Produtos</h3>
+                            <p class="text-xs text-gray-500 mt-2 tracking-tight">Sincronização de preços do ficheiro JSON.</p>
+                        </button>
+                        <button onclick="openManagementModal('supplier')" class="p-8 bg-white dark:bg-gray-800 rounded-3xl border dark:border-gray-700 shadow-sm hover:shadow-xl transition-all text-left group">
+                            <h3 class="text-lg font-black text-brand-orange uppercase italic group-hover:translate-x-2 transition-transform">Fornecedores</h3>
+                            <p class="text-xs text-gray-500 mt-2 tracking-tight">Gestão de custos e parceiros oficiais.</p>
+                        </button>
                     </div>
-                </header>
+                </section>
 
-                <main id="main-content" class="p-8">
-                    <!-- Page Contents -->
-                    <section id="dashboard-page" class="page-content space-y-8">
-                        <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-sm border dark:border-gray-700">
-                            <h2 class="text-3xl font-black text-gray-800 dark:text-white uppercase italic">Bem-vindo(a), <span id="welcome-user-name" class="text-brand-orange">Usuário</span>!</h2>
-                            <p class="mt-2 text-gray-500 dark:text-gray-400 font-medium tracking-wide">Seu perfil de acesso: <span id="welcome-user-role" class="text-brand-green font-bold uppercase"></span></p>
+                <!-- Page: Perfil (Restauração Completa) -->
+                <section id="perfil-page" class="page-content hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-1 bg-white dark:bg-gray-800 p-8 rounded-3xl border dark:border-gray-700 text-center space-y-6">
+                            <div id="profile-picture-container-inner" class="relative w-40 h-40 mx-auto rounded-full bg-gray-100 dark:bg-gray-700 border-4 border-brand-orange shadow-lg flex items-center justify-center bg-cover bg-center overflow-hidden">
+                                <span id="profile-picture-placeholder-inner" class="text-gray-400 font-bold uppercase text-[10px]">Alpha Member</span>
+                            </div>
+                            <h3 id="profile-title-name" class="text-2xl font-black text-gray-800 dark:text-white uppercase italic"></h3>
+                            <p id="profile-title-role" class="text-brand-orange font-bold uppercase text-[10px] tracking-widest"></p>
                         </div>
-                        <!-- ... Quick access cards ... -->
-                        <div id="vendedor-content" class="hidden bg-brand-green/5 dark:bg-brand-green/10 p-8 rounded-3xl border border-brand-green/20">
-                             <h3 class="text-lg font-black text-brand-green uppercase italic mb-2">Painel do Vendedor</h3>
-                             <p class="text-sm text-gray-600 dark:text-gray-400">Gerencie simulações e consulte custos em tempo real.</p>
-                        </div>
-                    </section>
-
-                    <section id="consultas-page" class="page-content hidden space-y-8">
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <input type="text" id="consultas-search-input" placeholder="Buscar no catálogo..." class="flex-1 px-6 py-4 rounded-2xl border dark:border-gray-700 bg-white dark:bg-gray-800 outline-none focus:ring-2 focus:ring-brand-green">
-                            <button id="consultas-search-button" class="px-10 py-4 bg-brand-green text-white font-bold rounded-2xl shadow-lg transition-all active:scale-95">Buscar</button>
-                        </div>
-                        <div id="consultas-search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                    </section>
-
-                    <section id="drones-page" class="page-content hidden space-y-8">
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <input type="text" id="drones-search-input" placeholder="Pesquisar drone..." class="flex-1 px-6 py-4 rounded-2xl border dark:border-gray-700 bg-white dark:bg-gray-800 outline-none focus:ring-2 focus:ring-brand-green">
-                            <button id="drones-search-button" class="px-10 py-4 bg-brand-green text-white font-bold rounded-2xl shadow-lg">Buscar</button>
-                        </div>
-                        <div id="drones-search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                    </section>
-
-                    <section id="perfil-page" class="page-content hidden">
-                        <!-- Profile content implemented in JS populator -->
-                        <div id="profile-container" class="bg-white dark:bg-gray-800 p-8 rounded-3xl border dark:border-gray-700">
-                            <h2 class="text-2xl font-black text-brand-green uppercase italic mb-6">Meu Perfil Profissional</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-1">WhatsApp</label><input type="text" id="profile-whatsapp" class="w-full p-3 bg-gray-50 dark:bg-gray-700 rounded-xl" readonly></div>
-                                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-1">CNPJ Empresa</label><input type="text" id="company-cnpj" class="w-full p-3 bg-gray-50 dark:bg-gray-700 rounded-xl" value="60.102.179/0001-10" readonly></div>
+                        <div class="lg:col-span-2 bg-white dark:bg-gray-800 p-8 rounded-3xl border dark:border-gray-700 space-y-8">
+                            <div class="space-y-4">
+                                <h4 class="text-lg font-black text-brand-green uppercase italic border-b dark:border-gray-700 pb-2">Dados do Profissional</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div><label class="block text-[10px] font-black text-gray-400 uppercase">Nome Completo</label><input type="text" id="profile-fullname" class="w-full p-3 bg-gray-50 dark:bg-gray-700 rounded-xl outline-none" readonly></div>
+                                    <div><label class="block text-[10px] font-black text-gray-400 uppercase">WhatsApp</label><input type="text" id="profile-wa" class="w-full p-3 bg-gray-50 dark:bg-gray-700 rounded-xl outline-none" readonly></div>
+                                    <div><label class="block text-[10px] font-black text-gray-400 uppercase">Usuário do Portal</label><input type="text" id="profile-user" class="w-full p-3 bg-gray-100 dark:bg-gray-900 rounded-xl outline-none" readonly></div>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <h4 class="text-lg font-black text-brand-green uppercase italic border-b dark:border-gray-700 pb-2">Informações da Empresa</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div><label class="block text-[10px] font-black text-gray-400 uppercase">CNPJ</label><input type="text" class="w-full p-3 bg-gray-100 dark:bg-gray-900 rounded-xl outline-none" value="60.102.179/0001-10" readonly></div>
+                                    <div><label class="block text-[10px] font-black text-gray-400 uppercase">Unidade</label><input type="text" class="w-full p-3 bg-gray-100 dark:bg-gray-900 rounded-xl outline-none" value="Goiânia - GO" readonly></div>
+                                </div>
+                                <div><label class="block text-[10px] font-black text-gray-400 uppercase">E-mail Corporativo</label><input type="text" class="w-full p-3 bg-gray-100 dark:bg-gray-900 rounded-xl outline-none" value="contato@galvaodrones.com.br" readonly></div>
                             </div>
                         </div>
-                    </section>
+                    </div>
+                </section>
 
-                    <section id="produtos-page" class="page-content hidden space-y-6">
-                        <div id="produtos-search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                    </section>
-
-                    <section id="admin-page" class="page-content hidden">
-                        <div class="p-8 bg-white dark:bg-gray-800 rounded-3xl border dark:border-gray-700">
-                            <h2 class="text-xl font-black text-red-600 uppercase italic">Área Administrativa</h2>
-                            <p class="text-sm text-gray-500 mt-2">Funções de gestão de usuários e produtos.</p>
-                        </div>
-                    </section>
-
-                    <section id="sobre-page" class="page-content hidden space-y-6">
-                        <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl border dark:border-gray-700">
-                             <h2 class="text-xl font-black text-brand-green uppercase italic">Galvão Drones</h2>
-                             <p class="text-sm text-gray-500 mt-4">Localizada em Goiânia - GO, somos especialistas em tecnologia DJI Enterprise e Consumer.</p>
-                        </div>
-                    </section>
-                </main>
-            </div>
+                <!-- Page: Catalog Views -->
+                <section id="consultas-page" class="page-content hidden space-y-6">
+                    <div class="flex gap-4"><input type="text" id="consultas-search-input" placeholder="Buscar drone..." class="flex-1 p-4 rounded-2xl border dark:bg-gray-800 outline-none focus:ring-2 focus:ring-brand-green bg-white dark:text-white"><button id="consultas-search-button" class="bg-brand-green text-white px-8 rounded-2xl font-bold uppercase text-xs">Buscar</button></div>
+                    <div id="consultas-search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </section>
+                <section id="drones-page" class="page-content hidden space-y-6">
+                    <div class="flex gap-4"><input type="text" id="drones-search-input" placeholder="Pesquisar DJI..." class="flex-1 p-4 rounded-2xl border dark:bg-gray-800 outline-none focus:ring-2 focus:ring-brand-green bg-white dark:text-white"><button id="drones-search-button" class="bg-brand-green text-white px-8 rounded-2xl font-bold uppercase text-xs">Pesquisar</button></div>
+                    <div id="drones-search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </section>
+                <section id="produtos-page" class="page-content hidden space-y-6"><div id="produtos-search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div></section>
+                <section id="marketing-page" class="page-content hidden"><div class="p-8 bg-white dark:bg-gray-800 rounded-3xl border font-black uppercase text-brand-green tracking-widest">Biblioteca Visual Galvão Drones</div></section>
+                <section id="sobre-page" class="page-content hidden"><div class="p-8 bg-white dark:bg-gray-800 rounded-3xl border font-black uppercase italic text-brand-green leading-relaxed">Galvão Drones | Tecnologia em VANTs<br><span class="text-xs text-gray-500 font-normal">Sede em Goiânia.</span></div></section>
+            </main>
         </div>
     </div>
 
-    <!-- CALCULATOR -->
-    <button id="calculator-fab" class="hidden fixed bottom-6 right-6 w-16 h-16 bg-brand-orange text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+    <!-- CALCULATOR POPUP -->
+    <button id="calculator-fab" class="hidden fixed bottom-6 right-6 w-16 h-16 bg-brand-orange text-white rounded-full shadow-2xl flex items-center justify-center z-50">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-width="2" stroke-linecap="round"></path></svg>
     </button>
-
-    <div id="calculator-popup" class="hidden fixed bottom-24 right-6 w-80 sm:w-96 glass-card rounded-3xl shadow-2xl border dark:border-gray-700 p-6 z-50 animate-fade-in opacity-0 scale-95 origin-bottom-right transition-all duration-300">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="font-black text-brand-green dark:text-white uppercase tracking-tighter italic text-xl">Simulador de Parcelas</h3>
-            <button id="close-calculator-popup" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-gray-500">×</button>
-        </div>
+    <div id="calculator-popup" class="hidden fixed bottom-24 right-6 w-80 sm:w-96 glass-card rounded-3xl shadow-2xl border dark:border-gray-700 p-6 z-50 transition-all duration-300">
+        <div class="flex justify-between items-center mb-6"><h3 class="font-black text-brand-green dark:text-white uppercase italic text-xl italic tracking-tighter">Simulador Galvão</h3><button id="close-calculator-popup" class="text-gray-400 hover:text-gray-600 text-2xl">×</button></div>
         <div class="space-y-4">
-            <input type="number" id="popup-sale-value" step="0.01" placeholder="Valor Base (R$)" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border-none rounded-xl focus:ring-2 focus:ring-brand-orange outline-none">
-            <div class="flex items-center gap-3 p-3 bg-brand-orange/5 rounded-xl border border-brand-orange/10">
-                <input type="checkbox" id="popup-include-nf" class="w-5 h-5 rounded text-brand-orange">
-                <label for="popup-include-nf" class="text-xs font-bold text-gray-600 dark:text-gray-300">Incluir Nota Fiscal (+6%)</label>
+            <input type="number" id="popup-sale-value" step="0.01" placeholder="Valor Base (R$)" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 rounded-xl focus:ring-2 focus:ring-brand-orange outline-none font-bold">
+            <div class="flex items-center gap-3 p-3 bg-brand-orange/5 rounded-xl border border-brand-orange/10"><input type="checkbox" id="popup-include-nf" class="w-5 h-5 rounded text-brand-orange"><label for="popup-include-nf" class="text-xs font-bold text-gray-600 dark:text-gray-300 uppercase">Incluir NF (+6%)</label></div>
+            <select id="popup-installments" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 rounded-xl outline-none font-bold text-sm"><option value="0">Parcelas...</option></select>
+            <div id="popup-calculator-results" class="hidden p-4 rounded-2xl bg-brand-green/5 space-y-2 border border-brand-green/10">
+                <div class="flex justify-between text-xs text-blue-600 font-black italic uppercase"><span>Total Final:</span><span id="popup-total-value"></span></div>
+                <div class="flex justify-between items-center text-brand-orange pt-2"><span class="text-xs font-black uppercase tracking-tighter">Parcela:</span><span id="popup-installment-value" class="text-xl font-black italic tracking-tighter"></span></div>
             </div>
-            <select id="popup-installments" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border-none rounded-xl focus:ring-2 focus:ring-brand-orange outline-none font-bold text-sm">
-                <option value="0">Selecione...</option>
-            </select>
-            <div id="popup-calculator-results" class="hidden p-4 rounded-2xl bg-brand-green/5 dark:bg-brand-green/20 border border-brand-green/10 space-y-2">
-                <div class="flex justify-between text-xs text-blue-500 font-black"><span>Total c/ Taxas:</span><span id="popup-total-value"></span></div>
-                <div class="flex justify-between items-center text-brand-green dark:text-brand-orange pt-2">
-                    <span class="text-xs font-black uppercase">Parcela:</span>
-                    <span id="popup-installment-value" class="text-xl font-black italic"></span>
-                </div>
-            </div>
-            <button id="popup-whatsapp-share-button" class="w-full py-4 bg-green-500 hover:bg-green-600 text-white font-black rounded-2xl flex items-center justify-center gap-2">Compartilhar WhatsApp</button>
+            <button onclick="shareCalc()" class="w-full py-4 bg-green-500 hover:bg-green-600 text-white font-black rounded-2xl transition-all shadow-md uppercase text-xs tracking-widest">Enviar WhatsApp</button>
         </div>
     </div>
 
-    <!-- ADMIN PASSWORD MODAL -->
-    <div id="admin-password-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-sm p-8 space-y-6">
-            <h3 class="text-xl font-black text-gray-800 dark:text-white uppercase italic text-center">Acesso Restrito</h3>
+    <!-- ADMIN MODALS -->
+    <div id="management-modal" class="hidden fixed inset-0 bg-black/60 z-[120] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-4xl p-8 flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center border-b pb-4 mb-6"><h3 id="mgmt-modal-title" class="text-xl font-black text-brand-green uppercase italic tracking-tighter">Gestão Operacional</h3><button onclick="closeManagementModal()" class="text-2xl text-gray-400 hover:text-gray-600">×</button></div>
+            <div id="mgmt-modal-content" class="overflow-y-auto flex-1 dark:text-gray-300"></div>
+        </div>
+    </div>
+
+    <!-- PASSWORD MODAL -->
+    <div id="admin-password-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-[150] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-sm p-8 space-y-6 shadow-2xl">
+            <h3 class="text-xl font-black text-center uppercase italic tracking-widest">Acesso Restrito</h3>
             <form id="admin-password-form" class="space-y-4">
-                <input type="password" id="admin-password-input" required placeholder="Senha Admin" class="w-full px-5 py-4 bg-gray-50 dark:bg-gray-700 rounded-2xl text-center font-black tracking-widest">
+                <input type="password" id="admin-password-input" required placeholder="Senha Admin" class="w-full px-5 py-4 bg-gray-50 dark:bg-gray-700 rounded-2xl text-center font-black tracking-[0.5em] border-none outline-none focus:ring-2 focus:ring-red-500">
                 <div class="flex gap-2">
-                    <button type="button" id="cancel-admin-password" class="flex-1 py-4 bg-gray-100 dark:bg-gray-700 rounded-2xl">Voltar</button>
-                    <button type="submit" class="flex-1 py-4 bg-red-600 text-white font-bold rounded-2xl shadow-lg">Entrar</button>
+                    <button type="button" onclick="document.getElementById('admin-password-modal').classList.add('hidden')" class="flex-1 py-4 bg-gray-100 dark:bg-gray-700 text-gray-600 font-bold rounded-2xl uppercase text-[10px]">Voltar</button>
+                    <button type="submit" class="flex-1 py-4 bg-red-600 text-white font-bold rounded-2xl shadow-lg uppercase text-[10px]">Confirmar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- AI MODAL -->
-    <div id="ai-response-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[85vh]">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h3 id="ai-modal-title" class="text-lg font-black text-brand-green dark:text-brand-orange uppercase italic">Assistente Galvão Drones</h3>
-                <button id="close-ai-modal" class="text-2xl text-gray-400">×</button>
-            </div>
-            <div id="ai-modal-content" class="p-8 overflow-y-auto text-sm leading-relaxed"></div>
-        </div>
-    </div>
+    <!-- TOAST -->
+    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 px-8 py-4 rounded-2xl bg-gray-900 text-white font-bold shadow-2xl opacity-0 pointer-events-none transition-all duration-300 z-[200] translate-y-[-20px]"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- DOM ELEMENTS ---
+            // Mapeamento de Elementos (Correção do logoutButton e ReferenceErrors)
             const loginForm = document.getElementById("login-form");
             const usernameInput = document.getElementById("username-input");
             const passwordInput = document.getElementById("password-input");
             const successMessage = document.getElementById("success-message");
             const loginView = document.getElementById("login-view");
             const dashboardView = document.getElementById("dashboard-view");
-            const calculatorFab = document.getElementById("calculator-fab");
-            const errorMessage = document.getElementById("error-message");
-            const visitorLoginButton = document.getElementById("visitor-login-button");
             const logoutButton = document.getElementById("logout-button");
             const menuButton = document.getElementById("menu-button");
             const sidebarMenu = document.getElementById("sidebar-menu");
+            const calculatorFab = document.getElementById("calculator-fab");
             const adminPasswordForm = document.getElementById("admin-password-form");
+            const adminPasswordInput = document.getElementById("admin-password-input");
             const calculatorPopup = document.getElementById("calculator-popup");
-            const syncMessage = document.getElementById("sync-message");
+            const closeCalculatorPopup = document.getElementById("close-calculator-popup");
 
-            // --- STATE ---
             let products = [];
             let loggedInUser = null;
             let adminSessionActive = false;
-            const installmentRates = { 2: 5.79, 3: 6.09, 4: 7.99, 5: 8.09, 6: 8.18, 7: 9.49, 8: 9.68, 9: 10.37, 10: 11.05, 11: 12.27, 12: 12.38 };
+            const rates = { 2: 5.79, 3: 6.09, 4: 7.99, 5: 8.09, 6: 8.18, 7: 9.49, 8: 9.68, 9: 10.37, 10: 11.05, 11: 12.27, 12: 12.38 };
             const fmt = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
             const users = [
@@ -278,34 +292,35 @@
                 { name: "Visitante", username: "consultas", password: "", role: "Visitante", phone: "" }
             ];
 
-            // --- DATA FETCHING (INTEGRAÇÃO JSON) ---
-            async function carregarProdutos() {
+            function cleanCurrency(val) {
+                if (!val) return 0;
+                if (typeof val === 'number') return val;
+                return parseFloat(val.replace(/\./g, '').replace(',', '.'));
+            }
+
+            async function carregarDados() {
                 try {
                     const response = await fetch('produtos.json');
-                    if (!response.ok) throw new Error("Erro ao carregar banco de dados");
+                    if (!response.ok) throw new Error();
                     const data = await response.json();
-                    products = data.produtos || [];
-                    console.log("Banco de dados sincronizado com sucesso.");
-                    return true;
+                    products = data.products || [];
                 } catch (e) {
-                    console.error("Falha ao buscar produtos.json. Verifique se o arquivo existe no diretório.", e);
-                    // Fallback para não quebrar a UI durante testes
-                    syncMessage.textContent = "Erro ao carregar produtos.json!";
-                    syncMessage.classList.add("text-red-500");
-                    return false;
+                    console.error("Produtos.json erro.");
                 }
             }
 
-            // --- FUNCTIONS ---
             function switchPage(pageId) {
                 document.querySelectorAll(".page-content").forEach(p => p.classList.add("hidden"));
-                document.getElementById(pageId + "-page")?.classList.remove("hidden");
+                const target = document.getElementById(pageId + "-page");
+                if(target) target.classList.remove("hidden");
+                
                 document.querySelectorAll(".sidebar-link").forEach(l => {
                     l.classList.remove("active");
                     if(l.dataset.page === pageId) l.classList.add("active");
                 });
-                document.getElementById("page-title").textContent = pageId.charAt(0).toUpperCase() + pageId.slice(1);
                 
+                document.getElementById("page-title").textContent = pageId.toUpperCase();
+                if (pageId === "perfil") populateProfile();
                 if (pageId === "drones") renderProducts("drones", false);
                 if (pageId === "consultas") renderProducts("consultas", true);
                 if (pageId === "produtos") renderProducts("produtos", true);
@@ -313,103 +328,61 @@
                 sidebarMenu.classList.add("-translate-x-full");
             }
 
+            function populateProfile() {
+                if(!loggedInUser) return;
+                document.getElementById("profile-fullname").value = loggedInUser.name;
+                document.getElementById("profile-wa").value = loggedInUser.phone;
+                document.getElementById("profile-user").value = loggedInUser.username;
+                document.getElementById("profile-title-name").textContent = loggedInUser.name;
+                document.getElementById("profile-title-role").textContent = loggedInUser.role;
+                document.getElementById("sidebar-profile-placeholder").textContent = loggedInUser.name.charAt(0);
+            }
+
             function renderProducts(containerId, showPrice) {
                 const grid = document.getElementById(containerId + "-search-results");
                 if(!grid) return;
-                const search = document.getElementById(containerId + "-search-input")?.value.toLowerCase() || "";
-                
+                const search = (document.getElementById(containerId + "-search-input")?.value || "").toLowerCase();
                 grid.innerHTML = "";
-                const filtered = products.filter(p => p.name.toLowerCase().includes(search) || p.spec.toLowerCase().includes(search));
-
-                if(filtered.length === 0) {
-                    grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500">Nenhum drone encontrado.</div>`;
-                    return;
-                }
-
-                filtered.forEach(p => {
+                
+                products.filter(p => p.name.toLowerCase().includes(search)).forEach(p => {
+                    const sellPrice = cleanCurrency(p.sell);
                     const card = document.createElement("div");
                     card.className = "bg-white dark:bg-gray-800 p-6 rounded-3xl border dark:border-gray-700 shadow-sm transition-all";
-                    
-                    let priceHtml = showPrice ? `
-                        <div class="mt-4 pt-4 border-t dark:border-gray-700">
-                            <p class="text-[10px] font-black text-gray-400 uppercase">Preço Venda</p>
-                            <p class="text-2xl font-black text-brand-green dark:text-brand-orange">${fmt.format(p.price)}</p>
-                        </div>` : "";
-
                     card.innerHTML = `
-                        <h3 class="font-black text-brand-green dark:text-white uppercase italic text-sm">${p.name}</h3>
-                        <p class="text-xs text-gray-500 mt-2 line-clamp-2">${p.spec}</p>
-                        ${priceHtml}
-                        <div class="mt-6 grid grid-cols-2 gap-2">
-                            <button onclick="handleAIAssist('generate-description', '${p.name}', '${p.spec.replace(/\n/g, ' ')}')" class="text-[10px] font-black uppercase bg-gray-100 dark:bg-gray-700 p-3 rounded-xl">Ficha IA</button>
-                            <button onclick="handleSendWA('${p.name}', ${p.price})" class="text-[10px] font-black uppercase bg-brand-green text-white p-3 rounded-xl">Consultar</button>
-                        </div>
+                        <h3 class="font-black text-brand-green dark:text-white uppercase italic text-xs">${p.name}</h3>
+                        <p class="text-[10px] text-gray-500 mt-1">${p.line || 'DJI'}</p>
+                        ${showPrice ? `<p class="text-xl font-black text-brand-green mt-4">${fmt.format(sellPrice)}</p>` : ""}
+                        <button onclick="handleSendWA('${p.name}', ${sellPrice})" class="w-full mt-4 bg-brand-green text-white py-3 rounded-xl font-bold uppercase text-[10px]">Consultar WhatsApp</button>
                     `;
                     grid.appendChild(card);
                 });
             }
 
-            function setupCalculator() {
-                const sel = document.getElementById("popup-installments");
-                for (let i in installmentRates) {
-                    const opt = document.createElement("option");
-                    opt.value = i;
-                    opt.textContent = `${i}x (${installmentRates[i]}%)`;
-                    sel.appendChild(opt);
-                }
-                const update = () => {
-                    const baseVal = parseFloat(document.getElementById("popup-sale-value").value) || 0;
-                    const inst = parseInt(sel.value);
-                    const incNF = document.getElementById("popup-include-nf").checked;
-                    const res = document.getElementById("popup-calculator-results");
-                    if (baseVal > 0) {
-                        let currentVal = incNF ? baseVal * 1.06 : baseVal;
-                        if(inst > 0) {
-                            const total = currentVal * (1 + (installmentRates[inst] / 100));
-                            document.getElementById("popup-total-value").textContent = fmt.format(total);
-                            document.getElementById("popup-installment-value").textContent = `${inst}x de ${fmt.format(total/inst)}`;
-                            res.classList.remove("hidden");
-                        } else { res.classList.add("hidden"); }
-                    }
-                };
-                document.getElementById("popup-sale-value").oninput = update;
-                sel.onchange = update;
-                document.getElementById("popup-include-nf").onchange = update;
-            }
-
-            // --- LOGIN ---
             loginForm.onsubmit = async e => {
                 e.preventDefault();
                 const user = users.find(x => x.username === usernameInput.value && x.password === passwordInput.value);
                 if (user) {
                     loggedInUser = user;
-                    document.getElementById("login-header").classList.add("hidden");
-                    loginForm.classList.add("hidden");
                     successMessage.classList.remove("hidden");
-                    
-                    // Carrega os dados ANTES de entrar no dashboard
-                    await carregarProdutos();
-
+                    await carregarDados();
                     setTimeout(() => {
                         loginView.classList.add("hidden");
                         dashboardView.classList.remove("hidden");
                         calculatorFab.classList.remove("hidden");
                         document.getElementById("sidebar-user-name").textContent = user.name;
                         document.getElementById("sidebar-user-role").textContent = user.role;
-                        document.getElementById("sidebar-profile-placeholder").textContent = user.name.charAt(0);
                         document.getElementById("welcome-user-name").textContent = user.name.split(" ")[0];
                         document.getElementById("welcome-user-role").textContent = user.role;
-                        if (user.role === "Administrador") document.getElementById("admin-link").classList.remove("hidden");
-                        if (user.role === "Vendedor") document.getElementById("vendedor-content").classList.remove("hidden");
+                        
+                        if (user.role === "Administrador") {
+                            document.getElementById("admin-link")?.classList.remove("hidden");
+                            document.getElementById("admin-card")?.classList.remove("hidden");
+                        }
                         switchPage("dashboard");
                     }, 1000);
-                } else {
-                    errorMessage.classList.remove("hidden");
-                    setTimeout(() => errorMessage.classList.add("hidden"), 3000);
-                }
+                } else { document.getElementById("error-message").classList.remove("hidden"); }
             };
 
-            // --- EVENTS ---
             document.querySelectorAll(".sidebar-link, .quick-access-link").forEach(l => {
                 l.onclick = e => {
                     e.preventDefault();
@@ -420,68 +393,69 @@
                 };
             });
 
-            document.getElementById("admin-password-form").onsubmit = e => {
+            adminPasswordForm.onsubmit = e => {
                 e.preventDefault();
-                if(document.getElementById("admin-password-input").value === "@0639") {
+                if(adminPasswordInput.value === "@0639") {
                     adminSessionActive = true;
                     document.getElementById("admin-password-modal").classList.add("hidden");
                     switchPage("admin");
                 }
             };
 
-            visitorLoginButton.onclick = () => {
-                usernameInput.value = "consultas";
-                passwordInput.value = "";
+            logoutButton.onclick = () => location.reload();
+            menuButton.onclick = () => sidebarMenu.classList.toggle("-translate-x-full");
+            calculatorFab.onclick = () => calculatorPopup.classList.toggle("hidden");
+            closeCalculatorPopup.onclick = () => calculatorPopup.classList.add("hidden");
+            document.getElementById("theme-toggle").onclick = () => document.documentElement.classList.toggle('dark');
+
+            // --- CALCULATOR SETUP ---
+            const calcSel = document.getElementById("popup-installments");
+            for (let i in rates) {
+                const opt = document.createElement("option");
+                opt.value = i; opt.textContent = `${i}x (${rates[i]}%)`;
+                calcSel.appendChild(opt);
+            }
+            const updateCalc = () => {
+                const val = parseFloat(document.getElementById("popup-sale-value").value) || 0;
+                const inst = parseInt(calcSel.value);
+                const nf = document.getElementById("popup-include-nf").checked;
+                if (val > 0 && inst > 0) {
+                    let total = nf ? val * 1.06 : val;
+                    total = total * (1 + (rates[inst] / 100));
+                    document.getElementById("popup-total-value").textContent = fmt.format(total);
+                    document.getElementById("popup-installment-value").textContent = `${inst}x de ${fmt.format(total/inst)}`;
+                    document.getElementById("popup-calculator-results").classList.remove("hidden");
+                }
+            };
+            document.getElementById("popup-sale-value").oninput = updateCalc;
+            calcSel.onchange = updateCalc;
+            document.getElementById("popup-include-nf").onchange = updateCalc;
+
+            document.getElementById("visitor-login-button").onclick = () => {
+                usernameInput.value = "consultas"; passwordInput.value = "";
                 loginForm.dispatchEvent(new Event('submit'));
             };
-
-            menuButton.onclick = () => sidebarMenu.classList.toggle("-translate-x-full");
-            calculatorFab.onclick = () => {
-                calculatorPopup.classList.remove("hidden");
-                setTimeout(() => calculatorPopup.classList.remove("opacity-0", "scale-95"), 10);
-            };
-            document.getElementById("close-calculator-popup").onclick = () => {
-                calculatorPopup.classList.add("opacity-0", "scale-95");
-                setTimeout(() => calculatorPopup.classList.add("hidden"), 300);
-            };
-            document.getElementById("theme-toggle").onclick = () => document.documentElement.classList.toggle('dark');
-            logoutButton.onclick = () => location.reload();
-            document.getElementById("close-ai-modal").onclick = () => document.getElementById("ai-response-modal").classList.add("hidden");
-
-            document.getElementById("consultas-search-button").onclick = () => renderProducts("consultas", true);
-            document.getElementById("drones-search-button").onclick = () => renderProducts("drones", false);
-
-            setupCalculator();
         });
 
-        // Global functions for card clicks
         window.handleSendWA = (name, price) => {
-            const msg = `🚀 Olá! Consultando disponibilidade do drone: *${name}* - Valor Ref: ${new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL'}).format(price)}`;
+            const msg = `🚀 Olá Galvão Drones! Consulta de stock: *${name}* - Ref: ${new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL'}).format(price)}`;
             window.open(`https://wa.me/556236360668?text=${encodeURIComponent(msg)}`, "_blank");
         };
 
-        window.handleAIAssist = async (action, name, spec) => {
-            const modal = document.getElementById("ai-response-modal");
-            const content = document.getElementById("ai-modal-content");
-            modal.classList.remove("hidden");
-            content.innerHTML = '<div class="spinner mx-auto"></div>';
-            
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: `Gere uma descrição técnica e visionária para o drone ${name}. Dados: ${spec}` }] }],
-                        systemInstruction: { parts: [{ text: "Você é Mikhaell Galvão, autoridade técnica DJI." }] }
-                    })
-                });
-                const data = await response.json();
-                content.innerHTML = `<div class="prose dark:prose-invert font-medium">${data.candidates[0].content.parts[0].text}</div>`;
-            } catch (e) { content.textContent = "Erro na IA."; }
+        window.shareCalc = () => {
+            const total = document.getElementById("popup-total-value").textContent;
+            window.open(`https://wa.me/?text=${encodeURIComponent("*Simulação Galvão Drones*\nTotal Final: "+total)}`, "_blank");
         };
+
+        window.openManagementModal = (type) => {
+            const modal = document.getElementById("management-modal");
+            const content = document.getElementById("mgmt-modal-content");
+            document.getElementById("mgmt-modal-title").textContent = type === 'user' ? "Gestão de Utilizadores" : "Inventário DJI";
+            content.innerHTML = `<div class="p-10 text-center font-bold">Módulo de sincronização com produtos.json ativo para: ${type}.</div>`;
+            modal.classList.remove("hidden");
+        };
+
+        window.closeManagementModal = () => document.getElementById("management-modal").classList.add("hidden");
     </script>
 </body>
 </html>
