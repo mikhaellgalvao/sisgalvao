@@ -61,4 +61,5 @@
         { "id": 1035, "name": "Par de helices Air 2s", "cost": "150,00", "sell": "210,00", "icon": "⚡", "type": "Peças", "line": "Consumer" },
         { "id": 1036, "name": "Protetor de helices Neo", "cost": "100,00", "sell": "140,00", "icon": "⚡", "type": "Acessórios", "line": "Consumer" }
     ]
+
 }
