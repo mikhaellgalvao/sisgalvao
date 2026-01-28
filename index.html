@@ -29,8 +29,9 @@
         .dark .sidebar-link.active { background-color: #374151; color: #f9fafb; }
         .modal-tab.active { border-color: #EF7E13; color: #EF7E13; }
         #calculator-popup::after {
-            content: ''; position: absolute; bottom: -10px; right: 20px; width: 0; height: 0;
-            border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid white;
+            content: ''; position: absolute; bottom: -10px; right: 20px;
+            width: 0; height: 0; border-left: 10px solid transparent;
+            border-right: 10px solid transparent; border-top: 10px solid white;
         }
         .dark #calculator-popup::after { border-top-color: #1f2937; }
     </style>
@@ -46,175 +47,256 @@
             </div>
             <form id="login-form" class="space-y-4 pt-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Usuário</label>
-                    <input type="text" id="username-input" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <label for="username-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Usuário</label>
+                    <input type="text" id="username-input" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white px-3 py-2">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Senha</label>
-                    <input type="password" id="password-input" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <label for="password-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Senha</label>
+                    <input type="password" id="password-input" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white px-3 py-2">
                 </div>
-                <button type="submit" class="w-full justify-center rounded-lg bg-brand-green py-3 text-sm font-semibold text-white hover:bg-green-700">Entrar</button>
-                <button type="button" id="visitor-login-button" class="w-full justify-center rounded-lg bg-gray-400 py-3 text-sm font-semibold text-white hover:bg-gray-500 mt-2">Visitante</button>
+                <button type="submit" class="group relative flex w-full justify-center rounded-lg bg-brand-green py-3 px-4 text-sm font-semibold text-white hover:bg-green-700 transition">Entrar</button>
+                <button type="button" id="visitor-login-button" class="w-full flex justify-center rounded-lg bg-gray-400 py-3 px-4 text-sm font-semibold text-white hover:bg-gray-500 mt-2 transition">Visitante</button>
             </form>
-            <div id="error-message" class="hidden p-4 mt-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400">Acesso Negado.</div>
+            <div id="error-message" class="hidden p-4 mt-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">Usuário ou senha inválidos.</div>
             <div id="success-message" class="hidden text-center">
                 <div class="spinner mx-auto"></div>
-                <p class="mt-4 font-semibold text-brand-green">Carregando catálogo...</p>
+                <p class="mt-4 font-semibold text-lg text-brand-green dark:text-gray-200">Login bem-sucedido!</p>
             </div>
         </div>
     </div>
 
     <div id="dashboard-view" class="hidden">
-        <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
-            <div id="sidebar-menu" class="fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 shadow-lg transform -translate-x-full md:relative md:translate-x-0 transition-transform z-30 flex flex-col">
-                <div class="flex items-center justify-center h-20 border-b dark:border-gray-700 px-4">
-                    <div class="flex items-center">
-                        <div id="sidebar-profile-picture" class="w-10 h-10 rounded-full bg-gray-300 bg-cover bg-center"></div>
-                        <div class="ml-3"><p id="sidebar-user-name" class="font-semibold text-sm dark:text-white"></p></div>
-                    </div>
+        <div class="flex h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden">
+            <div id="sidebar-menu" class="fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 shadow-lg transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-200 ease-in-out z-30 flex flex-col">
+                <div class="flex items-center h-20 border-b dark:border-gray-700 px-4">
+                    <a href="#" data-page="perfil" class="sidebar-link flex items-center w-full">
+                        <div id="sidebar-profile-picture" class="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-700 bg-cover bg-center flex-shrink-0 flex items-center justify-center">
+                            <span id="sidebar-profile-placeholder" class="text-xs text-gray-500">Foto</span>
+                        </div>
+                        <div class="ml-3 overflow-hidden">
+                            <p id="sidebar-user-name" class="font-semibold text-sm text-gray-800 dark:text-white truncate"></p>
+                            <p id="sidebar-user-role" class="text-xs text-gray-500 dark:text-gray-400 truncate"></p>
+                        </div>
+                    </a>
                 </div>
-                <nav id="sidebar-nav" class="flex-1 px-2 py-4 space-y-1">
-                    <a href="#" data-page="dashboard" class="sidebar-link active flex items-center px-4 py-2.5 dark:text-gray-400 rounded-md"><span>Dashboard</span></a>
-                    <a href="#" data-page="consultas" class="sidebar-link flex items-center px-4 py-2.5 dark:text-gray-400 rounded-md"><span>Consultas</span></a>
-                    <a href="#" data-page="drones" class="sidebar-link flex items-center px-4 py-2.5 dark:text-gray-400 rounded-md"><span>Drones</span></a>
-                    <a href="#" data-page="produtos" class="sidebar-link flex items-center px-4 py-2.5 dark:text-gray-400 rounded-md"><span>Produtos</span></a>
-                    <a href="#" data-page="perfil" class="sidebar-link flex items-center px-4 py-2.5 dark:text-gray-400 rounded-md"><span>Perfil</span></a>
+                <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
+                    <a href="#" data-page="dashboard" class="sidebar-link active flex items-center px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">
+                        <span class="font-medium">Dashboard</span>
+                    </a>
+                    <a href="#" data-page="consultas" class="sidebar-link flex items-center px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">
+                        <span class="font-medium">Consultas</span>
+                    </a>
+                    <a href="#" data-page="drones" class="sidebar-link flex items-center px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">
+                        <span class="font-medium">Drones</span>
+                    </a>
+                    <a href="#" data-page="marketing" class="sidebar-link flex items-center px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">
+                        <span class="font-medium">Marketing</span>
+                    </a>
+                    <a href="#" data-page="produtos" class="sidebar-link flex items-center px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">
+                        <span class="font-medium">Produtos</span>
+                    </a>
+                    <div class="pt-2 mt-auto border-t dark:border-gray-700">
+                        <a href="#" data-page="admin" id="admin-link" class="sidebar-link hidden flex items-center px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">
+                            <span class="font-medium">Administração</span>
+                        </a>
+                        <a href="#" data-page="sobre" class="sidebar-link flex items-center px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">
+                            <span class="font-medium">Sobre a Empresa</span>
+                        </a>
+                    </div>
                 </nav>
             </div>
 
             <div class="flex flex-col flex-1 overflow-y-auto">
-                <div class="flex items-center justify-between h-20 px-6 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
-                    <h1 id="page-title" class="text-2xl font-semibold dark:text-white">Dashboard</h1>
-                    <button id="logout-button" class="px-4 py-2 bg-brand-orange text-white rounded-md">Sair</button>
-                </div>
-                
-                <div id="main-content" class="p-6">
+                <header class="flex items-center justify-between h-20 px-6 bg-white dark:bg-gray-800 border-b dark:border-gray-700 shrink-0">
+                    <button id="menu-button" class="md:hidden text-gray-600 dark:text-gray-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <h1 id="page-title" class="text-2xl font-semibold text-gray-800 dark:text-white">Dashboard</h1>
+                    <button id="logout-button" class="px-4 py-2 text-sm font-medium text-white bg-brand-orange rounded-md hover:bg-orange-600">Sair</button>
+                </header>
+
+                <main id="main-content" class="p-6">
                     <div id="dashboard-page" class="page-content">
-                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow dark:text-white">
-                            <h2 class="text-xl font-bold">Bem-vindo, <span id="welcome-user-name"></span>!</h2>
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                            <h2 class="text-xl font-bold text-gray-800 dark:text-white">Bem-vindo(a), <span id="welcome-user-name">Usuário</span>!</h2>
+                            <p class="mt-1 text-gray-600 dark:text-gray-400">Nível de acesso: <span id="welcome-user-role" class="font-semibold"></span></p>
                         </div>
                     </div>
 
-                    <div id="produtos-page" class="page-content hidden">
-                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                            <h2 class="text-xl font-bold text-brand-green dark:text-brand-orange">Catálogo de Produtos</h2>
-                            <p class="mt-2 text-gray-600 dark:text-gray-400">Dados carregados via arquivo produtos.json.</p>
-                            <div class="mt-4 flex gap-2">
-                                <button id="export-json-button" class="bg-brand-green text-white px-4 py-2 rounded-md text-sm">Exportar Backup</button>
-                                <label for="import-json-input" class="bg-brand-orange text-white px-4 py-2 rounded-md text-sm cursor-pointer">Importar JSON</label>
-                                <input type="file" id="import-json-input" class="hidden" accept=".json">
-                            </div>
+                    <div id="consultas-page" class="page-content hidden">
+                        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                            <input type="text" id="consultas-search-input" placeholder="Buscar no catálogo..." class="flex-1 rounded-md border-gray-300 px-4 py-2 dark:bg-gray-700 dark:text-white">
+                            <button id="consultas-search-button" class="bg-brand-green text-white px-6 py-2 rounded-md">Buscar</button>
                         </div>
-                        <div id="produtos-search-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"></div>
+                        <div id="consultas-search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                     </div>
-                    
-                    <div id="drones-page" class="page-content hidden"><div id="drones-search-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div></div>
-                    <div id="consultas-page" class="page-content hidden"><div id="consultas-search-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div></div>
-                </div>
+
+                    <div id="drones-page" class="page-content hidden">
+                        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                            <input type="text" id="drones-search-input" placeholder="Pesquisar drone..." class="flex-1 rounded-md border-gray-300 px-4 py-2 dark:bg-gray-700 dark:text-white">
+                            <button id="drones-search-button" class="bg-brand-green text-white px-6 py-2 rounded-md">Buscar</button>
+                        </div>
+                        <div id="drones-search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    </div>
+
+                    <div id="marketing-page" class="page-content hidden"><div class="p-6 bg-white dark:bg-gray-800 rounded-lg">Painel de Marketing</div></div>
+                    <div id="produtos-page" class="page-content hidden"><div id="produtos-search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div></div>
+                    <div id="perfil-page" class="page-content hidden"><div class="p-6 bg-white dark:bg-gray-800 rounded-lg">Meu Perfil</div></div>
+                    <div id="sobre-page" class="page-content hidden"><div class="p-6 bg-white dark:bg-gray-800 rounded-lg">Sobre a Galvão Drones</div></div>
+                </main>
             </div>
         </div>
     </div>
 
+    <button id="calculator-fab" class="hidden fixed bottom-6 right-6 bg-brand-orange text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:bg-orange-600 z-50 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+    </button>
+
+    <div id="calculator-popup" class="hidden fixed bottom-24 right-6 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-4 z-50">
+        <h3 class="font-bold text-brand-green mb-4">Simulador de Parcelas</h3>
+        <input type="number" id="popup-sale-value" placeholder="Valor (R$)" class="w-full mb-3 p-2 border rounded dark:bg-gray-700 dark:text-white">
+        <select id="popup-installments" class="w-full mb-3 p-2 border rounded dark:bg-gray-700 dark:text-white"></select>
+        <div id="calc-result" class="text-sm space-y-2 dark:text-gray-300"></div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const loginView = document.getElementById("login-view");
-            const dashboardView = document.getElementById("dashboard-view");
-            const successMessage = document.getElementById("success-message");
-            const loginForm = document.getElementById("login-form");
+            // --- ESTADOS ---
+            let products = [];
+            let suppliers = [];
+            let loggedInUser = null;
             const currencyFormatter = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
-            let loggedInUser = null;
-            let products = []; // Inicia vazio
-            let suppliers = []; // Inicia vazio
+            const users = [
+                { name: "Mikhaell Galvão", username: "mikhaell", password: "mk0639", role: "Administrador" },
+                { name: "Rafael Gomes", username: "rafael", password: "rf123", role: "Vendedor" },
+                { name: "Visitante", username: "consultas", password: "", role: "Visitante" }
+            ];
 
-            // 1. FUNÇÃO PARA BUSCAR O ARQUIVO JSON EXTERNO
-            async function loadExternalData() {
+            const installmentRates = { 1:0, 2:5.79, 3:6.09, 4:7.99, 5:8.09, 6:8.18, 7:9.49, 8:9.68, 9:10.37, 10:11.05, 11:12.27, 12:12.38 };
+
+            // --- CARREGAMENTO DO JSON ---
+            async function carregarDados() {
                 try {
                     const response = await fetch('produtos.json');
-                    if (!response.ok) throw new Error('Arquivo produtos.json não encontrado.');
+                    if (!response.ok) throw new Error();
                     const data = await response.json();
-                    
-                    products = data.products || [];
-                    suppliers = data.suppliers || [];
-                    
-                    console.log("Dados carregados com sucesso:", products.length, "produtos.");
-                } catch (error) {
-                    console.error("Erro ao carregar produtos.json:", error);
-                    alert("Atenção: Não foi possível carregar o arquivo produtos.json automaticamente.");
+                    products = data.produtos || [];
+                    suppliers = data.fornecedores || [];
+                    console.log("Banco de dados sincronizado.");
+                } catch (e) {
+                    console.error("Erro ao carregar produtos.json. Verifique se o arquivo existe.");
                 }
             }
 
-            // 2. Lógica de Login
-            loginForm.addEventListener("submit", async e => {
-                e.preventDefault();
-                // Simulação de login
-                loggedInUser = { name: "Mikhaell Galvão", role: "Administrador" };
-                
-                successMessage.classList.remove("hidden");
-                await loadExternalData(); // Busca o arquivo ao logar
-                
-                setTimeout(() => {
-                    loginView.classList.add("hidden");
-                    dashboardView.classList.remove("hidden");
-                    document.getElementById("sidebar-user-name").textContent = loggedInUser.name;
-                    document.getElementById("welcome-user-name").textContent = loggedInUser.name;
-                    switchPage('dashboard');
-                }, 1000);
-            });
-
-            // 3. Renderização Dinâmica
+            // --- NAVEGAÇÃO ---
             function switchPage(pageId) {
                 document.querySelectorAll(".page-content").forEach(p => p.classList.add("hidden"));
-                document.getElementById(pageId + "-page").classList.remove("hidden");
+                const target = document.getElementById(pageId + "-page");
+                if (target) target.classList.remove("hidden");
                 
-                const container = document.getElementById(`${pageId}-search-results`);
-                if (container) {
-                    container.innerHTML = "";
-                    products.forEach(product => {
-                        const card = document.createElement("div");
-                        card.className = "bg-white dark:bg-gray-800 p-4 rounded-lg shadow dark:text-white";
-                        card.innerHTML = `
-                            <h3 class="font-bold text-brand-green">${product.name}</h3>
-                            <p class="text-sm mt-2">${product.spec || ''}</p>
-                            <p class="mt-4 font-bold text-lg">${currencyFormatter.format(product.price)}</p>
-                        `;
-                        container.appendChild(card);
-                    });
-                }
+                document.getElementById("page-title").textContent = pageId.charAt(0).toUpperCase() + pageId.slice(1);
+                
+                if (pageId === "drones") renderProducts("drones", false);
+                if (pageId === "consultas") renderProducts("consultas", true);
+                if (pageId === "produtos") renderProducts("produtos", true);
             }
 
-            // Botões de Sidebar
-            document.querySelectorAll(".sidebar-link").forEach(link => {
-                link.addEventListener("click", e => {
-                    e.preventDefault();
-                    switchPage(link.dataset.page);
+            function renderProducts(containerId, showPrice) {
+                const container = document.getElementById(containerId + "-search-results");
+                const searchTerm = document.getElementById(containerId + "-search-input")?.value.toLowerCase() || "";
+                
+                container.innerHTML = "";
+                const filtered = products.filter(p => p.name.toLowerCase().includes(searchTerm));
+
+                filtered.forEach(p => {
+                    const card = document.createElement("div");
+                    card.className = "bg-white dark:bg-gray-800 p-4 rounded-lg shadow";
+                    card.innerHTML = `
+                        <h3 class="font-bold text-brand-green dark:text-brand-orange">${p.name}</h3>
+                        <p class="text-sm text-gray-500 mt-2 whitespace-pre-wrap">${p.spec}</p>
+                        ${showPrice ? `<p class="mt-4 font-bold text-xl">${currencyFormatter.format(p.price)}</p>` : ""}
+                        <div class="mt-4 pt-4 border-t flex gap-2">
+                            <button class="text-xs bg-gray-100 p-2 rounded flex-1">Detalhes</button>
+                            <button onclick="window.open('https://wa.me/556236360668')" class="text-xs bg-brand-green text-white p-2 rounded flex-1">Consultar</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
                 });
-            });
+            }
 
-            // Exportar Backup
-            document.getElementById('export-json-button').addEventListener('click', () => {
-                const dataToExport = { products, suppliers };
-                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
-                const downloadAnchorNode = document.createElement('a');
-                downloadAnchorNode.setAttribute("href", dataStr);
-                downloadAnchorNode.setAttribute("download", "produtos_galvao_drones.json");
-                downloadAnchorNode.click();
-            });
-
-            // Importar Manualmente
-            document.getElementById('import-json-input').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const imported = JSON.parse(event.target.result);
-                    products = imported.products || imported; // Aceita tanto objeto quanto array simples
-                    switchPage('produtos');
-                    alert("Catálogo atualizado via importação!");
+            // --- CALCULADORA ---
+            function setupCalc() {
+                const sel = document.getElementById("popup-installments");
+                for (let i in installmentRates) {
+                    const opt = document.createElement("option");
+                    opt.value = i;
+                    opt.textContent = i + "x (" + installmentRates[i] + "%)";
+                    sel.appendChild(opt);
+                }
+                
+                const update = () => {
+                    const val = parseFloat(document.getElementById("popup-sale-value").value) || 0;
+                    const inst = parseInt(sel.value);
+                    const fee = installmentRates[inst];
+                    const total = val + (val * (fee/100));
+                    document.getElementById("calc-result").innerHTML = `
+                        <p>Total: <b>${currencyFormatter.format(total)}</b></p>
+                        <p>Parcela: ${inst}x de <b>${currencyFormatter.format(total/inst)}</b></p>
+                    `;
                 };
-                reader.readAsText(file);
+                document.getElementById("popup-sale-value").oninput = update;
+                sel.onchange = update;
+            }
+
+            // --- LOGIN ---
+            document.getElementById("login-form").onsubmit = e => {
+                e.preventDefault();
+                const u = document.getElementById("username-input").value;
+                const p = document.getElementById("password-input").value;
+                const user = users.find(x => x.username === u && x.password === p);
+                
+                if (user) {
+                    loggedInUser = user;
+                    document.getElementById("login-view").classList.add("hidden");
+                    document.getElementById("dashboard-view").classList.remove("hidden");
+                    document.getElementById("calculator-fab").classList.remove("hidden");
+                    document.getElementById("sidebar-user-name").textContent = user.name;
+                    document.getElementById("sidebar-user-role").textContent = user.role;
+                    document.getElementById("welcome-user-name").textContent = user.name.split(" ")[0];
+                    document.getElementById("welcome-user-role").textContent = user.role;
+                    if (user.role === "Administrador") document.getElementById("admin-link").classList.remove("hidden");
+                    switchPage("dashboard");
+                } else {
+                    document.getElementById("error-message").classList.remove("hidden");
+                }
+            };
+
+            document.getElementById("visitor-login-button").onclick = () => {
+                document.getElementById("username-input").value = "consultas";
+                document.getElementById("password-input").value = "";
+                document.getElementById("login-form").dispatchEvent(new Event('submit'));
+            };
+
+            // --- EVENTOS GERAIS ---
+            document.querySelectorAll(".sidebar-link").forEach(l => {
+                l.onclick = e => {
+                    e.preventDefault();
+                    switchPage(l.dataset.page);
+                };
             });
 
+            document.getElementById("menu-button").onclick = () => document.getElementById("sidebar-menu").classList.toggle("-translate-x-full");
+            document.getElementById("calculator-fab").onclick = () => document.getElementById("calculator-popup").classList.toggle("hidden");
             document.getElementById("logout-button").onclick = () => location.reload();
+
+            // --- BUSCA ---
+            document.getElementById("consultas-search-button").onclick = () => renderProducts("consultas", true);
+            document.getElementById("drones-search-button").onclick = () => renderProducts("drones", false);
+
+            // --- INIT ---
+            carregarDados();
+            setupCalc();
         });
     </script>
 </body>
