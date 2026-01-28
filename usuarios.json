@@ -1,41 +1,46 @@
 {
     "empresa": "Galvão Drones",
-    "last_update": "2026-01-28T16:00:00",
+    "last_update": "2026-01-28T16:30:00",
     "users": [
         {
             "name": "Mikhaell Galvão",
             "username": "mikhaell",
             "password": "mk0639",
             "role": "Administrador",
-            "phone": "62984710639"
+            "phone": "62984710639",
+            "avatar": "https://imgur.com/ny5U9KV.png"
         },
         {
             "name": "Maikhon Galvão",
             "username": "maikhon",
             "password": "0639",
             "role": "Administrador",
-            "phone": "62933001865"
+            "phone": "62933001865",
+            "avatar": ""
         },
         {
             "name": "Rafael Gomes",
             "username": "rafael",
             "password": "rf123",
             "role": "Vendedor",
-            "phone": "62993344356"
+            "phone": "62993344356",
+            "avatar": ""
         },
         {
             "name": "Ryan Rodrigues",
             "username": "ryan",
-            "password": "0639",
+            "password": "mk0639",
             "role": "Administrador",
-            "phone": "62920007396"
+            "phone": "62920007396",
+            "avatar": ""
         },
         {
             "name": "Visitante",
             "username": "consultas",
             "password": "",
             "role": "Visitante",
-            "phone": ""
+            "phone": "",
+            "avatar": ""
         }
     ]
 }
