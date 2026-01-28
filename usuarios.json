@@ -32,7 +32,7 @@
             "password": "mk0639",
             "role": "Administrador",
             "phone": "62920007396",
-            "avatar": ""
+            "avatar": "https://i.imgur.com/7nZVEsE.jpeg"
         },
         {
             "name": "Visitante",
@@ -44,6 +44,7 @@
         }
     ]
 }
+
 
 
 
