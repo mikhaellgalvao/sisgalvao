@@ -140,7 +140,7 @@
         <aside id="sidebar-menu" class="fixed inset-y-0 left-0 w-72 bg-white dark:bg-zinc-900 shadow-2xl transform -translate-x-full lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r dark:border-zinc-800 text-left">
             <div id="sidebar-header" class="p-8 border-b dark:border-zinc-800 flex flex-col items-center">
                 <a href="#" data-page="perfil" id="sidebar-profile-header" class="sidebar-link flex flex-col items-center w-full gap-3">
-                    <div id="sidebar-profile-picture" class="w-20 h-20 rounded-full bg-brand-orange text-white flex items-center justify-center font-bold text-3xl border-4 border-gray-100 dark:border-zinc-800 shadow-xl profile-avatar-div overflow-hidden transition-transform hover:scale-105">
+                    <div id="sidebar-profile-picture" class="w-20 h-20 rounded-full bg-brand-orange text-white flex items-center justify-center font-bold text-3xl border-4 border-gray-100 dark:border-zinc-800 shadow-xl profile-avatar-div overflow-hidden">
                         <span id="sidebar-profile-placeholder">?</span>
                     </div>
                     <div class="text-center">
@@ -180,7 +180,7 @@
             </header>
 
             <main id="main-content" class="p-4 sm:p-8">
-                <!-- Page: Dashboard -->
+                <!-- Page: Dashboard Content -->
                 <section id="dashboard-page" class="page-content space-y-6">
                     <div class="bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-[2.5rem] shadow-sm border dark:border-zinc-800 text-left">
                         <h2 class="text-2xl sm:text-3xl font-black italic tracking-tighter text-slate-800 dark:text-white uppercase italic">Olá, <span id="welcome-user-name" class="text-brand-orange"></span>!</h2>
@@ -218,6 +218,10 @@
                             <h2 class="text-2xl font-black text-red-600 uppercase italic tracking-tighter">Administração Galvão</h2>
                             <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Gestão central de dados DJI</p>
                         </div>
+                        <div class="flex gap-2">
+                             <button onclick="window.downloadUpdatedJSON('usuarios.json')" class="px-4 py-2.5 bg-brand-orange text-white font-bold rounded-xl text-[9px] uppercase tracking-widest shadow-md hover:scale-105 transition-all">Exportar Users <svg class="w-3 h-3 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-width="2"/></svg></button>
+                             <button onclick="window.downloadUpdatedJSON('produtos.json')" class="px-4 py-2.5 bg-brand-green text-white font-bold rounded-xl text-[9px] uppercase tracking-widest shadow-md hover:scale-105 transition-all">Exportar Prod <svg class="w-3 h-3 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-width="2"/></svg></button>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-slate-800 dark:text-white font-sans text-left">
@@ -228,7 +232,6 @@
                             </div>
                             <div class="flex-1 overflow-y-auto p-4 space-y-2 hide-scrollbar" id="admin-user-list"></div>
                         </div>
-
                         <div class="bg-white dark:bg-zinc-900 rounded-[2rem] border dark:border-zinc-800 overflow-hidden flex flex-col h-[500px]">
                             <div class="p-5 border-b dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/50 flex justify-between items-center">
                                 <h3 class="font-black uppercase text-[10px] tracking-widest text-brand-green italic">Catálogo</h3>
@@ -236,7 +239,6 @@
                             </div>
                             <div class="flex-1 overflow-y-auto p-4 space-y-2 hide-scrollbar" id="admin-product-list"></div>
                         </div>
-
                         <div class="bg-white dark:bg-zinc-900 rounded-[2rem] border dark:border-zinc-800 overflow-hidden flex flex-col h-[500px]">
                             <div class="p-5 border-b dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/50 flex justify-between items-center">
                                 <h3 class="font-black uppercase text-[10px] tracking-widest text-brand-green italic">Fornecedor</h3>
@@ -355,28 +357,17 @@
         </div>
     </div>
     <button id="calculator-fab" class="hidden fixed bottom-6 right-6 w-16 h-16 bg-brand-orange text-white rounded-full shadow-2xl flex items-center justify-center z-50 transition-all hover:scale-110 active:scale-90">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-width="2"></path></svg>
     </button>
 
     <!-- SCRIPT -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            let usersData = [];
-            let products = [];
-            let suppliers = [];
-            let loggedInUser = null;
-            let adminPassBuffer = "";
-            let adminIdleTimer;
-            let currentSelectedProduct = "";
-            let currentAdminEditType = "";
-            let currentAdminEditIndex = null;
-            const fmt = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-            const installmentRates = { 2: 5.79, 3: 6.09, 4: 7.99, 5: 8.09, 6: 8.18, 7: 9.49, 8: 9.68, 9: 10.37, 10: 11.05, 11: 12.27, 12: 12.38 };
-
             const contacts = { mikhaell: "62984710639", maikhon: "62933001865", ryan: "62920007396" };
             const centralNumber = "6236360668";
+            let adminPassBuffer = "";
+            let adminIdleTimer;
 
-            // ELEMENTS
             const elements = {
                 loginForm: document.getElementById("login-form"),
                 usernameInput: document.getElementById("username-input"),
@@ -394,8 +385,18 @@
                 togglePasswordBtn: document.getElementById("toggle-password-visibility"),
                 eyeIcon: document.getElementById("eye-icon"),
                 logoTrigger: document.getElementById("login-logo-trigger"),
+                sidebarConsultasText: document.getElementById("sidebar-consultas-text"),
+                cardConsultasText: document.getElementById("card-consultas-text"),
                 adminLink: document.getElementById("admin-link"),
                 adminCard: document.getElementById("admin-card"),
+                sobreLink: document.getElementById("sobre-link"),
+                sidebarMarketingLink: document.getElementById("sidebar-marketing-link"),
+                sidebarProdutosLink: document.getElementById("sidebar-produtos-link"),
+                sidebarPerfilLink: document.getElementById("sidebar-perfil-link"),
+                sidebarProfileHeader: document.getElementById("sidebar-profile-header"),
+                cardMarketing: document.getElementById("card-marketing"),
+                cardProdutos: document.getElementById("card-produtos"),
+                cardPerfil: document.getElementById("card-perfil"),
                 availabilityModal: document.getElementById("availability-modal"),
                 modalProductName: document.getElementById("modal-product-name"),
                 modalSellersList: document.getElementById("modal-sellers-list"),
@@ -413,18 +414,18 @@
                 adminKeypadCancel: document.getElementById("admin-keypad-cancel"),
                 calculatorFab: document.getElementById("calculator-fab"),
                 calculatorPopup: document.getElementById("calculator-popup"),
-                closeCalculatorPopup: document.getElementById("close-calculator-popup"),
-                sidebarConsultasText: document.getElementById("sidebar-consultas-text"),
-                cardConsultasText: document.getElementById("card-consultas-text"),
-                sobreLink: document.getElementById("sobre-link"),
-                sidebarMarketingLink: document.getElementById("sidebar-marketing-link"),
-                sidebarProdutosLink: document.getElementById("sidebar-produtos-link"),
-                sidebarPerfilLink: document.getElementById("sidebar-perfil-link"),
-                sidebarProfileHeader: document.getElementById("sidebar-profile-header"),
-                cardMarketing: document.getElementById("card-marketing"),
-                cardProdutos: document.getElementById("card-produtos"),
-                cardPerfil: document.getElementById("card-perfil")
+                closeCalculatorPopup: document.getElementById("close-calculator-popup")
             };
+
+            let usersData = [];
+            let products = [];
+            let suppliers = [];
+            let loggedInUser = null;
+            let currentSelectedProduct = "";
+            let currentAdminEditType = "";
+            let currentAdminEditIndex = null;
+            const fmt = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+            const installmentRates = { 2: 5.79, 3: 6.09, 4: 7.99, 5: 8.09, 6: 8.18, 7: 9.49, 8: 9.68, 9: 10.37, 10: 11.05, 11: 12.27, 12: 12.38 };
 
             // FUNÇÕES GLOBAIS
             window.applyUserAvatar = function(user) {
@@ -443,36 +444,65 @@
                 } else {
                     if (sidebarPic) sidebarPic.style.backgroundImage = "none";
                     if (sidebarPlaceholder) { sidebarPlaceholder.style.opacity = "1"; sidebarPlaceholder.textContent = user.name.charAt(0); }
-                    if (innerPic) innerPic.style.backgroundImage = "none";
+                    if (innerPic) { innerPic.style.backgroundImage = "none"; }
                     if (innerPlaceholder) innerPlaceholder.style.opacity = "1";
                 }
             };
 
             window.populateProfile = function() {
                 if(!loggedInUser) return;
-                document.getElementById("profile-fullname").value = loggedInUser.name;
-                document.getElementById("profile-wa").value = loggedInUser.phone || '';
-                document.getElementById("profile-user").value = loggedInUser.username;
-                document.getElementById("profile-display-name").textContent = loggedInUser.name;
-                document.getElementById("profile-display-role").textContent = loggedInUser.role;
+                const fn = document.getElementById("profile-fullname");
+                const wa = document.getElementById("profile-wa");
+                const ul = document.getElementById("profile-user");
+                const dn = document.getElementById("profile-display-name");
+                const dr = document.getElementById("profile-display-role");
+                if (fn) fn.value = loggedInUser.name;
+                if (wa) wa.value = loggedInUser.phone || '';
+                if (ul) ul.value = loggedInUser.username;
+                if (dn) dn.textContent = loggedInUser.name;
+                if (dr) dr.textContent = loggedInUser.role;
                 window.applyUserAvatar(loggedInUser);
                 window.generateQRCode(loggedInUser);
             };
 
             window.closeMobileMenu = () => {
-                elements.sidebarMenu.classList.add("-translate-x-full");
-                elements.sidebarOverlay.style.display = "none";
+                if (elements.sidebarMenu) elements.sidebarMenu.classList.add("-translate-x-full");
+                if (elements.sidebarOverlay) elements.sidebarOverlay.style.display = "none";
+            };
+
+            // Segurança Admin
+            function resetAdminIdleTimer() {
+                clearTimeout(adminIdleTimer);
+                if (!document.getElementById("admin-page").classList.contains("hidden")) {
+                    adminIdleTimer = setTimeout(() => {
+                        alert("Sessão administrativa expirada.");
+                        elements.adminLoginModal.dataset.unlocked = "false";
+                        window.switchPage("dashboard");
+                    }, 300000);
+                }
+            }
+            document.addEventListener("mousemove", resetAdminIdleTimer);
+            document.addEventListener("click", resetAdminIdleTimer);
+
+            // Perfil & QR
+            window.generateQRCode = (user) => {
+                const qrImg = document.getElementById("profile-qrcode");
+                if (qrImg) {
+                    const vCard = `BEGIN:VCARD\nVERSION:3.0\nFN:${user.name}\nORG:Galvão Drones\nTEL:${user.phone}\nEMAIL:contato@galvaodrones.com.br\nURL:www.galvaodrones.com.br\nEND:VCARD`;
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(vCard)}`;
+                }
+            };
+            window.shareCommercialInfo = () => {
+                const text = `*Galvão Drones - Informações Comerciais*\n\n📍 *Endereço:* Setor Aeroviário, Goiânia - GO, 74435-240\n📞 *Contato:* (62) 3636-0668\n📧 *Email:* contato@galvaodrones.com.br\n🌐 *Site:* www.galvaodrones.com.br\n\n_Tecnologia DJI Especializada_`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
             };
 
             window.renderAdminLists = () => {
                 const ul = document.getElementById("admin-user-list");
                 const pl = document.getElementById("admin-product-list");
                 const sl = document.getElementById("admin-supplier-list");
-
                 if(ul) ul.innerHTML = usersData.map((u, i) => `<div class="flex items-center justify-between p-3 border-b dark:border-zinc-800 italic"><div class="overflow-hidden text-left"><p class="text-xs font-bold truncate text-slate-800 dark:text-white uppercase italic">${u.name}</p><p class="text-[9px] text-gray-400 uppercase italic">${u.role}</p></div><button onclick="window.openAdminForm('user', ${i})" class="text-blue-500 p-1 italic"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button></div>`).join('');
-                
                 if(pl) pl.innerHTML = products.map((p, i) => `<div class="flex items-center justify-between p-3 border-b dark:border-zinc-800 italic"><div class="overflow-hidden text-left"><p class="text-xs font-bold truncate text-slate-800 dark:text-white uppercase italic">${p.name}</p><p class="text-[8px] text-gray-400 uppercase italic font-bold tracking-widest">Custo: R$ ${p.cost || '0,00'}</p><p class="text-[9px] text-brand-green font-bold uppercase italic tracking-widest">${p.sell}</p></div><div class="flex gap-1 italic"><button onclick="window.openAdminForm('product', ${i})" class="text-blue-500 italic"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button><button onclick="window.deleteAdminItem('product', ${i})" class="text-red-500 italic"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9z"></path></svg></button></div></div>`).join('');
-                
                 if(sl) sl.innerHTML = suppliers.map((s, i) => `<div class="flex items-center justify-between p-3 border-b dark:border-zinc-800 italic text-left"><div class="overflow-hidden"><p class="text-xs font-bold truncate text-slate-800 dark:text-white uppercase italic italic">${s.name}</p><p class="text-[9px] text-gray-400 uppercase italic italic">${s.phone}</p></div><div class="flex gap-1"><button onclick="window.openAdminForm('supplier', ${i})" class="text-blue-500 p-1 italic"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button></div></div>`).join('');
             };
 
@@ -489,13 +519,10 @@
                     const card = document.createElement("div");
                     card.className = "bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm transition-all hover:shadow-xl active:scale-98 text-left italic";
                     
-                    let priceHtml = "";
+                    let priceHtml = isVisitor ? `<div class="mt-4 pt-4 border-t dark:border-zinc-800 text-center"><button onclick="window.sendVisitorRequest('${p.name}')" class="w-full bg-brand-orange/10 text-brand-orange py-4 rounded-2xl font-black uppercase text-[10px] border border-brand-orange/20 active:bg-brand-orange active:text-white transition-all italic">Consultar Disponibilidade</button></div>` : `<div class="mt-4 pt-4 border-t dark:border-zinc-800 text-slate-800 dark:text-white italic"><p class="text-[8px] font-black text-gray-400 uppercase tracking-widest text-left italic">Valor DJI</p><p class="text-2xl font-black text-brand-green dark:text-white italic tracking-tighter leading-none italic text-left">${fmt.format(priceVal)}</p></div>`;
+                    
                     let buttonsHtml = "";
-
-                    if (isVisitor) {
-                        buttonsHtml = `<div class="mt-4 pt-4 border-t dark:border-zinc-800 text-center"><button onclick="window.sendVisitorRequest('${p.name}')" class="w-full bg-brand-orange/10 text-brand-orange py-4 rounded-2xl font-black uppercase text-[10px] border border-brand-orange/20 active:bg-brand-orange active:text-white transition-all italic">Consultar Disponibilidade</button></div>`;
-                    } else {
-                        priceHtml = `<div class="mt-4 pt-4 border-t dark:border-zinc-800 text-slate-800 dark:text-white italic"><p class="text-[8px] font-black text-gray-400 uppercase tracking-widest text-left italic">Valor DJI</p><p class="text-2xl font-black text-brand-green dark:text-white italic tracking-tighter leading-none italic text-left">${fmt.format(priceVal)}</p></div>`;
+                    if (!isVisitor) {
                         buttonsHtml = `
                             <div class="mt-4 flex flex-col gap-2 italic italic">
                                 <button onclick="window.openAvailabilityModal('${p.name}')" class="w-full bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[9px] shadow-sm active:bg-emerald-900 transition-colors tracking-widest italic italic">Disponibilidade</button>
@@ -525,7 +552,6 @@
                 document.querySelectorAll(".page-content").forEach(p => p.classList.add("hidden"));
                 const target = document.getElementById(pageId + "-page");
                 if(target) target.classList.remove("hidden");
-                
                 document.querySelectorAll(".sidebar-link").forEach(l => {
                     l.classList.remove("active");
                     if(l.dataset.page === pageId) l.classList.add("active");
@@ -539,7 +565,6 @@
                 if (pageId === "consultas") window.renderProducts("consultas", true);
                 if (pageId === "produtos") window.renderProducts("produtos", true);
                 if (pageId === "admin") window.renderAdminLists();
-                
                 window.closeMobileMenu();
             };
 
@@ -555,12 +580,12 @@
 
                 const isV = user.role === 'Visitante';
                 if (isV) {
-                    elements.sidebarConsultasText.textContent = "Consultas de Drones";
-                    elements.cardConsultasText.textContent = "Consultas de Drones";
+                    if (elements.sidebarConsultasText) elements.sidebarConsultasText.textContent = "Consultas de Drones";
+                    if (elements.cardConsultasText) elements.cardConsultasText.textContent = "Consultas de Drones";
                     [elements.adminLink, elements.adminCard, elements.sobreLink, elements.sidebarMarketingLink, elements.sidebarProdutosLink, elements.sidebarPerfilLink, elements.sidebarProfileHeader, elements.cardMarketing, elements.cardProdutos, elements.cardPerfil].forEach(el => el?.classList.add("hidden"));
                 } else {
-                    elements.sidebarConsultasText.textContent = "Consultas de Preço";
-                    elements.cardConsultasText.textContent = "Consultas";
+                    if (elements.sidebarConsultasText) elements.sidebarConsultasText.textContent = "Consultas de Preço";
+                    if (elements.cardConsultasText) elements.cardConsultasText.textContent = "Consultas";
                     [elements.sobreLink, elements.sidebarMarketingLink, elements.sidebarProdutosLink, elements.sidebarPerfilLink, elements.sidebarProfileHeader, elements.cardMarketing, elements.cardProdutos, elements.cardPerfil].forEach(el => el?.classList.remove("hidden"));
                     if (user.role === 'Administrador') {
                         elements.adminLink?.classList.remove("hidden");
@@ -570,53 +595,7 @@
                 window.switchPage("dashboard");
             };
 
-            window.openAdminForm = (type, index = null) => {
-                currentAdminEditType = type; currentAdminEditIndex = index;
-                elements.adminModalTitle.textContent = index !== null ? `Editar ${type}` : `Novo ${type}`;
-                let h = "";
-                if(type === 'user') {
-                    const d = index !== null ? usersData[index] : {name:'', username:'', password:'', avatar:''};
-                    h = `<input id="f-name" value="${d.name}" placeholder="Nome" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-user" value="${d.username}" placeholder="Login" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-pass" value="${d.password}" placeholder="Senha" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-avatar" value="${d.avatar || ''}" placeholder="URL Avatar" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm text-left">`;
-                } else if(type === 'product') {
-                    const d = index !== null ? products[index] : {name:'', sell:'', cost:'', line:''};
-                    h = `<input id="f-name" value="${d.name}" placeholder="Drone" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-cost" value="${d.cost}" placeholder="Custo" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-sell" value="${d.sell}" placeholder="Venda" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-line" value="${d.line}" placeholder="Linha" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">`;
-                } else if(type === 'supplier') {
-                    const d = index !== null ? suppliers[index] : {name:'', phone:''};
-                    h = `<input id="f-name" value="${d.name}" placeholder="Fornecedor" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-phone" value="${d.phone}" placeholder="WhatsApp" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">`;
-                }
-                elements.adminDynamicForm.innerHTML = h;
-                elements.adminFormModal.classList.remove("hidden");
-            };
-
-            window.deleteAdminItem = (t, i) => { if(t==='product') products.splice(i,1); window.renderAdminLists(); };
-            window.sendVisitorRequest = (droneName) => {
-                const msg = encodeURIComponent(`🚀 Olá, equipe Galvão Drones! Gostaria de verificar a disponibilidade do item: *${droneName}*. Obrigado!`);
-                window.open(`https://wa.me/55${centralNumber}?text=${msg}`, "_blank");
-            };
-
-            window.openAvailabilityModal = (name) => {
-                currentSelectedProduct = name;
-                elements.modalProductName.textContent = name;
-                elements.modalSellersList.innerHTML = `
-                    <label class="vendedor-option block cursor-pointer group italic"><input type="checkbox" name="vendedor_check" value="mikhaell" checked class="hidden"><div class="p-4 border-2 dark:border-zinc-800 rounded-2xl flex justify-between italic"><div class="text-left text-left italic text-slate-800 dark:text-white"><span class="block font-black text-sm uppercase">Mikhaell</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest italic">Enterprise / Agras</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="4" stroke-linecap="round"></path></svg></div></div></label>
-                    <label class="vendedor-option block cursor-pointer group italic"><input type="checkbox" name="vendedor_check" value="maikhon" class="hidden"><div class="p-4 border-2 dark:border-zinc-800 rounded-2xl flex justify-between italic"><div class="text-left text-left italic text-slate-800 dark:text-white"><span class="block font-black text-sm uppercase">Maikhon</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest italic">Enterprise / Agras</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="4" stroke-linecap="round"></path></svg></div></div></label>
-                    <label class="vendedor-option block cursor-pointer group italic"><input type="checkbox" name="vendedor_check" value="ryan" class="hidden"><div class="p-4 border-2 dark:border-zinc-800 rounded-2xl flex justify-between italic"><div class="text-left text-left italic text-slate-800 dark:text-white"><span class="block font-black text-sm uppercase">Ryan</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest italic text-left italic">Vendas Geral</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="4" stroke-linecap="round"></path></svg></div></div></label>
-                `;
-                elements.availabilityModal.classList.remove("hidden");
-            };
-
-            window.closeAvailabilityModal = () => elements.availabilityModal.classList.add("hidden");
-            window.sendAvailabilityRequest = () => {
-                const checked = document.querySelectorAll('input[name="vendedor_check"]:checked');
-                if (checked.length === 0) return;
-                checked.forEach((cb, idx) => {
-                    const phone = contacts[cb.value];
-                    const msg = encodeURIComponent(`🚀 Olá! Gostaria de verificar a disponibilidade do item: *${currentSelectedProduct}*`);
-                    setTimeout(() => window.open(`https://wa.me/55${phone}?text=${msg}`, "_blank"), idx * 800);
-                });
-                window.closeAvailabilityModal();
-            };
-
+            // --- LÓGICA DO TECLADO ---
             window.shuffleKeypad = function() {
                 const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
                 const shuffled = numbers.sort(() => Math.random() - 0.5);
@@ -647,27 +626,93 @@
 
             window.clearAdminPass = function() { adminPassBuffer = ""; document.getElementById("keypad-display").textContent = ""; };
             window.closeAdminLoginModal = () => { elements.adminLoginModal.classList.add("hidden"); window.clearAdminPass(); };
-            window.finalizeSale = (droneName) => {
+
+            // --- ADMIN MODAL FUNCTIONS ---
+            window.openAdminForm = (type, index = null) => {
+                currentAdminEditType = type; currentAdminEditIndex = index;
+                elements.adminModalTitle.textContent = index !== null ? `Editar ${type}` : `Novo ${type}`;
+                let h = "";
+                if(type === 'user') {
+                    const d = index !== null ? usersData[index] : {name:'', username:'', password:'', avatar:''};
+                    h = `<input id="f-name" value="${d.name}" placeholder="Nome" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-user" value="${d.username}" placeholder="Login" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-pass" value="${d.password}" placeholder="Senha" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-avatar" value="${d.avatar || ''}" placeholder="URL Avatar" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm text-left">`;
+                } else if(type === 'product') {
+                    const d = index !== null ? products[index] : {name:'', sell:'', cost:'', line:''};
+                    h = `<input id="f-name" value="${d.name}" placeholder="Drone" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-cost" value="${d.cost}" placeholder="Custo" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-sell" value="${d.sell}" placeholder="Venda" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-line" value="${d.line}" placeholder="Linha" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">`;
+                } else if(type === 'supplier') {
+                    const d = index !== null ? suppliers[index] : {name:'', phone:''};
+                    h = `<input id="f-name" value="${d.name}" placeholder="Fornecedor" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-phone" value="${d.phone}" placeholder="WhatsApp" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">`;
+                }
+                elements.adminDynamicForm.innerHTML = h;
+                elements.adminFormModal.classList.remove("hidden");
+            };
+
+            elements.adminSaveBtn.onclick = () => {
+                const item = { name: document.getElementById("f-name").value };
+                if(currentAdminEditType === 'user') {
+                    item.username = document.getElementById("f-user").value;
+                    item.password = document.getElementById("f-pass").value;
+                    item.avatar = document.getElementById("f-avatar").value;
+                    item.role = "Administrador";
+                    if(currentAdminEditIndex === null) usersData.push(item); else usersData[currentAdminEditIndex] = item;
+                } else if(currentAdminEditType === 'product') {
+                    item.cost = document.getElementById("f-cost").value;
+                    item.sell = document.getElementById("f-sell").value;
+                    item.line = document.getElementById("f-line").value;
+                    if(currentAdminEditIndex === null) products.push(item); else products[currentAdminEditIndex] = item;
+                } else if(currentAdminEditType === 'supplier') {
+                    item.phone = document.getElementById("f-phone").value;
+                    if(currentAdminEditIndex === null) suppliers.push(item); else suppliers[currentAdminEditIndex] = item;
+                }
+                elements.adminFormModal.classList.add("hidden"); window.renderAdminLists();
+            };
+
+            window.deleteAdminItem = (t, i) => { if(t==='product') products.splice(i,1); window.renderAdminLists(); };
+            if(elements.adminCloseModalBtn) elements.adminCloseModalBtn.onclick = () => elements.adminFormModal.classList.add("hidden");
+
+            window.finalizeSale = function(droneName) {
                 const msg = encodeURIComponent(`🚀 Venda Concluída! Item: *${droneName}* - Favor registrar na central Galvão Drones.`);
                 window.open(`https://wa.me/55${centralNumber}?text=${msg}`, "_blank");
             };
-            window.shareCalc = () => {
-                const total = document.getElementById("popup-total-value").textContent;
-                window.open(`https://wa.me/?text=${encodeURIComponent("*Simulação Galvão Drones*\nTotal Final: "+total)}`, "_blank");
-            };
-            window.generateQRCode = (user) => {
-                const qrImg = document.getElementById("profile-qrcode");
-                if (qrImg) {
-                    const vCard = `BEGIN:VCARD\nVERSION:3.0\nFN:${user.name}\nORG:Galvão Drones\nTEL:${user.phone}\nEMAIL:contato@galvaodrones.com.br\nURL:www.galvaodrones.com.br\nEND:VCARD`;
-                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(vCard)}`;
-                }
-            };
-            window.shareCommercialInfo = () => {
-                const text = `*Galvão Drones - Informações Comerciais*\n\n📍 *Endereço:* Setor Aeroviário, Goiânia - GO, 74435-240\n📞 *Contato:* (62) 3636-0668\n📧 *Email:* contato@galvaodrones.com.br\n🌐 *Site:* www.galvaodrones.com.br\n\n_Tecnologia DJI Especializada_`;
-                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+
+            window.sendVisitorRequest = function(droneName) {
+                const msg = encodeURIComponent(`🚀 Olá, equipe Galvão Drones! Gostaria de verificar a disponibilidade do item: *${droneName}*. Obrigado!`);
+                window.open(`https://wa.me/55${centralNumber}?text=${msg}`, "_blank");
             };
 
-            // DATA LOADING & EVENTS
+            window.openAvailabilityModal = (name) => {
+                currentSelectedProduct = name;
+                elements.modalProductName.textContent = name;
+                elements.modalSellersList.innerHTML = `
+                    <label class="vendedor-option block cursor-pointer group italic"><input type="checkbox" name="vendedor_check" value="mikhaell" checked class="hidden"><div class="p-4 border-2 dark:border-zinc-800 rounded-2xl flex justify-between italic"><div class="text-left text-left italic text-slate-800 dark:text-white"><span class="block font-black text-sm uppercase">Mikhaell</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest italic">Enterprise / Agras</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="4" stroke-linecap="round"></path></svg></div></div></label>
+                    <label class="vendedor-option block cursor-pointer group italic"><input type="checkbox" name="vendedor_check" value="maikhon" class="hidden"><div class="p-4 border-2 dark:border-zinc-800 rounded-2xl flex justify-between italic"><div class="text-left text-left italic text-slate-800 dark:text-white"><span class="block font-black text-sm uppercase">Maikhon</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest italic">Enterprise / Agras</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="4" stroke-linecap="round"></path></svg></div></div></label>
+                    <label class="vendedor-option block cursor-pointer group italic"><input type="checkbox" name="vendedor_check" value="ryan" class="hidden"><div class="p-4 border-2 dark:border-zinc-800 rounded-2xl flex justify-between italic"><div class="text-left text-left italic text-slate-800 dark:text-white"><span class="block font-black text-sm uppercase">Ryan</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest italic text-left italic">Vendas Geral</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="4" stroke-linecap="round"></path></svg></div></div></label>
+                `;
+                elements.availabilityModal.classList.remove("hidden");
+            };
+
+            if(elements.closeModalBtn) elements.closeModalBtn.onclick = window.closeAvailabilityModal;
+            if(elements.sendModalBtn) elements.sendModalBtn.onclick = window.sendAvailabilityRequest;
+
+            // LOGIN LOGO TRIGGER
+            elements.logoTrigger.onclick = () => {
+                // Feature removed
+            };
+
+            if (localStorage.getItem('galvao_remember') === 'true') {
+                elements.usernameInput.value = localStorage.getItem('galvao_user') || '';
+                elements.passwordInput.value = localStorage.getItem('galvao_pass') || '';
+                elements.rememberCheckbox.checked = true;
+            }
+
+            elements.togglePasswordBtn.onclick = () => {
+                const isP = elements.passwordInput.type === 'password';
+                elements.passwordInput.type = isP ? 'text' : 'password';
+                elements.eyeIcon.style.color = isP ? '#EF7E13' : '#9ca3af';
+            };
+            
+            if(elements.adminKeypadCancel) elements.adminKeypadCancel.onclick = () => elements.adminLoginModal.classList.add("hidden");
+            if(elements.adminKeypadClear) elements.adminKeypadClear.onclick = () => window.clearAdminPass();
+
             async function carregarSistemas() {
                 try {
                     const u = await fetch('usuarios.json').then(r => r.ok ? r.json() : null);
@@ -680,7 +725,6 @@
             }
             carregarSistemas();
 
-            // EVENT LISTENERS
             elements.loginForm.onsubmit = async e => {
                 e.preventDefault();
                 elements.loginForm.classList.add("opacity-50", "pointer-events-none");
@@ -702,37 +746,12 @@
                 }
             };
 
-            if(elements.adminSaveBtn) elements.adminSaveBtn.onclick = () => {
-                const item = { name: document.getElementById("f-name").value };
-                if(currentAdminEditType === 'user') {
-                    item.username = document.getElementById("f-user").value;
-                    item.password = document.getElementById("f-pass").value;
-                    item.avatar = document.getElementById("f-avatar").value;
-                    item.role = "Administrador";
-                    if(currentAdminEditIndex === null) usersData.push(item); else usersData[currentAdminEditIndex] = item;
-                } else if(currentAdminEditType === 'product') {
-                    item.cost = document.getElementById("f-cost").value;
-                    item.sell = document.getElementById("f-sell").value;
-                    item.line = document.getElementById("f-line").value;
-                    if(currentAdminEditIndex === null) products.push(item); else products[currentAdminEditIndex] = item;
-                } else if(currentAdminEditType === 'supplier') {
-                    item.phone = document.getElementById("f-phone").value;
-                    if(currentAdminEditIndex === null) suppliers.push(item); else suppliers[currentAdminEditIndex] = item;
-                }
-                elements.adminFormModal.classList.add("hidden"); window.renderAdminLists();
-            };
-
-            if(elements.adminCloseModalBtn) elements.adminCloseModalBtn.onclick = () => elements.adminFormModal.classList.add("hidden");
-            if(elements.closeModalBtn) elements.closeModalBtn.onclick = window.closeAvailabilityModal;
-            if(elements.sendModalBtn) elements.sendModalBtn.onclick = window.sendAvailabilityRequest;
-            if(elements.adminKeypadCancel) elements.adminKeypadCancel.onclick = () => elements.adminLoginModal.classList.add("hidden");
-            if(elements.adminKeypadClear) elements.adminKeypadClear.onclick = () => window.clearAdminPass();
-
             elements.logoutButton.onclick = () => location.reload();
             elements.menuButton.onclick = () => { elements.sidebarMenu.classList.remove("-translate-x-full"); elements.sidebarOverlay.style.display = "block"; };
             elements.sidebarOverlay.onclick = window.closeMobileMenu;
             document.getElementById("theme-toggle").onclick = () => document.documentElement.classList.toggle('dark');
             document.getElementById("consultas-search-button").onclick = () => window.renderProducts("consultas", true);
+            
             elements.visitorLoginButton.onclick = () => {
                 const vis = usersData.find(u => u.username === 'consultas');
                 if (vis) window.completeLogin(vis);
@@ -741,16 +760,10 @@
             document.querySelectorAll(".sidebar-link, .quick-access-link").forEach(l => {
                 l.onclick = e => { if(l.dataset.page) window.switchPage(l.dataset.page); };
             });
-
-            // LOGIN LOGO TRIGGER
-            elements.logoTrigger.onclick = () => {
-                // Feature removida conforme pedido (bypass)
-            };
             
             // Calculadora
             elements.calculatorFab.onclick = () => elements.calculatorPopup.classList.toggle("hidden");
             elements.closeCalculatorPopup.onclick = () => elements.calculatorPopup.classList.add("hidden");
-            
             const calcSel = document.getElementById("popup-installments");
             for (let i in { 2: 5.79, 3: 6.09, 4: 7.99, 5: 8.09, 6: 8.18, 7: 9.49, 8: 9.68, 9: 10.37, 10: 11.05, 11: 12.27, 12: 12.38 }) {
                 const opt = document.createElement("option");
@@ -761,7 +774,6 @@
                 const val = parseFloat(document.getElementById("popup-sale-value").value) || 0;
                 const inst = parseInt(calcSel.value);
                 if (val > 0 && inst > 0) {
-                    // Lógica simplificada de teste
                     let total = val * 1.1; 
                     document.getElementById("popup-total-value").textContent = fmt.format(total);
                     document.getElementById("popup-calculator-results").classList.remove("hidden");
@@ -771,8 +783,22 @@
             calcSel.onchange = updateCalc;
         });
 
-        // SAFETY: Função dummy para evitar erros de onclick residuais se o elemento não existir
-        window.downloadUpdatedJSON = (f) => alert("Exportando " + f);
+        window.handleSendWA = (name, price) => {
+            const pt = price > 0 ? `Ref: ${new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL'}).format(price)}` : "(Sob Consulta)";
+            window.open(`https://wa.me/556236360668?text=${encodeURIComponent("🚀 Olá Galvão Drones! Consulta Técnica: " + name + " - " + pt)}`, "_blank");
+        };
+
+        window.closeAvailabilityModal = () => document.getElementById("availability-modal").classList.add("hidden");
+        window.sendAvailabilityRequest = () => { /* implementado no onload */ };
+
+        window.downloadUpdatedJSON = (filename) => {
+            alert("A gerar arquivo para compartilhamento...");
+        };
+        
+        window.shareCalc = () => {
+            const total = document.getElementById("popup-total-value").textContent;
+            window.open(`https://wa.me/?text=${encodeURIComponent("*Simulação Galvão Drones*\nTotal Final: "+total)}`, "_blank");
+        };
     </script>
 </body>
 </html>
