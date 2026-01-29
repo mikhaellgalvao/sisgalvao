@@ -99,14 +99,14 @@
                 <p class="mt-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium">Gestão Técnica e Comercial DJI</p>
             </div>
             <form id="login-form" class="space-y-4">
-                <div class="text-left text-slate-800 dark:text-zinc-400">
-                    <label for="username-input" class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Utilizador</label>
-                    <input type="text" id="username-input" required class="w-full rounded-2xl border border-gray-300 dark:border-zinc-700 px-4 py-4 bg-white dark:bg-zinc-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange outline-none transition-all text-sm">
+                <div>
+                    <label for="username-input" class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1 text-left">Usuário</label>
+                    <input type="text" id="username-input" required class="w-full rounded-2xl border border-gray-300 dark:border-zinc-700 px-4 py-4 bg-white dark:bg-zinc-800 focus:ring-2 focus:ring-brand-orange outline-none transition-all text-sm">
                 </div>
-                <div class="text-left text-slate-800 dark:text-zinc-400">
-                    <label for="password-input" class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Senha</label>
+                <div>
+                    <label for="password-input" class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1 text-left">Senha</label>
                     <div class="relative">
-                        <input type="password" id="password-input" required class="w-full rounded-2xl border border-gray-300 dark:border-zinc-700 px-4 py-4 bg-white dark:bg-zinc-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange outline-none transition-all text-sm">
+                        <input type="password" id="password-input" required class="w-full rounded-2xl border border-gray-300 dark:border-zinc-700 px-4 py-4 bg-white dark:bg-zinc-800 focus:ring-2 focus:ring-brand-orange outline-none transition-all text-sm">
                         <button type="button" id="toggle-password-visibility" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 opacity-80 p-1">
                             <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                         </button>
@@ -116,31 +116,31 @@
                 <div class="flex items-center justify-between px-1">
                     <label class="flex items-center gap-2 cursor-pointer group">
                         <input type="checkbox" id="remember-me" class="w-4 h-4 rounded border-gray-300 text-brand-orange focus:ring-brand-orange">
-                        <span class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase group-hover:text-brand-orange transition-colors">Lembrar</span>
+                        <span class="text-[10px] font-bold text-gray-500 uppercase group-hover:text-brand-orange transition-colors">Lembrar Senha</span>
                     </label>
                 </div>
 
-                <button type="submit" class="w-full py-4 bg-brand-green hover:bg-emerald-900 text-white font-bold rounded-2xl shadow-lg transition-all active:scale-95 uppercase text-xs tracking-widest italic">Entrar</button>
-                <button type="button" id="visitor-login-button" class="w-full py-3 bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 font-bold rounded-2xl transition-all uppercase text-[10px] tracking-widest italic">Visitante</button>
+                <button type="submit" class="w-full py-4 bg-brand-green hover:bg-emerald-900 text-white font-bold rounded-2xl shadow-lg transition-all active:scale-95 uppercase text-xs tracking-widest italic">Entrar no Sistema</button>
+                <button type="button" id="visitor-login-button" class="w-full py-3 bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 font-bold rounded-2xl transition-all uppercase text-[10px] tracking-widest italic">Acesso Visitante</button>
             </form>
             <div id="error-message" class="hidden p-4 bg-red-100 text-red-700 text-xs rounded-2xl text-center font-bold mt-4 uppercase">Credenciais Inválidas</div>
             <div id="success-message" class="hidden text-center mt-6">
                 <div class="spinner mx-auto"></div>
-                <p class="mt-4 text-xs font-bold text-brand-green dark:text-gray-200 uppercase tracking-tighter animate-pulse">Iniciando Portal...</p>
+                <p class="mt-4 text-xs font-bold text-brand-green dark:text-gray-200 uppercase tracking-tighter animate-pulse text-center">Iniciando Portal...</p>
             </div>
         </div>
     </div>
 
-    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- MAIN APP VIEW -->
     <div id="dashboard-view" class="hidden flex h-screen overflow-hidden bg-gray-50 dark:bg-zinc-950">
         <!-- SIDEBAR -->
         <aside id="sidebar-menu" class="fixed inset-y-0 left-0 w-72 bg-white dark:bg-zinc-900 shadow-2xl transform -translate-x-full lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex flex-col border-r dark:border-zinc-800 text-left">
             <div id="sidebar-header" class="p-8 border-b dark:border-zinc-800 flex flex-col items-center">
                 <a href="#" data-page="perfil" id="sidebar-profile-header" class="sidebar-link flex flex-col items-center w-full gap-3">
-                    <div id="sidebar-profile-picture" class="w-20 h-20 rounded-full bg-brand-orange text-white flex items-center justify-center font-bold text-3xl border-4 border-gray-100 dark:border-zinc-800 shadow-xl profile-avatar-div overflow-hidden">
+                    <div id="sidebar-profile-picture" class="w-20 h-20 rounded-full bg-brand-orange text-white flex items-center justify-center font-bold text-3xl border-4 border-gray-100 dark:border-zinc-800 shadow-xl profile-avatar-div overflow-hidden transition-transform hover:scale-105">
                         <span id="sidebar-profile-placeholder">?</span>
                     </div>
-                    <div class="text-center overflow-hidden">
+                    <div class="text-center">
                         <p id="sidebar-user-name" class="font-black text-sm text-slate-800 dark:text-white truncate w-56 tracking-tight uppercase italic"></p>
                         <p id="sidebar-user-role" class="text-[10px] text-brand-orange font-bold uppercase tracking-widest mt-0.5 italic"></p>
                     </div>
@@ -151,6 +151,7 @@
                 <a href="#" data-page="dashboard" class="sidebar-link active flex items-center px-5 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic">Dashboard</a>
                 <a href="#" data-page="consultas" class="sidebar-link flex items-center px-5 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic"><span id="sidebar-consultas-text">Consultas de Preço</span></a>
                 <a href="#" data-page="marketing" id="sidebar-marketing-link" class="sidebar-link flex items-center px-5 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic">Marketing</a>
+                <a href="#" data-page="produtos" id="sidebar-produtos-link" class="sidebar-link flex items-center px-5 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic">Lista Interna</a>
                 
                 <div class="pt-4 mt-4 border-t dark:border-zinc-800">
                     <a href="#" data-page="admin" id="admin-link" class="sidebar-link hidden flex items-center px-5 py-4 rounded-2xl font-bold text-red-500 transition-all text-sm uppercase tracking-tighter italic">Administração</a>
@@ -160,171 +161,167 @@
             </nav>
         </aside>
 
-        <!-- AREA DE CONTEÚDO -->
+        <!-- CONTENT AREA -->
         <div class="flex-1 flex flex-col min-w-0 overflow-y-auto font-sans">
             <header class="h-20 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-lg border-b dark:border-zinc-800 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30">
-                <div class="flex items-center gap-3">
-                    <button id="menu-button" class="lg:hidden p-2 bg-gray-100 dark:bg-zinc-800 rounded-xl text-gray-600 dark:text-zinc-300"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round"></path></svg></button>
+                <div class="flex items-center gap-3 text-left">
+                    <button id="menu-button" class="lg:hidden p-2 bg-gray-100 dark:bg-zinc-800 rounded-xl text-gray-600 dark:text-zinc-300 active:scale-90 transition-all"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round"></path></svg></button>
                     <h1 id="page-title" class="text-lg sm:text-xl font-black text-slate-800 dark:text-white uppercase italic tracking-tighter">Dashboard</h1>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button id="theme-toggle" class="p-2.5 rounded-xl bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-zinc-400 transition-all">
+                    <button id="theme-toggle" class="p-2.5 rounded-xl bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-zinc-400 transition-all active:rotate-12">
                         <svg id="theme-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
                     </button>
-                    <button id="logout-button" class="px-4 py-2 bg-brand-orange text-white font-bold rounded-xl text-[10px] uppercase shadow-lg active:scale-95 transition-all italic tracking-widest">Sair</button>
+                    <button id="logout-button" class="px-4 py-2 bg-brand-orange text-white font-bold rounded-xl text-[10px] uppercase shadow-lg active:scale-95 transition-all tracking-widest">Sair</button>
                 </div>
             </header>
 
             <main id="main-content" class="p-4 sm:p-8">
-                <!-- Seção Dashboard -->
+                <!-- Page: Dashboard -->
                 <section id="dashboard-page" class="page-content space-y-6">
                     <div class="bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-[2.5rem] shadow-sm border dark:border-zinc-800 text-left">
                         <h2 class="text-2xl sm:text-3xl font-black italic tracking-tighter text-slate-800 dark:text-white uppercase italic">Olá, <span id="welcome-user-name" class="text-brand-orange"></span>!</h2>
-                        <p class="text-gray-500 mt-1 text-[10px] font-bold uppercase tracking-widest italic text-left italic">Central Goiânia | Acesso: <span id="welcome-user-role" class="text-brand-green font-bold"></span></p>
+                        <p class="text-gray-500 mt-1 text-[10px] font-bold uppercase tracking-widest italic text-left italic">Central Goiânia | Acesso: <span id="welcome-user-role" class="text-brand-green"></span></p>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="quick-access-grid">
-                        <button data-page="consultas" class="quick-access-link p-6 sm:p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border dark:border-zinc-800 hover:shadow-2xl transition-all flex flex-col items-center group active:scale-95 italic">
+                        <button data-page="consultas" id="card-consultas" class="quick-access-link p-6 sm:p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border dark:border-zinc-800 hover:shadow-2xl transition-all flex flex-col items-center group active:scale-95 italic">
                             <div class="p-5 bg-emerald-50 dark:bg-emerald-900/20 text-brand-green rounded-3xl mb-4 group-hover:bg-brand-green group-hover:text-white transition-all shadow-inner"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2" stroke-linecap="round"></path></svg></div>
                             <span class="font-black uppercase text-xs dark:text-white tracking-widest italic" id="card-consultas-text">Consultas</span>
                         </button>
-                        <button data-page="marketing" class="quick-access-link p-6 sm:p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border dark:border-zinc-800 hover:shadow-2xl transition-all flex flex-col items-center group active:scale-95 italic text-slate-800 dark:text-white">
+                        <button data-page="marketing" id="card-marketing" class="quick-access-link p-6 sm:p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border dark:border-zinc-800 hover:shadow-2xl transition-all flex flex-col items-center group active:scale-95 italic text-slate-800 dark:text-white">
                             <div class="p-5 bg-orange-50 dark:bg-orange-900/20 text-brand-orange rounded-3xl mb-4 group-hover:bg-brand-orange group-hover:text-white transition-all shadow-inner"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h14a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2"></path></svg></div>
                             <span class="font-black uppercase text-xs dark:text-white tracking-widest italic text-center">Marketing DJI</span>
                         </button>
-                        <button data-page="perfil" class="quick-access-link p-6 sm:p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border dark:border-zinc-800 hover:shadow-2xl transition-all flex flex-col items-center group active:scale-95 italic text-slate-800 dark:text-white">
+                        <button data-page="produtos" id="card-produtos" class="quick-access-link p-6 sm:p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border dark:border-zinc-800 hover:shadow-2xl transition-all flex flex-col items-center group active:scale-95 text-slate-800 dark:text-white italic">
+                            <div class="p-5 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 rounded-3xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-inner"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-width="2" stroke-linecap="round"></path></svg></div>
+                            <span class="font-black uppercase text-xs dark:text-white tracking-widest italic text-center">Lista Interna</span>
+                        </button>
+                        <button data-page="perfil" id="card-perfil" class="quick-access-link p-6 sm:p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border dark:border-zinc-800 hover:shadow-2xl transition-all flex flex-col items-center group active:scale-95 text-slate-800 dark:text-white italic">
                             <div class="p-5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-3xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-inner"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-width="2" stroke-linecap="round"></path></svg></div>
                             <span class="font-black uppercase text-xs dark:text-white tracking-widest italic text-center">Meu Perfil</span>
+                        </button>
+                        <button data-page="admin" id="admin-card" class="quick-access-link hidden p-6 sm:p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-red-100 dark:border-red-900/30 hover:shadow-2xl transition-all flex flex-col items-center group text-red-500 active:scale-95 italic">
+                            <div class="p-5 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-3xl mb-4 group-hover:bg-red-600 group-hover:text-white transition-all shadow-inner"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37" stroke-width="2" stroke-linecap="round"></path></svg></div>
+                            <span class="font-black uppercase text-xs tracking-widest italic text-center">Administração</span>
                         </button>
                     </div>
                 </section>
 
-                <!-- Administração -->
+                <!-- Page: Administração -->
                 <section id="admin-page" class="page-content hidden space-y-6">
-                    <div class="bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm text-left italic">
-                        <h2 class="text-2xl font-black text-red-600 uppercase italic tracking-tighter">Administração Galvão</h2>
-                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest italic">Painel Técnico de Controle</p>
+                    <div class="bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4 text-slate-800 dark:text-white">
+                        <div class="text-left">
+                            <h2 class="text-2xl font-black text-red-600 uppercase italic tracking-tighter">Administração Galvão</h2>
+                            <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Gestão central de dados DJI</p>
+                        </div>
+                        <div class="flex gap-2">
+                             <button onclick="window.downloadUpdatedJSON('usuarios.json')" class="px-4 py-2.5 bg-brand-orange text-white font-bold rounded-xl text-[9px] uppercase tracking-widest shadow-md hover:scale-105 transition-all">Exportar Users</button>
+                             <button onclick="window.downloadUpdatedJSON('produtos.json')" class="px-4 py-2.5 bg-brand-green text-white font-bold rounded-xl text-[9px] uppercase tracking-widest shadow-md hover:scale-105 transition-all">Exportar Prod</button>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-slate-800 dark:text-white font-sans text-left">
-                        <!-- Equipe -->
                         <div class="bg-white dark:bg-zinc-900 rounded-[2rem] border dark:border-zinc-800 overflow-hidden flex flex-col h-[500px]">
                             <div class="p-5 border-b dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/50 flex justify-between items-center">
                                 <h3 class="font-black uppercase text-[10px] tracking-widest text-brand-green italic">Equipe</h3>
                                 <div class="flex gap-2">
-                                    <button onclick="window.downloadUpdatedJSON('usuarios.json')" class="p-2 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-lg active:scale-90" title="Exportar Equipe">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-width="2"></path></svg>
-                                    </button>
-                                    <button onclick="window.openAdminForm('user')" class="p-2 bg-brand-green text-white rounded-lg active:scale-90"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3"></path></svg></button>
+                                     <button onclick="window.downloadUpdatedJSON('usuarios.json')" class="p-2 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-lg active:scale-90" title="Exportar Equipe">
+                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-width="2"></path></svg>
+                                     </button>
+                                     <button onclick="window.openAdminForm('user')" class="p-2 bg-brand-green text-white rounded-lg active:scale-90 transition-all"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3"></path></svg></button>
                                 </div>
                             </div>
-                            <div class="flex-1 overflow-y-auto p-4 space-y-2 hide-scrollbar text-slate-800 dark:text-white" id="admin-user-list"></div>
+                            <div class="flex-1 overflow-y-auto p-4 space-y-2 hide-scrollbar" id="admin-user-list"></div>
                         </div>
 
-                        <!-- Catálogo -->
                         <div class="bg-white dark:bg-zinc-900 rounded-[2rem] border dark:border-zinc-800 overflow-hidden flex flex-col h-[500px]">
                             <div class="p-5 border-b dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/50 flex justify-between items-center">
                                 <h3 class="font-black uppercase text-[10px] tracking-widest text-brand-green italic">Catálogo</h3>
                                 <div class="flex gap-2">
-                                    <button onclick="window.downloadUpdatedJSON('produtos.json')" class="p-2 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-lg active:scale-90" title="Exportar Catálogo">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-width="2"></path></svg>
-                                    </button>
-                                    <button onclick="window.openAdminForm('product')" class="p-2 bg-brand-green text-white rounded-lg active:scale-90"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3"></path></svg></button>
+                                     <button onclick="window.downloadUpdatedJSON('produtos.json')" class="p-2 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-lg active:scale-90" title="Exportar Catálogo">
+                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-width="2"></path></svg>
+                                     </button>
+                                     <button onclick="window.openAdminForm('product')" class="p-2 bg-brand-green text-white rounded-lg active:scale-90 transition-all"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3"></path></svg></button>
                                 </div>
                             </div>
-                            <div class="flex-1 overflow-y-auto p-4 space-y-2 hide-scrollbar text-slate-800 dark:text-white text-left" id="admin-product-list"></div>
+                            <div class="flex-1 overflow-y-auto p-4 space-y-2 hide-scrollbar" id="admin-product-list"></div>
                         </div>
 
-                        <!-- Fornecedor -->
                         <div class="bg-white dark:bg-zinc-900 rounded-[2rem] border dark:border-zinc-800 overflow-hidden flex flex-col h-[500px]">
                             <div class="p-5 border-b dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/50 flex justify-between items-center">
                                 <h3 class="font-black uppercase text-[10px] tracking-widest text-brand-green italic">Fornecedor</h3>
                                 <div class="flex gap-2">
-                                    <button onclick="window.downloadUpdatedJSON('fornecedores.json')" class="p-2 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-lg active:scale-90" title="Exportar Fornecedores">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-width="2"></path></svg>
-                                    </button>
-                                    <button onclick="window.openAdminForm('supplier')" class="p-2 bg-brand-green text-white rounded-lg active:scale-90"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3"></path></svg></button>
+                                     <button onclick="window.downloadUpdatedJSON('fornecedores.json')" class="p-2 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-lg active:scale-90" title="Exportar Fornecedores">
+                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-width="2"></path></svg>
+                                     </button>
+                                     <button onclick="window.openAdminForm('supplier')" class="p-2 bg-brand-green text-white rounded-lg active:scale-90 transition-all"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3"></path></svg></button>
                                 </div>
                             </div>
-                            <div class="flex-1 overflow-y-auto p-4 space-y-2 hide-scrollbar text-slate-800 dark:text-white text-left" id="admin-supplier-list"></div>
+                            <div class="flex-1 overflow-y-auto p-4 space-y-2 hide-scrollbar" id="admin-supplier-list"></div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Consultas -->
+                <!-- Page: Consultas -->
                 <section id="consultas-page" class="page-content hidden space-y-6">
                     <div class="flex flex-col sm:flex-row gap-3">
-                        <input type="text" id="consultas-search-input" placeholder="Buscar drone..." class="flex-1 p-5 rounded-2xl border dark:border-zinc-800 outline-none focus:ring-2 focus:ring-brand-green bg-white dark:bg-zinc-900 text-slate-900 dark:text-white text-sm font-medium shadow-sm text-left">
+                        <input type="text" id="consultas-search-input" placeholder="Buscar no catálogo Galvão..." class="flex-1 p-5 rounded-2xl border dark:border-zinc-800 outline-none focus:ring-2 focus:ring-brand-green bg-white dark:bg-zinc-900 text-sm font-medium shadow-sm text-left text-slate-800 dark:text-white">
                         <button id="consultas-search-button" class="w-full sm:w-auto bg-brand-green text-white px-10 py-5 rounded-2xl font-bold uppercase text-xs transition-all active:scale-95 shadow-lg tracking-widest italic italic">Pesquisar</button>
                     </div>
                     <div id="consultas-search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 text-slate-800 dark:text-white"></div>
                 </section>
 
-                <!-- Perfil -->
+                <!-- Page: Perfil -->
                 <section id="perfil-page" class="page-content hidden space-y-6 text-left">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 text-left italic">
                         <div class="lg:col-span-1 bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 text-center space-y-6 shadow-sm">
                             <div id="profile-picture-container-inner" class="relative w-48 h-48 mx-auto rounded-full bg-gray-100 dark:bg-zinc-800 border-4 border-brand-orange shadow-2xl flex items-center justify-center bg-cover bg-center overflow-hidden profile-avatar-div">
                                 <span id="profile-picture-placeholder-inner" class="text-gray-400 font-bold uppercase text-[10px]">Técnico DJI</span>
                             </div>
-                            <div class="space-y-1 text-center">
+                            <div class="mt-4 flex justify-center">
+                                <img id="profile-qrcode" src="" alt="QR Code" class="w-24 h-24 rounded-xl border-2 border-brand-green p-1 bg-white">
+                            </div>
+                            <div class="space-y-1 text-center mt-2">
                                 <h3 id="profile-display-name" class="text-2xl font-black uppercase italic tracking-tight text-slate-800 dark:text-white"></h3>
                                 <p id="profile-display-role" class="text-brand-orange font-bold uppercase text-[10px] tracking-widest italic"></p>
                             </div>
                         </div>
                         <div class="lg:col-span-2 bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-[2.5rem] border dark:border-zinc-800 space-y-8 shadow-sm">
-                            <div class="space-y-4">
+                            <div class="space-y-4 text-left">
                                 <h4 class="text-lg font-black text-brand-green uppercase italic border-b dark:border-zinc-800 pb-2 tracking-tight italic text-left">Dados Profissionais</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
                                     <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Nome Completo</label><input type="text" id="profile-fullname" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl outline-none text-sm font-bold italic text-slate-900 dark:text-white" readonly></div>
                                     <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">WhatsApp</label><input type="text" id="profile-wa" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl outline-none text-sm font-bold italic text-slate-900 dark:text-white" readonly></div>
-                                    <div class="md:col-span-2"><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1 uppercase text-left">Utilizador</label><input type="text" id="profile-user" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl outline-none text-sm font-bold italic text-slate-900 dark:text-white" readonly></div>
+                                    <div class="md:col-span-2"><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1 uppercase text-left">Usuário de Login</label><input type="text" id="profile-user" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl outline-none text-sm font-bold italic text-slate-900 dark:text-white" readonly></div>
                                 </div>
                             </div>
-                            <div class="space-y-4 pt-4 border-t dark:border-zinc-800 text-slate-800 dark:text-white text-left">
-                                <h4 class="text-lg font-black text-brand-green uppercase italic border-b dark:border-zinc-800 pb-2 tracking-tight italic text-left">Informações Oficiais</h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                                    <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">CNPJ</label><input type="text" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold text-slate-900 dark:text-white" value="48.429.698/0001-91" readonly></div>
-                                    <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1 uppercase text-left">Unidade Regional</label><input type="text" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold text-slate-900 dark:text-white" value="Goiânia - GO" readonly></div>
+                            <div class="space-y-4 pt-4 border-t dark:border-zinc-800 text-slate-800 dark:text-white text-left italic">
+                                <h4 class="text-lg font-black text-brand-green uppercase italic border-b dark:border-zinc-800 pb-2 tracking-tight italic text-left">Informações Comerciais</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left italic">
+                                    <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">CNPJ</label><input type="text" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold" value="48.429.698/0001-91" readonly></div>
+                                    <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1 uppercase text-left">Sede</label><input type="text" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold" value="Goiânia - GO" readonly></div>
                                 </div>
+                                <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1 uppercase text-left">Endereço</label><input type="text" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold" value="Setor Aeroviário, Goiânia - GO, 74435-240" readonly></div>
+                                <button onclick="shareCommercialInfo()" class="w-full mt-2 bg-brand-orange/10 text-brand-orange py-3 rounded-2xl font-black uppercase text-[10px] border border-brand-orange/20 hover:bg-brand-orange hover:text-white transition-all">Compartilhar Dados Comerciais</button>
                             </div>
                         </div>
                     </div>
                 </section>
                 
-                <section id="marketing-page" class="page-content hidden">
-                    <div class="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm text-left italic">
-                        <h2 class="text-2xl font-black text-brand-green uppercase italic tracking-tighter mb-4 italic">Painel de Mídia</h2>
-                        <div class="grid grid-cols-2 gap-4 italic italic">
-                            <div class="bg-gray-50 dark:bg-zinc-800 p-6 rounded-2xl flex flex-col items-center justify-center gap-2 border border-gray-100 dark:border-zinc-700 hover:shadow-md transition-all cursor-pointer">
-                                <svg class="w-8 h-8 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h14a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2"></path></svg>
-                                <span class="font-bold text-[10px] uppercase text-gray-500 italic">Arquivos 3D</span>
-                            </div>
-                            <div class="bg-gray-50 dark:bg-zinc-800 p-6 rounded-2xl flex flex-col items-center justify-center gap-2 border border-gray-100 dark:border-zinc-700 hover:shadow-md transition-all cursor-pointer">
-                                <svg class="w-8 h-8 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-width="2"></path></svg>
-                                <span class="font-bold text-[10px] uppercase text-gray-500 italic">Vídeos DJI</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section id="sobre-page" class="page-content hidden">
-                    <div class="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 text-center space-y-6 shadow-sm">
-                        <img src="https://imgur.com/2PNy5CS.png" class="h-20 mx-auto" alt="Logo">
-                        <h2 class="text-2xl font-black text-brand-green uppercase italic tracking-tighter">Galvão Drones</h2>
-                        <div class="text-left space-y-4 text-gray-600 dark:text-gray-400 text-sm">
-                            <p><span class="font-bold text-brand-orange uppercase text-[10px]">Especialidade:</span> Alta tecnologia em drones Enterprise e Agras.</p>
-                            <p><span class="font-bold text-brand-orange uppercase text-[10px]">Unidade:</span> Goiânia - GO</p>
-                        </div>
-                    </div>
-                </section>
+                <section id="marketing-page" class="page-content hidden p-12 bg-white dark:bg-zinc-900 rounded-[2.5rem] border dark:border-zinc-800 font-black uppercase text-brand-green italic tracking-widest shadow-sm">Repositório Mídia Galvão</section>
+                <section id="produtos-page" class="page-content hidden space-y-6"><div id="produtos-search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 text-slate-800 dark:text-white"></div></section>
+                <section id="sobre-page" class="page-content hidden text-center p-12 bg-white dark:bg-zinc-900 rounded-[2.5rem] border dark:border-zinc-800 font-black uppercase text-brand-green italic tracking-widest shadow-sm leading-relaxed italic">Galvão Drones | Goiânia<br><span class="text-xs text-gray-500 font-normal mt-2 block tracking-normal uppercase italic font-bold tracking-widest">Tecnologia Certificada DJI</span></section>
             </main>
         </div>
     </div>
 
     <!-- MODAIS -->
+    <!-- Modal Login Administração (Teclado Numérico Embaralhado) -->
     <div id="admin-login-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-[120] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center animate-in zoom-in duration-200">
-            <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-2 italic">Acesso Administrativo</h3>
+            <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-2 italic">Acesso Restrito</h3>
+            <p class="text-[9px] text-gray-400 uppercase tracking-widest mb-6">Digite a senha administrativa</p>
             <div id="keypad-display" class="w-full h-16 mb-8 flex items-center justify-center bg-gray-50 dark:bg-zinc-800 rounded-2xl text-2xl font-black tracking-[0.75rem] text-brand-orange"></div>
             <div id="virtual-keypad" class="keypad-grid mb-8"></div>
             <div class="grid grid-cols-2 gap-3">
@@ -334,25 +331,27 @@
         </div>
     </div>
 
+    <!-- Modal Disponibilidade -->
     <div id="availability-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center animate-in zoom-in duration-200">
             <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-2 italic">Consultar Equipe</h3>
             <p class="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest mb-6" id="modal-product-name"></p>
             <div class="space-y-3 mb-8" id="modal-sellers-list"></div>
-            <div class="grid grid-cols-2 gap-3">
-                <button id="close-availability-btn" class="py-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-500 italic">Voltar</button>
-                <button id="send-modal-btn" class="py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg italic">Enviar</button>
+            <div class="grid grid-cols-2 gap-3 font-sans">
+                <button id="close-modal-btn" class="py-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-500 active:scale-95 transition-all italic italic">Voltar</button>
+                <button id="send-modal-btn" class="py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all italic italic">Enviar</button>
             </div>
         </div>
     </div>
 
+    <!-- Modal Admin Dynamic Form -->
     <div id="admin-form-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-lg p-8 shadow-2xl border dark:border-white/10 text-left italic">
             <h3 id="admin-modal-title" class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-6 italic">Editar</h3>
             <div id="admin-dynamic-form" class="space-y-4 max-h-[60vh] overflow-y-auto hide-scrollbar italic"></div>
             <div class="grid grid-cols-2 gap-3 mt-8">
                 <button id="admin-close-form-btn" class="py-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest italic">Cancelar</button>
-                <button id="admin-save-item-btn" class="py-4 bg-brand-orange text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg italic">Salvar</button>
+                <button id="admin-save-btn" class="py-4 bg-brand-orange text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg italic">Salvar</button>
             </div>
         </div>
     </div>
@@ -360,7 +359,7 @@
     <!-- SCRIPT -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- ESTADO GLOBAL ---
+            // BACKUP ESTÁTICO (Fallback para evitar erros de parsing de URL no fetch)
             const fallbackUsers = [
                 { name: "Mikhaell Galvão", username: "mikhaell", password: "mk0639", role: "Administrador", phone: "62984710639", avatar: "https://i.imgur.com/ViDcChZ.jpeg" },
                 { name: "Maikhon Galvão", username: "maikhon", password: "0639", role: "Administrador", phone: "62933001865", avatar: "" },
@@ -368,151 +367,146 @@
                 { name: "Ryan Rodrigues", username: "ryan", password: "mk0639", role: "Administrador", phone: "62920007396", avatar: "" },
                 { name: "Visitante", username: "consultas", password: "", role: "Visitante", avatar: "" }
             ];
+
             const fallbackProducts = [
                 { "id": 1000, "name": "Drone DJI Neo 2 Standard", "cost": "1.660,00", "sell": "2.324,00", "line": "Consumer" },
                 { "id": 1001, "name": "Drone DJI Mavic 4 Pro Enterprise", "cost": "20.760,00", "sell": "29.064,00", "line": "Enterprise" }
             ];
+
             const contacts = { mikhaell: "62984710639", maikhon: "62933001865", ryan: "62920007396" };
             const centralNumber = "6236360668";
-            
+            let adminPassBuffer = "";
+            let adminIdleTimer;
+
+            const elements = {
+                loginForm: document.getElementById("login-form"),
+                usernameInput: document.getElementById("username-input"),
+                passwordInput: document.getElementById("password-input"),
+                successMessage: document.getElementById("success-message"),
+                errorMessage: document.getElementById("error-message"),
+                loginView: document.getElementById("login-view"),
+                dashboardView: document.getElementById("dashboard-view"),
+                logoutButton: document.getElementById("logout-button"),
+                visitorLoginButton: document.getElementById("visitor-login-button"),
+                menuButton: document.getElementById("menu-button"),
+                sidebarMenu: document.getElementById("sidebar-menu"),
+                sidebarOverlay: document.getElementById("sidebar-overlay"),
+                rememberCheckbox: document.getElementById("remember-me"),
+                togglePasswordBtn: document.getElementById("toggle-password-visibility"),
+                eyeIcon: document.getElementById("eye-icon"),
+                logoTrigger: document.getElementById("login-logo-trigger"),
+                sidebarConsultasText: document.getElementById("sidebar-consultas-text"),
+                cardConsultasText: document.getElementById("card-consultas-text"),
+                adminLink: document.getElementById("admin-link"),
+                adminCard: document.getElementById("admin-card"),
+                sobreLink: document.getElementById("sobre-link"),
+                sidebarMarketingLink: document.getElementById("sidebar-marketing-link"),
+                sidebarProdutosLink: document.getElementById("sidebar-produtos-link"),
+                sidebarPerfilLink: document.getElementById("sidebar-perfil-link"),
+                sidebarProfileHeader: document.getElementById("sidebar-profile-header"),
+                cardMarketing: document.getElementById("card-marketing"),
+                cardProdutos: document.getElementById("card-produtos"),
+                cardPerfil: document.getElementById("card-perfil"),
+                availabilityModal: document.getElementById("availability-modal"),
+                modalProductName: document.getElementById("modal-product-name"),
+                modalSellersList: document.getElementById("modal-sellers-list"),
+                adminLoginModal: document.getElementById("admin-login-modal"),
+                virtualKeypad: document.getElementById("virtual-keypad"),
+                keypadDisplay: document.getElementById("keypad-display"),
+                adminFormModal: document.getElementById("admin-form-modal"),
+                adminDynamicForm: document.getElementById("admin-dynamic-form"),
+                adminModalTitle: document.getElementById("admin-modal-title"),
+                adminSaveBtn: document.getElementById("admin-save-btn"),
+                closeModalBtn: document.getElementById("close-modal-btn"),
+                sendModalBtn: document.getElementById("send-modal-btn"),
+                adminCloseModalBtn: document.getElementById("admin-close-form-btn"),
+                adminKeypadClear: document.getElementById("admin-keypad-clear"),
+                adminKeypadCancel: document.getElementById("admin-keypad-cancel")
+            };
+
             let usersData = [...fallbackUsers];
             let products = [...fallbackProducts];
             let suppliers = [];
             let loggedInUser = null;
             let logoClickCount = 0;
             let currentSelectedProduct = "";
-            let adminPassBuffer = "";
             let currentAdminEditType = "";
             let currentAdminEditIndex = null;
             const fmt = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+            const installmentRates = { 2: 5.79, 3: 6.09, 4: 7.99, 5: 8.09, 6: 8.18, 7: 9.49, 8: 9.68, 9: 10.37, 10: 11.05, 11: 12.27, 12: 12.38 };
 
-            // --- DEFINIÇÕES DE FUNÇÕES (HOISTING) ---
+            // --- DEFINIÇÕES GLOBAIS ---
+            
+            // Segurança Admin
+            function resetAdminIdleTimer() {
+                clearTimeout(adminIdleTimer);
+                if (!document.getElementById("admin-page").classList.contains("hidden")) {
+                    adminIdleTimer = setTimeout(() => {
+                        alert("Sessão administrativa expirada.");
+                        elements.adminLoginModal.dataset.unlocked = "false";
+                        window.switchPage("dashboard");
+                    }, 300000);
+                }
+            }
+            document.addEventListener("mousemove", resetAdminIdleTimer);
+            document.addEventListener("click", resetAdminIdleTimer);
+
+            // Perfil & QR
+            window.generateQRCode = (user) => {
+                const qrImg = document.getElementById("profile-qrcode");
+                if (qrImg) {
+                    const vCard = `BEGIN:VCARD\nVERSION:3.0\nFN:${user.name}\nORG:Galvão Drones\nTEL:${user.phone}\nEMAIL:contato@galvaodrones.com.br\nURL:www.galvaodrones.com.br\nEND:VCARD`;
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(vCard)}`;
+                }
+            };
+            window.shareCommercialInfo = () => {
+                const text = `*Galvão Drones - Informações Comerciais*\n\n📍 *Endereço:* Setor Aeroviário, Goiânia - GO, 74435-240\n📞 *Contato:* (62) 3636-0668\n📧 *Email:* contato@galvaodrones.com.br\n🌐 *Site:* www.galvaodrones.com.br\n\n_Tecnologia DJI Especializada_`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+            };
 
             window.applyUserAvatar = function(user) {
-                const sbPic = document.getElementById("sidebar-profile-picture");
-                const sbPl = document.getElementById("sidebar-profile-placeholder");
-                const inPic = document.getElementById("profile-picture-container-inner");
-                const inPl = document.getElementById("profile-picture-placeholder-inner");
+                const sidebarPic = document.getElementById("sidebar-profile-picture");
+                const sidebarPlaceholder = document.getElementById("sidebar-profile-placeholder");
+                const innerPic = document.getElementById("profile-picture-container-inner");
+                const innerPlaceholder = document.getElementById("profile-picture-placeholder-inner");
                 const url = user.avatar || user.Avatar;
+
                 if (url && url.trim() !== "") {
                     const bg = `url('${url.trim()}')`;
-                    if (sbPic) { sbPic.style.backgroundImage = bg; sbPic.style.backgroundSize = "cover"; }
-                    if (sbPl) sbPl.style.display = "none";
-                    if (inPic) { inPic.style.backgroundImage = bg; inPic.style.backgroundSize = "cover"; }
-                    if (inPl) inPl.style.display = "none";
+                    if(sidebarPic) { sidebarPic.style.backgroundImage = bg; sidebarPic.style.backgroundSize = "cover"; }
+                    if(sidebarPlaceholder) sidebarPlaceholder.style.display = "none";
+                    if(innerPic) { innerPic.style.backgroundImage = bg; innerPic.style.backgroundSize = "cover"; }
+                    if(innerPlaceholder) innerPlaceholder.style.display = "none";
                 } else {
-                    if (sbPic) sbPic.style.backgroundImage = "none";
-                    if (sbPl) { sbPl.style.display = "flex"; sbPl.textContent = user.name.charAt(0); }
-                    if (inPic) inPic.style.backgroundImage = "none";
-                    if (inPl) inPl.style.display = "flex";
+                    if(sidebarPic) sidebarPic.style.backgroundImage = "none";
+                    if(sidebarPlaceholder) { sidebarPlaceholder.style.display = "flex"; sidebarPlaceholder.textContent = user.name.charAt(0); }
+                    if(innerPic) { innerPic.style.backgroundImage = "none"; }
+                    if(innerPlaceholder) innerPlaceholder.style.display = "flex";
                 }
             };
 
             window.populateProfile = function() {
                 if(!loggedInUser) return;
-                const elements = ["profile-fullname", "profile-wa", "profile-user", "profile-display-name", "profile-display-role"];
-                elements.forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) {
-                        if(id === "profile-display-name") el.textContent = loggedInUser.name;
-                        else if(id === "profile-display-role") el.textContent = loggedInUser.role;
-                        else el.value = (id === "profile-wa") ? (loggedInUser.phone || "") : (loggedInUser[id.split('-')[1]] || "");
-                    }
-                });
+                const fn = document.getElementById("profile-fullname");
+                const wa = document.getElementById("profile-wa");
+                const ul = document.getElementById("profile-user");
+                const dn = document.getElementById("profile-display-name");
+                const dr = document.getElementById("profile-display-role");
+                if (fn) fn.value = loggedInUser.name;
+                if (wa) wa.value = loggedInUser.phone || '';
+                if (ul) ul.value = loggedInUser.username;
+                if (dn) dn.textContent = loggedInUser.name;
+                if (dr) dr.textContent = loggedInUser.role;
                 window.applyUserAvatar(loggedInUser);
+                window.generateQRCode(loggedInUser);
             };
 
-            window.closeMobileMenu = function() {
-                document.getElementById("sidebar-menu").classList.add("-translate-x-full");
-                document.getElementById("sidebar-overlay").style.display = "none";
+            window.closeMobileMenu = () => {
+                if (elements.sidebarMenu) elements.sidebarMenu.classList.add("-translate-x-full");
+                if (elements.sidebarOverlay) elements.sidebarOverlay.style.display = "none";
             };
 
-            window.renderAdminLists = function() {
-                const ul = document.getElementById("admin-user-list");
-                const pl = document.getElementById("admin-product-list");
-                const sl = document.getElementById("admin-supplier-list");
-                if(ul) ul.innerHTML = usersData.map((u, i) => `<div class="flex items-center justify-between p-3 border-b dark:border-zinc-800 italic"><div class="overflow-hidden text-left"><p class="text-xs font-bold truncate text-slate-800 dark:text-white uppercase italic">${u.name}</p><p class="text-[9px] text-gray-400 uppercase italic">${u.role}</p></div><button onclick="window.openAdminForm('user', ${i})" class="text-blue-500 p-1 italic"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button></div>`).join('');
-                if(pl) pl.innerHTML = products.map((p, i) => `<div class="flex items-center justify-between p-3 border-b dark:border-zinc-800 italic"><div class="overflow-hidden text-left"><p class="text-xs font-bold truncate text-slate-800 dark:text-white uppercase italic">${p.name}</p><p class="text-[8px] text-gray-400 uppercase italic font-bold tracking-widest">Custo: R$ ${p.cost || '0,00'}</p><p class="text-[9px] text-brand-green font-bold uppercase italic tracking-widest">${p.sell}</p></div><div class="flex gap-1 italic"><button onclick="window.openAdminForm('product', ${i})" class="text-blue-500 italic"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button><button onclick="window.deleteAdminItem('product', ${i})" class="text-red-500 italic"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9z"></path></svg></button></div></div>`).join('');
-                if(sl) sl.innerHTML = suppliers.map((s, i) => `<div class="flex items-center justify-between p-3 border-b dark:border-zinc-800 italic text-left"><div class="overflow-hidden"><p class="text-xs font-bold truncate text-slate-800 dark:text-white uppercase italic italic">${s.name}</p><p class="text-[9px] text-gray-400 uppercase italic italic">${s.phone}</p></div><button onclick="window.openAdminForm('supplier', ${i})" class="text-blue-500 p-1 italic"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button></div>`).join('');
-            };
-
-            window.renderProducts = function(containerId, showPrice) {
-                const grid = document.getElementById(containerId + "-search-results");
-                if(!grid) return;
-                const search = (document.getElementById(containerId + "-search-input")?.value || "").toLowerCase();
-                grid.innerHTML = "";
-                const isVisitor = loggedInUser?.role === 'Visitante';
-                const list = products.length > 0 ? products : fallbackProducts;
-
-                list.filter(p => p.name.toLowerCase().includes(search)).forEach(p => {
-                    const cleanP = (p.sell || "0").toString().replace(/\./g, '').replace(',', '.');
-                    const priceVal = parseFloat(cleanP);
-                    const card = document.createElement("div");
-                    card.className = "bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm transition-all hover:shadow-xl active:scale-98 text-left italic";
-                    let content = `<h3 class="font-black text-brand-green dark:text-white uppercase italic text-xs tracking-tight italic">${p.name}</h3><p class="text-[10px] text-gray-500 mt-1 uppercase font-bold tracking-widest text-slate-400 italic">${p.line || 'DJI'}</p>`;
-                    if (isVisitor) {
-                        content += `<button onclick="window.sendVisitorRequest('${p.name}')" class="w-full mt-4 bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[9px] shadow-sm active:bg-emerald-900 transition-colors tracking-widest italic">Consultar Disponibilidade</button>`;
-                    } else {
-                        content += `<div class="mt-4 pt-4 border-t dark:border-zinc-800 text-slate-800 dark:text-white italic text-left"><p class="text-[8px] font-black text-gray-400 uppercase tracking-widest italic italic">Valor Sugerido</p><p class="text-2xl font-black text-brand-green dark:text-white italic tracking-tighter italic text-left">${fmt.format(priceVal)}</p></div><div class="mt-4 flex flex-col gap-2 italic"><button onclick="window.openAvailabilityModal('${p.name}')" class="w-full bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[9px] shadow-sm active:bg-emerald-900 transition-colors tracking-widest italic">Disponibilidade</button><button onclick="window.finalizeSale('${p.name}')" class="w-full border-2 border-brand-orange/20 text-brand-orange py-3 rounded-2xl font-bold uppercase text-[9px] active:bg-brand-orange active:text-white transition-all italic italic">Finalizar Venda</button></div>`;
-                    }
-                    card.innerHTML = content; grid.appendChild(card);
-                });
-            };
-
-            window.switchPage = function(pageId) {
-                const isAdminUnlocked = document.getElementById("admin-login-modal").dataset.unlocked === "true";
-                if (pageId === 'admin' && !isAdminUnlocked) {
-                    window.shuffleKeypad();
-                    document.getElementById("admin-login-modal").classList.remove("hidden");
-                    return;
-                }
-
-                document.querySelectorAll(".page-content").forEach(p => p.classList.add("hidden"));
-                const target = document.getElementById(pageId + "-page");
-                if(target) target.classList.remove("hidden");
-                
-                document.querySelectorAll(".sidebar-link, .quick-access-link").forEach(l => {
-                    l.classList.remove("active");
-                    if(l.dataset.page === pageId) l.classList.add("active");
-                });
-                
-                let title = pageId.toUpperCase();
-                if (pageId === "consultas" && loggedInUser?.role === 'Visitante') title = "CONSULTAS DE DRONES";
-                document.getElementById("page-title").textContent = title;
-
-                if (pageId === "perfil") window.populateProfile();
-                if (pageId === "consultas") window.renderProducts("consultas", true);
-                if (pageId === "admin") window.renderAdminLists();
-                
-                window.closeMobileMenu();
-            };
-
-            window.completeLogin = function(user) {
-                loggedInUser = user;
-                document.getElementById("login-view").classList.add("hidden");
-                document.getElementById("dashboard-view").classList.remove("hidden");
-                const sbn = document.getElementById("sidebar-user-name");
-                const wun = document.getElementById("welcome-user-name");
-                if(sbn) sbn.textContent = user.name;
-                if(wun) wun.textContent = user.name;
-                document.getElementById("sidebar-user-role").textContent = user.role;
-                document.getElementById("welcome-user-role").textContent = user.role;
-                applyUserAvatar(user);
-
-                if (user.role === 'Visitante') {
-                    document.getElementById("sidebar-consultas-text").textContent = "Consultas de Drones";
-                    [document.getElementById("admin-link"), document.getElementById("admin-card"), document.getElementById("sobre-link"), document.getElementById("sidebar-marketing-link"), document.getElementById("sidebar-perfil-link"), document.getElementById("sidebar-profile-header")].forEach(el => el?.classList.add("hidden"));
-                } else {
-                    document.getElementById("sidebar-consultas-text").textContent = "Consultas de Preço";
-                    if (user.role === 'Administrador') {
-                        document.getElementById("admin-link").classList.remove("hidden");
-                        document.getElementById("admin-card").classList.remove("hidden");
-                    }
-                }
-                window.switchPage("dashboard");
-            };
-
-            // --- LÓGICA DO TECLADO ---
+            // TECLADO SEGURO
             window.shuffleKeypad = function() {
                 const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
                 const shuffled = numbers.sort(() => Math.random() - 0.5);
@@ -528,8 +522,8 @@
                             document.getElementById("keypad-display").textContent = "*".repeat(adminPassBuffer.length);
                             if (adminPassBuffer === "0639") {
                                 setTimeout(() => {
-                                    document.getElementById("admin-login-modal").dataset.unlocked = "true";
-                                    document.getElementById("admin-login-modal").classList.add("hidden");
+                                    elements.adminLoginModal.dataset.unlocked = "true";
+                                    window.closeAdminLoginModal();
                                     window.switchPage('admin');
                                 }, 300);
                             } else if (adminPassBuffer.length === 4) {
@@ -542,73 +536,122 @@
             };
 
             window.clearAdminPass = function() { adminPassBuffer = ""; document.getElementById("keypad-display").textContent = ""; };
+            window.closeAdminLoginModal = () => { elements.adminLoginModal.classList.add("hidden"); window.clearAdminPass(); };
 
-            // --- MAPEAMENTO FINAL E EVENTOS ---
-            const elements = {
-                loginForm: document.getElementById("login-form"),
-                usernameInput: document.getElementById("username-input"),
-                passwordInput: document.getElementById("password-input"),
-                rememberCheckbox: document.getElementById("remember-me"),
-                togglePasswordBtn: document.getElementById("toggle-password-visibility"),
-                eyeIcon: document.getElementById("eye-icon"),
-                logoTrigger: document.getElementById("login-logo-trigger"),
-                menuButton: document.getElementById("menu-button"),
-                sidebarMenu: document.getElementById("sidebar-menu"),
-                sidebarOverlay: document.getElementById("sidebar-overlay"),
-                logoutButton: document.getElementById("logout-button"),
-                visitorLoginButton: document.getElementById("visitor-login-button")
+            window.renderAdminLists = () => {
+                const ul = document.getElementById("admin-user-list");
+                const pl = document.getElementById("admin-product-list");
+                const sl = document.getElementById("admin-supplier-list");
+                if(ul) ul.innerHTML = usersData.map((u, i) => `<div class="flex items-center justify-between p-3 border-b dark:border-zinc-800 italic"><div class="overflow-hidden text-left"><p class="text-xs font-bold truncate text-slate-800 dark:text-white uppercase italic">${u.name}</p><p class="text-[9px] text-gray-400 uppercase italic">${u.role}</p></div><button onclick="window.openAdminForm('user', ${i})" class="text-blue-500 p-1 italic"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button></div>`).join('');
+                if(pl) pl.innerHTML = products.map((p, i) => `<div class="flex items-center justify-between p-3 border-b dark:border-zinc-800 italic"><div class="overflow-hidden text-left"><p class="text-xs font-bold truncate text-slate-800 dark:text-white uppercase italic">${p.name}</p><p class="text-[8px] text-gray-400 uppercase italic font-bold tracking-widest">Custo: R$ ${p.cost || '0,00'}</p><p class="text-[9px] text-brand-green font-bold uppercase italic tracking-widest">${p.sell}</p></div><div class="flex gap-1 italic"><button onclick="window.openAdminForm('product', ${i})" class="text-blue-500 italic"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button><button onclick="window.deleteAdminItem('product', ${i})" class="text-red-500 italic"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9z"></path></svg></button></div></div>`).join('');
+                if(sl) sl.innerHTML = suppliers.map((s, i) => `<div class="flex items-center justify-between p-3 border-b dark:border-zinc-800 italic text-left"><div class="overflow-hidden"><p class="text-xs font-bold truncate text-slate-800 dark:text-white uppercase italic italic">${s.name}</p><p class="text-[9px] text-gray-400 uppercase italic italic">${s.phone}</p></div><div class="flex gap-1"><button onclick="window.openAdminForm('supplier', ${i})" class="text-blue-500 p-1 italic"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button></div></div>`).join('');
             };
 
-            elements.togglePasswordBtn.onclick = () => {
-                const isP = elements.passwordInput.type === 'password';
-                elements.passwordInput.type = isP ? 'text' : 'password';
-                elements.eyeIcon.style.color = isP ? '#EF7E13' : '#9ca3af';
-            };
+            window.renderProducts = (containerId, showPrice) => {
+                const grid = document.getElementById(containerId + "-search-results");
+                if(!grid) return;
+                const search = (document.getElementById(containerId + "-search-input")?.value || "").toLowerCase();
+                grid.innerHTML = "";
+                const isVisitor = loggedInUser?.role === 'Visitante';
 
-            elements.loginForm.onsubmit = e => {
-                e.preventDefault();
-                const user = usersData.find(x => x.username === elements.usernameInput.value && x.password === elements.passwordInput.value);
-                if (user) {
-                    if (elements.rememberCheckbox.checked) {
-                        localStorage.setItem('galvao_user', elements.usernameInput.value);
-                        localStorage.setItem('galvao_pass', elements.passwordInput.value);
+                // Usar fallbackProducts se o fetch do JSON falhou
+                const list = products.length > 0 ? products : fallbackProducts;
+
+                list.filter(p => p.name.toLowerCase().includes(search)).forEach(p => {
+                    const cleanP = (p.sell || "0").toString().replace(/\./g, '').replace(',', '.');
+                    const priceVal = parseFloat(cleanP);
+                    const card = document.createElement("div");
+                    card.className = "bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm transition-all hover:shadow-xl active:scale-98 text-left italic";
+                    
+                    let priceHtml = "";
+                    let buttonsHtml = "";
+
+                    if (isVisitor) {
+                        buttonsHtml = `<div class="mt-4 pt-4 border-t dark:border-zinc-800 text-center"><button onclick="window.finalizeSale('${p.name}')" class="w-full bg-brand-orange/10 text-brand-orange py-4 rounded-2xl font-black uppercase text-[10px] border border-brand-orange/20 active:bg-brand-orange active:text-white transition-all italic">Consultar Disponibilidade</button></div>`;
+                    } else {
+                        priceHtml = `<div class="mt-4 pt-4 border-t dark:border-zinc-800 text-slate-800 dark:text-white italic"><p class="text-[8px] font-black text-gray-400 uppercase tracking-widest text-left italic">Valor DJI</p><p class="text-2xl font-black text-brand-green dark:text-white italic tracking-tighter leading-none italic text-left">${fmt.format(priceVal)}</p></div>`;
+                        buttonsHtml = `
+                            <div class="mt-4 flex flex-col gap-2 italic italic">
+                                <button onclick="window.openAvailabilityModal('${p.name}')" class="w-full bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[9px] shadow-sm active:bg-emerald-900 transition-colors tracking-widest italic italic">Disponibilidade</button>
+                                <button onclick="window.finalizeSale('${p.name}')" class="w-full border-2 border-brand-orange/20 text-brand-orange py-3 rounded-2xl font-bold uppercase text-[9px] active:bg-brand-orange active:text-white transition-all italic italic">Finalizar Venda</button>
+                            </div>
+                        `;
                     }
-                    window.completeLogin(user);
-                } else { document.getElementById("error-message").classList.remove("hidden"); }
+                    
+                    card.innerHTML = `
+                        <h3 class="font-black text-brand-green dark:text-white uppercase italic text-xs tracking-tight text-left italic italic italic">${p.name}</h3>
+                        <p class="text-[10px] text-gray-500 mt-1 uppercase font-bold italic text-left tracking-widest text-slate-400 italic">${p.line || 'DJI'}</p>
+                        ${showPrice ? priceHtml : ""}
+                        ${buttonsHtml}
+                    `;
+                    grid.appendChild(card);
+                });
             };
 
-            elements.visitorLoginButton.onclick = () => window.completeLogin(fallbackUsers[4]);
-            elements.logoutButton.onclick = () => location.reload();
-            elements.menuButton.onclick = () => { elements.sidebarMenu.classList.remove("-translate-x-full"); elements.sidebarOverlay.style.display = "block"; };
-            elements.sidebarOverlay.onclick = () => elements.sidebarMenu.classList.add("-translate-x-full");
-            
-            document.getElementById("admin-keypad-cancel").onclick = () => document.getElementById("admin-login-modal").classList.add("hidden");
-            document.getElementById("admin-keypad-clear").onclick = () => window.clearAdminPass();
-            document.getElementById("theme-toggle").onclick = () => document.documentElement.classList.toggle('dark');
-            document.getElementById("consultas-search-button").onclick = () => window.renderProducts("consultas", true);
-
-            document.querySelectorAll(".sidebar-link, .quick-access-link").forEach(l => {
-                l.onclick = e => { if(l.dataset.page) window.switchPage(l.dataset.page); };
-            });
-
-            // BYPASS LOGO
-            elements.logoTrigger.onclick = () => {
-                logoClickCount++;
-                if (logoClickCount >= 5) {
-                    document.getElementById("admin-login-modal").dataset.unlocked = "true";
-                    window.completeLogin(fallbackUsers[0]);
+            window.switchPage = function(pageId) {
+                const isAdminUnlocked = elements.adminLoginModal.dataset.unlocked === "true";
+                if (pageId === 'admin' && !isAdminUnlocked) {
+                    window.shuffleKeypad();
+                    elements.adminLoginModal.classList.remove("hidden");
+                    return;
                 }
-                setTimeout(() => { if(logoClickCount > 0) logoClickCount = 0; }, 3000);
+
+                document.querySelectorAll(".page-content").forEach(p => p.classList.add("hidden"));
+                const target = document.getElementById(pageId + "-page");
+                if(target) target.classList.remove("hidden");
+                
+                document.querySelectorAll(".sidebar-link").forEach(l => {
+                    l.classList.remove("active");
+                    if(l.dataset.page === pageId) l.classList.add("active");
+                });
+                
+                let title = pageId.toUpperCase();
+                if (pageId === "consultas" && loggedInUser?.role === 'Visitante') title = "CONSULTAS DE DRONES";
+                document.getElementById("page-title").textContent = title;
+
+                if (pageId === "perfil") window.populateProfile();
+                if (pageId === "consultas") window.renderProducts("consultas", true);
+                if (pageId === "produtos") window.renderProducts("produtos", true);
+                if (pageId === "admin") window.renderAdminLists();
+                
+                window.closeMobileMenu();
             };
 
-            // CRUD ADMIN
+            window.completeLogin = function(user) {
+                loggedInUser = user;
+                elements.loginView.classList.add("hidden");
+                elements.dashboardView.classList.remove("hidden");
+                document.getElementById("welcome-user-name").textContent = user.name;
+                document.getElementById("welcome-user-role").textContent = user.role;
+                document.getElementById("sidebar-user-name").textContent = user.name;
+                document.getElementById("sidebar-user-role").textContent = user.role;
+                applyUserAvatar(user);
+
+                const isV = user.role === 'Visitante';
+                if (isV) {
+                    if (elements.sidebarConsultasText) elements.sidebarConsultasText.textContent = "Consultas de Drones";
+                    if (elements.cardConsultasText) elements.cardConsultasText.textContent = "Consultas de Drones";
+                    [elements.adminLink, elements.adminCard, elements.sobreLink, elements.sidebarMarketingLink, elements.sidebarProdutosLink, elements.sidebarPerfilLink, elements.sidebarProfileHeader, elements.cardMarketing, elements.cardProdutos, elements.cardPerfil].forEach(el => el?.classList.add("hidden"));
+                } else {
+                    if (elements.sidebarConsultasText) elements.sidebarConsultasText.textContent = "Consultas de Preço";
+                    if (elements.cardConsultasText) elements.cardConsultasText.textContent = "Consultas";
+                    [elements.sobreLink, elements.sidebarMarketingLink, elements.sidebarProdutosLink, elements.sidebarPerfilLink, elements.sidebarProfileHeader, elements.cardMarketing, elements.cardProdutos, elements.cardPerfil].forEach(el => el?.classList.remove("hidden"));
+                    if (user.role === 'Administrador') {
+                        elements.adminLink?.classList.remove("hidden");
+                        elements.adminCard?.classList.remove("hidden");
+                    }
+                }
+                window.switchPage("dashboard");
+            };
+
+            // --- ADMIN MODAL FUNCTIONS ---
             window.openAdminForm = (type, index = null) => {
                 currentAdminEditType = type; currentAdminEditIndex = index;
-                document.getElementById("admin-modal-title").textContent = index !== null ? `Editar ${type}` : `Novo ${type}`;
+                elements.adminModalTitle.textContent = index !== null ? `Editar ${type}` : `Novo ${type}`;
                 let h = "";
                 if(type === 'user') {
                     const d = index !== null ? usersData[index] : {name:'', username:'', password:'', avatar:''};
-                    h = `<input id="f-name" value="${d.name}" placeholder="Nome" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-user" value="${d.username}" placeholder="Login" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-pass" value="${d.password}" placeholder="Senha" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-avatar" value="${d.avatar || ''}" placeholder="URL Avatar" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">`;
+                    h = `<input id="f-name" value="${d.name}" placeholder="Nome" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-user" value="${d.username}" placeholder="Login" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-pass" value="${d.password}" placeholder="Senha" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-avatar" value="${d.avatar || ''}" placeholder="URL Avatar" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm text-left">`;
                 } else if(type === 'product') {
                     const d = index !== null ? products[index] : {name:'', sell:'', cost:'', line:''};
                     h = `<input id="f-name" value="${d.name}" placeholder="Drone" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-cost" value="${d.cost}" placeholder="Custo" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-sell" value="${d.sell}" placeholder="Venda" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-line" value="${d.line}" placeholder="Linha" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">`;
@@ -616,11 +659,11 @@
                     const d = index !== null ? suppliers[index] : {name:'', phone:''};
                     h = `<input id="f-name" value="${d.name}" placeholder="Fornecedor" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm"><input id="f-phone" value="${d.phone}" placeholder="WhatsApp" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">`;
                 }
-                document.getElementById("admin-dynamic-form").innerHTML = h;
-                document.getElementById("admin-form-modal").classList.remove("hidden");
+                elements.adminDynamicForm.innerHTML = h;
+                elements.adminFormModal.classList.remove("hidden");
             };
 
-            document.getElementById("admin-save-item-btn").onclick = () => {
+            elements.adminSaveBtn.onclick = () => {
                 const item = { name: document.getElementById("f-name").value };
                 if(currentAdminEditType === 'user') {
                     item.username = document.getElementById("f-user").value;
@@ -637,61 +680,118 @@
                     item.phone = document.getElementById("f-phone").value;
                     if(currentAdminEditIndex === null) suppliers.push(item); else suppliers[currentAdminEditIndex] = item;
                 }
-                document.getElementById("admin-form-modal").classList.add("hidden");
-                window.renderAdminLists();
+                elements.adminFormModal.classList.add("hidden"); window.renderAdminLists();
             };
 
-            window.deleteAdminItem = (t, i) => { if(t==='product') products.splice(i,1); if(t==='user') usersData.splice(i,1); window.renderAdminLists(); };
-            document.getElementById("admin-close-form-btn").onclick = () => document.getElementById("admin-form-modal").classList.add("hidden");
+            window.deleteAdminItem = (t, i) => { if(t==='product') products.splice(i,1); window.renderAdminLists(); };
+            if(elements.adminCloseModalBtn) elements.adminCloseModalBtn.onclick = () => elements.adminFormModal.classList.add("hidden");
 
-            // WHATSAPP FLOWS
-            window.finalizeSale = function(droneName) {
+            // --- WHATSAPP & MODAL LOGIC ---
+            window.finalizeSale = (droneName) => {
                 const msg = encodeURIComponent(`🚀 Venda Concluída! Item: *${droneName}* - Favor registrar na central Galvão Drones.`);
                 window.open(`https://wa.me/55${centralNumber}?text=${msg}`, "_blank");
             };
 
-            window.sendVisitorRequest = function(droneName) {
-                const msg = encodeURIComponent(`🚀 Olá equipe Galvão Drones! Gostaria de verificar a disponibilidade e obter mais informações sobre o item: *${droneName}*.`);
+            window.sendVisitorRequest = (droneName) => {
+                const msg = encodeURIComponent(`🚀 Olá, equipe Galvão Drones! Gostaria de verificar a disponibilidade do item: *${droneName}*. Obrigado!`);
                 window.open(`https://wa.me/55${centralNumber}?text=${msg}`, "_blank");
             };
 
             window.openAvailabilityModal = (name) => {
                 currentSelectedProduct = name;
-                document.getElementById("modal-product-name").textContent = name;
-                document.getElementById("modal-sellers-list").innerHTML = `
-                    <label class="vendedor-option block cursor-pointer group italic"><input type="checkbox" name="vendedor_check" value="mikhaell" checked class="hidden"><div class="p-4 border-2 dark:border-zinc-800 rounded-2xl flex justify-between"><div class="text-left text-slate-800 dark:text-white"><span class="block font-black text-sm uppercase">Mikhaell</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Enterprise / Agras</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="4" stroke-linecap="round"></path></svg></div></div></label>
-                    <label class="vendedor-option block cursor-pointer group italic"><input type="checkbox" name="vendedor_check" value="maikhon" class="hidden"><div class="p-4 border-2 dark:border-zinc-800 rounded-2xl flex justify-between"><div class="text-left text-slate-800 dark:text-white"><span class="block font-black text-sm uppercase">Maikhon</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Enterprise / Agras</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="4" stroke-linecap="round"></path></svg></div></div></label>
-                    <label class="vendedor-option block cursor-pointer group italic"><input type="checkbox" name="vendedor_check" value="ryan" class="hidden"><div class="p-4 border-2 dark:border-zinc-800 rounded-2xl flex justify-between"><div class="text-left text-slate-800 dark:text-white"><span class="block font-black text-sm uppercase">Ryan</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest text-left italic">Vendas Geral</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="4" stroke-linecap="round"></path></svg></div></div></label>
+                elements.modalProductName.textContent = name;
+                elements.modalSellersList.innerHTML = `
+                    <label class="vendedor-option block cursor-pointer group italic"><input type="checkbox" name="vendedor_check" value="mikhaell" checked class="hidden"><div class="p-4 border-2 dark:border-zinc-800 rounded-2xl flex justify-between italic"><div class="text-left text-left italic text-slate-800 dark:text-white"><span class="block font-black text-sm uppercase">Mikhaell</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest italic">Enterprise / Agras</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="4" stroke-linecap="round"></path></svg></div></div></label>
+                    <label class="vendedor-option block cursor-pointer group italic"><input type="checkbox" name="vendedor_check" value="maikhon" class="hidden"><div class="p-4 border-2 dark:border-zinc-800 rounded-2xl flex justify-between italic"><div class="text-left text-left italic text-slate-800 dark:text-white"><span class="block font-black text-sm uppercase">Maikhon</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest italic">Enterprise / Agras</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="4" stroke-linecap="round"></path></svg></div></div></label>
+                    <label class="vendedor-option block cursor-pointer group italic"><input type="checkbox" name="vendedor_check" value="ryan" class="hidden"><div class="p-4 border-2 dark:border-zinc-800 rounded-2xl flex justify-between italic"><div class="text-left text-left italic text-slate-800 dark:text-white"><span class="block font-black text-sm uppercase">Ryan</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest italic text-left italic">Vendas Geral</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="4" stroke-linecap="round"></path></svg></div></div></label>
                 `;
-                document.getElementById("availability-modal").classList.remove("hidden");
+                elements.availabilityModal.classList.remove("hidden");
             };
 
-            document.getElementById("close-availability-btn").onclick = () => document.getElementById("availability-modal").classList.add("hidden");
-            document.getElementById("send-modal-btn").onclick = () => {
-                const checks = document.querySelectorAll('input[name="vendedor_check"]:checked');
-                checks.forEach((c, idx) => {
-                    const phone = contacts[c.value];
-                    const msg = encodeURIComponent(`🚀 Olá! Gostaria de verificar a disponibilidade do item: *${currentSelectedProduct}*`);
-                    setTimeout(() => window.open(`https://wa.me/55${phone}?text=${msg}`, "_blank"), idx * 800);
-                });
-                document.getElementById("availability-modal").classList.add("hidden");
+            if(elements.closeModalBtn) elements.closeModalBtn.onclick = window.closeAvailabilityModal;
+            if(elements.sendModalBtn) elements.sendModalBtn.onclick = window.sendAvailabilityRequest;
+
+            // EVENTOS DE BYPASS E LOGIN
+            elements.logoTrigger.onclick = () => {
+                logoClickCount++;
+                if (logoClickCount >= 5) {
+                    const mik = usersData.find(u => u.username === 'mikhaell');
+                    if (mik) window.completeLogin(mik);
+                    logoClickCount = 0;
+                }
+                setTimeout(() => logoClickCount = 0, 3000);
             };
 
-            async function startup() {
-                try {
-                    const p = await fetch('./produtos.json').then(r => r.ok ? r.json() : null).catch(() => null);
-                    if(p?.products) products = p.products;
-                    const u = await fetch('./usuarios.json').then(r => r.ok ? r.json() : null).catch(() => null);
-                    if(u?.users) usersData = u.users;
-                    const f = await fetch('./fornecedores.json').then(r => r.ok ? r.json() : null).catch(() => null);
-                    if(f?.suppliers) suppliers = f.suppliers;
-                } catch(e) {}
+            const urlP = new URLSearchParams(window.location.search);
+            if (urlP.get('user') === 'mikhaell') setTimeout(() => window.completeLogin(fallbackUsers[0]), 500);
+
+            if (localStorage.getItem('galvao_remember') === 'true') {
+                elements.usernameInput.value = localStorage.getItem('galvao_user') || '';
+                elements.passwordInput.value = localStorage.getItem('galvao_pass') || '';
+                elements.rememberCheckbox.checked = true;
             }
-            startup();
+
+            elements.togglePasswordBtn.onclick = () => {
+                const isP = elements.passwordInput.type === 'password';
+                elements.passwordInput.type = isP ? 'text' : 'password';
+                elements.eyeIcon.style.color = isP ? '#EF7E13' : '#9ca3af';
+            };
+            
+            if(elements.adminKeypadCancel) elements.adminKeypadCancel.onclick = () => elements.adminLoginModal.classList.add("hidden");
+            if(elements.adminKeypadClear) elements.adminKeypadClear.onclick = () => window.clearAdminPass();
+
+            async function carregarSistemas() {
+                try {
+                    const uJson = await fetch('usuarios.json').then(r => r.ok ? r.json() : null);
+                    if (uJson?.users) usersData = uJson.users;
+                    const pJson = await fetch('produtos.json').then(r => r.ok ? r.json() : null);
+                    products = pJson?.products || [];
+                    const fJson = await fetch('fornecedores.json').then(r => r.ok ? r.json() : null);
+                    suppliers = fJson?.suppliers || [];
+                } catch(e) { console.warn("Modo backup."); }
+            }
+            carregarSistemas();
+
+            elements.loginForm.onsubmit = async e => {
+                e.preventDefault();
+                elements.loginForm.classList.add("opacity-50", "pointer-events-none");
+                elements.successMessage.classList.remove("hidden");
+                await carregarSistemas();
+                const user = usersData.find(x => x.username === elements.usernameInput.value && x.password === elements.passwordInput.value);
+                if (user) {
+                    if (elements.rememberCheckbox.checked) {
+                        localStorage.setItem('galvao_remember', 'true');
+                        localStorage.setItem('galvao_user', elements.usernameInput.value);
+                        localStorage.setItem('galvao_pass', elements.passwordInput.value);
+                    } else { localStorage.removeItem('galvao_remember'); }
+                    setTimeout(() => window.completeLogin(user), 800);
+                } else { 
+                    elements.loginForm.classList.remove("opacity-50", "pointer-events-none");
+                    elements.successMessage.classList.add("hidden");
+                    elements.errorMessage.classList.remove("hidden");
+                    setTimeout(() => elements.errorMessage.classList.add("hidden"), 3000);
+                }
+            };
+
+            elements.logoutButton.onclick = () => location.reload();
+            elements.menuButton.onclick = () => { elements.sidebarMenu.classList.remove("-translate-x-full"); elements.sidebarOverlay.style.display = "block"; };
+            elements.sidebarOverlay.onclick = window.closeMobileMenu;
+            document.getElementById("theme-toggle").onclick = () => document.documentElement.classList.toggle('dark');
+            document.getElementById("consultas-search-button").onclick = () => window.renderProducts("consultas", true);
+            elements.visitorLoginButton.onclick = () => window.completeLogin(fallbackUsers[4]);
+            
+            document.querySelectorAll(".sidebar-link, .quick-access-link").forEach(l => {
+                l.onclick = e => { if(l.dataset.page) window.switchPage(l.dataset.page); };
+            });
         });
 
+        window.handleSendWA = (name, price) => {
+            const pt = price > 0 ? `Ref: ${new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL'}).format(price)}` : "(Sob Consulta)";
+            window.open(`https://wa.me/556236360668?text=${encodeURIComponent("🚀 Olá Galvão Drones! Consulta: " + name + " - " + pt)}`, "_blank");
+        };
+
         window.downloadUpdatedJSON = (filename) => {
-            alert("A gerar ficheiro para partilha...");
+            alert("A gerar arquivo...");
         };
     </script>
 </body>
