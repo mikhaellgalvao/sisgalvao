@@ -147,6 +147,29 @@
     </div>
 
     <!-- MODAIS E POPUPS -->
+    
+    <!-- Share Options Modal (Novo) -->
+    <div id="share-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
+        <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
+            <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-4">Compartilhar</h3>
+            <p id="share-product-name" class="text-xs font-bold text-gray-500 mb-6 uppercase tracking-widest dark:text-gray-400"></p>
+            
+            <div class="flex gap-2 mb-6 bg-gray-100 dark:bg-zinc-800 p-1 rounded-2xl">
+                <button onclick="UI.setShareMode('vista')" id="btn-mode-vista" class="flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all bg-white shadow-sm text-brand-orange">À Vista</button>
+                <button onclick="UI.setShareMode('parcelado')" id="btn-mode-parcelado" class="flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-gray-400 hover:text-gray-600">Parcelado</button>
+            </div>
+
+            <div id="share-input-container" class="mb-6">
+                <!-- Inputs injetados via JS -->
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="UI.closeModal('share-modal')" class="py-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-500 active:scale-95 transition-all">Cancelar</button>
+                <button onclick="Actions.confirmShare()" class="py-4 bg-brand-orange text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all">Enviar WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Calculadora -->
     <div id="calculator-popup" class="hidden fixed bottom-24 right-6 w-80 sm:w-96 glass-card rounded-[2rem] shadow-2xl border dark:border-zinc-700 p-6 z-50 transition-all duration-300 transform origin-bottom-right">
         <div class="flex justify-between items-center mb-6"><h3 class="font-black text-brand-green dark:text-white uppercase italic text-xl tracking-tighter">Simulador Galvão</h3><button onclick="UI.toggleCalculator()" class="text-gray-400 text-2xl hover:text-red-500">×</button></div>
@@ -226,7 +249,10 @@
             users: [], 
             suppliers: [], 
             currentUser: null, adminSession: false,
-            adminPassBuffer: "", currentProduct: "", adminEdit: { type: null, index: null },
+            adminPassBuffer: "", currentProduct: "", 
+            currentShareProduct: { name: "", price: 0 },
+            shareMode: 'vista',
+            adminEdit: { type: null, index: null },
             passwords: { admin: "", download: "" }
         };
 
@@ -387,7 +413,7 @@
                                 <div class="mt-4 flex flex-col gap-2">
                                     <button onclick="Actions.openAvailability('${p.name}')" class="w-full bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[9px] shadow-sm active:bg-emerald-900 tracking-widest">Disponibilidade</button>
                                     <div class="flex gap-2">
-                                        <button onclick="Actions.shareProduct('${p.name}', '${Utils.fmtBRL.format(priceVal)}')" class="flex-1 bg-gray-100 dark:bg-zinc-800 text-gray-500 py-3 rounded-2xl font-bold uppercase text-[9px] hover:text-brand-green" title="Compartilhar"><svg class="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-width="2"/></svg></button>
+                                        <button onclick="Actions.openShareModal('${p.name}', ${priceVal})" class="flex-1 bg-gray-100 dark:bg-zinc-800 text-gray-500 py-3 rounded-2xl font-bold uppercase text-[9px] hover:text-brand-green active:scale-95 transition-all" title="Compartilhar"><svg class="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-width="2"/></svg></button>
                                         <button onclick="Actions.finalizeSale('${p.name}')" class="flex-[3] border-2 border-brand-orange/20 text-brand-orange py-3 rounded-2xl font-bold uppercase text-[9px] active:bg-brand-orange active:text-white transition-all">Finalizar Venda</button>
                                     </div>
                                 </div>`;
@@ -487,7 +513,32 @@
             toggleCalculator: () => document.getElementById('calculator-popup').classList.toggle('hidden'),
             closeSidebar: () => { document.getElementById('sidebar-menu').classList.add('-translate-x-full'); document.getElementById('sidebar-overlay').style.display = 'none'; },
             toggleSidebar: () => { document.getElementById('sidebar-menu').classList.remove('-translate-x-full'); document.getElementById('sidebar-overlay').style.display = 'block'; },
-            closeModal: (id) => document.getElementById(id).classList.add('hidden')
+            closeModal: (id) => document.getElementById(id).classList.add('hidden'),
+            
+            setShareMode: (mode) => {
+                STATE.shareMode = mode;
+                const container = document.getElementById('share-input-container');
+                const btnVista = document.getElementById('btn-mode-vista');
+                const btnParcelado = document.getElementById('btn-mode-parcelado');
+
+                if (mode === 'vista') {
+                    btnVista.classList.remove('text-gray-400', 'hover:text-gray-600');
+                    btnVista.classList.add('bg-white', 'shadow-sm', 'text-brand-orange');
+                    btnParcelado.classList.add('text-gray-400', 'hover:text-gray-600');
+                    btnParcelado.classList.remove('bg-white', 'shadow-sm', 'text-brand-orange');
+                    
+                    container.innerHTML = `<div class="text-left"><label class="block text-[10px] font-bold uppercase text-gray-400 mb-2 pl-1">Desconto (%)</label><input type="number" id="share-discount" placeholder="Ex: 5" min="0" max="10" class="w-full rounded-2xl border-0 bg-gray-100 dark:bg-zinc-800 px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange font-bold outline-none text-center text-lg"></div>`;
+                } else {
+                    btnParcelado.classList.remove('text-gray-400', 'hover:text-gray-600');
+                    btnParcelado.classList.add('bg-white', 'shadow-sm', 'text-brand-orange');
+                    btnVista.classList.add('text-gray-400', 'hover:text-gray-600');
+                    btnVista.classList.remove('bg-white', 'shadow-sm', 'text-brand-orange');
+                    
+                    let opts = `<option value="">Selecione...</option>`;
+                    for(let i=2; i<=12; i++) opts += `<option value="${i}">${i}x</option>`;
+                    container.innerHTML = `<div class="text-left"><label class="block text-[10px] font-bold uppercase text-gray-400 mb-2 pl-1">Parcelamento</label><select id="share-installments" class="w-full rounded-2xl border-0 bg-gray-100 dark:bg-zinc-800 px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange font-bold outline-none text-center text-lg appearance-none">${opts}</select></div>`;
+                }
+            }
         };
 
         const Actions = {
@@ -563,7 +614,44 @@
                 window.open(`https://wa.me/55${CONFIG.central}?text=${encodeURIComponent("🚀 Venda Concluída: " + name)}`, '_blank');
             },
             
-            shareProduct: (name, price) => window.open(`https://wa.me/?text=${encodeURIComponent(`Confira este drone: ${name}\nPreço: ${price}`)}`, '_blank'),
+            // Nova Lógica de Compartilhamento
+            openShareModal: (name, price) => {
+                STATE.currentShareProduct = { name, price };
+                document.getElementById('share-product-name').textContent = name;
+                UI.setShareMode('vista'); // Reset para vista
+                document.getElementById('share-modal').classList.remove('hidden');
+            },
+
+            confirmShare: () => {
+                const p = STATE.currentShareProduct;
+                const mode = STATE.shareMode;
+                let text = `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor Base:* ${Utils.fmtBRL.format(p.price)}\n`;
+
+                if (mode === 'vista') {
+                    const discountInput = document.getElementById('share-discount');
+                    let disc = parseFloat(discountInput.value) || 0;
+                    if(disc < 0) disc = 0; 
+                    if(disc > 10) disc = 10;
+                    
+                    const finalPrice = p.price * (1 - (disc/100));
+                    text += `\n🔥 *Condição à Vista:* ${disc}% OFF\n*Valor Final:* ${Utils.fmtBRL.format(finalPrice)}`;
+                } else {
+                    const instInput = document.getElementById('share-installments');
+                    const n = parseInt(instInput.value);
+                    if (!n) { alert("Selecione as parcelas"); return; }
+                    
+                    const rate = CONFIG.installmentRates[n] || 0;
+                    const totalWithRate = p.price * (1 + (rate/100));
+                    const parcelVal = totalWithRate / n;
+                    
+                    text += `\n💳 *Condição Parcelada:* ${n}x\n*Parcela:* ${Utils.fmtBRL.format(parcelVal)}\n*Total:* ${Utils.fmtBRL.format(totalWithRate)}`;
+                }
+
+                text += `\n\n🎁 *Bônus Especial:*\nLembrando, ao comprar um Drone, você ganha uma *Aula de Pilotagem* de brinde e já sai sabendo pilotar seu drone! 🚀`;
+
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                UI.closeModal('share-modal');
+            },
 
             openAvailability: (name) => {
                 STATE.currentProduct = name;
