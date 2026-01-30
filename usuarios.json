@@ -35,6 +35,14 @@
             "avatar": "https://i.imgur.com/7nZVEsE.jpeg"
         },
         {
+            "name": "Afranio Henrique",
+            "username": "afranio",
+            "password": "1234",
+            "role": "Vendedor",
+            "phone": "75981197699",
+            "avatar": "https://i.imgur.com/03fIaew.jpeg"
+        },
+        {
             "name": "Visitante",
             "username": "consultas",
             "password": "",
@@ -44,6 +52,7 @@
         }
     ]
 }
+
 
 
 
