@@ -281,6 +281,20 @@
                         else el.classList.remove('hidden');
                     }
                 });
+                
+                // Desativar clique no avatar para visitantes
+                const profileHeader = document.getElementById('sidebar-profile-header');
+                if(profileHeader) {
+                    if(isVisitor) {
+                        profileHeader.onclick = null; // Remove ação de clique
+                        profileHeader.classList.remove('cursor-pointer', 'group');
+                        profileHeader.classList.add('cursor-default');
+                    } else {
+                        profileHeader.onclick = () => UI.navigate('perfil');
+                        profileHeader.classList.add('cursor-pointer', 'group');
+                        profileHeader.classList.remove('cursor-default');
+                    }
+                }
 
                 // Botão de Admin
                 const adminBtn = document.getElementById('admin-link');
@@ -292,6 +306,9 @@
 
             navigate: (pageId) => {
                 if (pageId === 'admin' && !STATE.adminSession) { Admin.showLogin(); return; }
+                
+                // Bloqueio de segurança extra: Visitante não entra no perfil
+                if (pageId === 'perfil' && STATE.currentUser?.role === 'Visitante') return;
                 
                 // Atualizar Título
                 const titleMap = {
