@@ -148,8 +148,8 @@
 
     <!-- MODAIS E POPUPS -->
     
-    <!-- Share Options Modal (Novo) -->
-    <div id="share-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
+    <!-- Share Options Modal -->
+    <div id="share-modal" ondblclick="if(event.target === this) UI.closeModal('share-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
             <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-4">Compartilhar</h3>
             <p id="share-product-name" class="text-xs font-bold text-gray-500 mb-6 uppercase tracking-widest dark:text-gray-400"></p>
@@ -187,7 +187,7 @@
     <button id="calculator-fab" onclick="UI.toggleCalculator()" class="hidden fixed bottom-6 right-6 w-16 h-16 bg-brand-orange text-white rounded-full shadow-2xl flex items-center justify-center z-50 transition-all hover:scale-110 active:scale-90"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-width="2"></path></svg></button>
 
     <!-- Admin Keypad -->
-    <div id="admin-login-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-[120] flex items-center justify-center p-4 fade-in">
+    <div id="admin-login-modal" ondblclick="if(event.target === this) UI.closeModal('admin-login-modal')" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-[120] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
             <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-2">Acesso Restrito</h3>
             <p class="text-[9px] text-gray-400 uppercase tracking-widest mb-6">Digite a senha administrativa</p>
@@ -201,7 +201,7 @@
     </div>
 
     <!-- Availability Modal -->
-    <div id="availability-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
+    <div id="availability-modal" ondblclick="if(event.target === this) UI.closeModal('availability-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
             <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-2">Consultar Equipe</h3>
             <p class="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest mb-6" id="modal-product-name"></p>
@@ -214,7 +214,7 @@
     </div>
 
     <!-- Admin Form Modal -->
-    <div id="admin-form-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4 fade-in">
+    <div id="admin-form-modal" ondblclick="if(event.target === this) UI.closeModal('admin-form-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-lg p-8 shadow-2xl border dark:border-white/10 text-left">
             <div class="flex justify-between items-center mb-6">
                 <h3 id="admin-modal-title" class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter">Editar</h3>
@@ -229,11 +229,12 @@
     </div>
 
     <script>
-        // CONFIGURAÇÃO
+        // CONFIGURAÇÃO - TAXAS ZERADAS
         const CONFIG = {
             contacts: { mikhaell: "62984710639", maikhon: "62933001865", ryan: "62920007396" },
             central: "6236360668",
-            installmentRates: { 2: 5.79, 3: 6.09, 4: 7.99, 5: 8.09, 6: 8.18, 7: 9.49, 8: 9.68, 9: 10.37, 10: 11.05, 11: 12.27, 12: 12.38 }
+            // Taxas zeradas para parcelamento sem juros
+            installmentRates: { 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0 }
         };
 
         // DADOS DE BACKUP (AGORA VAZIOS PARA SEGURANÇA - SÓ CARREGA SE O JSON FUNCIONAR)
@@ -280,6 +281,17 @@
                     await Data.loadPasswords();
                     await Data.load(); 
                 } catch(e) { console.log('Init data load issue', e); }
+                
+                // Listener Global para fechar calculadora com duplo clique fora
+                document.addEventListener('dblclick', function(e) {
+                    const calc = document.getElementById('calculator-popup');
+                    const fab = document.getElementById('calculator-fab');
+                    
+                    // Se a calculadora existe, não está escondida, e o clique NÃO foi nela nem no botão FAB
+                    if (calc && !calc.classList.contains('hidden') && !calc.contains(e.target) && !fab.contains(e.target)) {
+                        calc.classList.add('hidden');
+                    }
+                });
             },
 
             showError: (msg) => {
