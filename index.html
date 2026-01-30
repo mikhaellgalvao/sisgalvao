@@ -111,13 +111,14 @@
                 <button onclick="UI.navigate('dashboard')" class="sidebar-link active flex items-center w-full px-6 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic text-left">Dashboard</button>
                 <button onclick="UI.navigate('consultas')" class="sidebar-link flex items-center w-full px-6 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic text-left"><span id="sidebar-consultas-text">Consultas de Preço</span></button>
                 <button onclick="UI.navigate('marketing')" id="sidebar-marketing-link" class="sidebar-link flex items-center w-full px-6 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic text-left">Marketing</button>
-                <!-- LISTA INTERNA REMOVIDA -->
                 
                 <div class="pt-6 mt-2 border-t border-gray-100 dark:border-zinc-800 space-y-2">
+                    <!-- Botão Admin Ajustado (Ícone e Visibilidade) -->
                     <button onclick="UI.navigate('admin')" id="admin-link" class="sidebar-link hidden flex items-center w-full px-6 py-4 rounded-2xl font-bold text-red-500 transition-all text-sm uppercase tracking-tighter italic text-left">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 00-1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 001.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         Administração
                     </button>
+                    
                     <button onclick="UI.navigate('perfil')" id="sidebar-perfil-link" class="sidebar-link flex items-center w-full px-6 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic text-slate-500 dark:text-zinc-400 text-left">Meu Perfil</button>
                     <button onclick="UI.navigate('sobre')" id="sobre-link" class="sidebar-link flex items-center w-full px-6 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic text-slate-400 dark:text-zinc-500 text-left">Sobre a Empresa</button>
                 </div>
@@ -255,6 +256,30 @@
                 if(i) i.type = i.type === 'password' ? 'text' : 'password';
             },
 
+            // Função para controlar visibilidade do menu lateral baseado no cargo
+            updateSidebarVisibility: () => {
+                const role = STATE.currentUser.role;
+                const isVisitor = role === 'Visitante';
+                const isAdmin = role === 'Administrador';
+
+                // Ocultar/Mostrar itens para visitante
+                const visitorHiddenItems = ['sidebar-marketing-link', 'sidebar-perfil-link'];
+                visitorHiddenItems.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) {
+                        if(isVisitor) el.classList.add('hidden');
+                        else el.classList.remove('hidden');
+                    }
+                });
+
+                // Botão de Admin
+                const adminBtn = document.getElementById('admin-link');
+                if(adminBtn) {
+                    if(isAdmin) adminBtn.classList.remove('hidden');
+                    else adminBtn.classList.add('hidden');
+                }
+            },
+
             navigate: (pageId) => {
                 if (pageId === 'admin' && !STATE.adminSession) { Admin.showLogin(); return; }
                 
@@ -293,6 +318,7 @@
 
             renderDashboard: () => {
                 const isVisitor = STATE.currentUser.role === 'Visitante';
+                const isAdmin = STATE.currentUser.role === 'Administrador';
                 const html = `
                     <section class="space-y-6">
                         <div class="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] shadow-sm border dark:border-zinc-800">
@@ -303,7 +329,7 @@
                             ${UI.cardBtn('consultas', 'bg-emerald-50 text-brand-green', isVisitor ? 'Consultas' : 'Preços', 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z')}
                             ${!isVisitor ? UI.cardBtn('marketing', 'bg-orange-50 text-brand-orange', 'Marketing', 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h14a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z') : ''}
                             ${!isVisitor ? UI.cardBtn('perfil', 'bg-blue-50 text-blue-600', 'Meu Perfil', 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z') : ''}
-                            ${STATE.currentUser.role === 'Administrador' ? UI.cardBtn('admin', 'bg-red-50 text-red-600', 'Gestão Admin', 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 00-1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37') : ''}
+                            ${isAdmin ? UI.cardBtn('admin', 'bg-red-50 text-red-600', 'Gestão Admin', 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 00-1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37') : ''}
                         </div>
                     </section>`;
                 document.getElementById('main-content').innerHTML = html;
@@ -457,6 +483,9 @@
                     document.getElementById('sidebar-user-name').textContent = user.name;
                     document.getElementById('sidebar-user-role').textContent = user.role;
                     
+                    // Atualiza visibilidade do menu (Admin/Visitante)
+                    UI.updateSidebarVisibility();
+                    
                     // Foto Sidebar
                     const sbPic = document.getElementById('sidebar-profile-picture');
                     if(user.avatar) {
@@ -480,6 +509,15 @@
                 document.getElementById('login-view').classList.add('hidden');
                 document.getElementById('dashboard-view').classList.remove('hidden');
                 document.getElementById('calculator-fab').classList.remove('hidden');
+                
+                // Sidebar Info
+                document.getElementById('sidebar-user-name').textContent = "Visitante";
+                document.getElementById('sidebar-user-role').textContent = "Visitante";
+                document.getElementById('sidebar-profile-placeholder').textContent = "V";
+
+                // Atualiza visibilidade do menu (Oculta itens restritos)
+                UI.updateSidebarVisibility();
+
                 UI.navigate('dashboard');
             },
 
