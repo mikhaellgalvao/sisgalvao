@@ -213,9 +213,19 @@
             installmentRates: { 2: 5.79, 3: 6.09, 4: 7.99, 5: 8.09, 6: 8.18, 7: 9.49, 8: 9.68, 9: 10.37, 10: 11.05, 11: 12.27, 12: 12.38 }
         };
 
+        // DADOS DE BACKUP (AGORA VAZIOS PARA SEGURANÇA - SÓ CARREGA SE O JSON FUNCIONAR)
+        const DEFAULT_DATA = {
+            products: [],
+            users: [],
+            suppliers: []
+        };
+
         // ESTADO
         const STATE = {
-            products: [], users: [], suppliers: [], currentUser: null, adminSession: false,
+            products: [], 
+            users: [], 
+            suppliers: [], 
+            currentUser: null, adminSession: false,
             adminPassBuffer: "", currentProduct: "", adminEdit: { type: null, index: null },
             passwords: { admin: "", download: "" }
         };
@@ -338,39 +348,45 @@
             cardBtn: (page, colorClass, text, iconPath) => `<button onclick="UI.navigate('${page}')" class="p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border dark:border-zinc-800 hover:shadow-xl transition-all flex flex-col items-center group active:scale-95 w-full"><div class="p-5 rounded-3xl mb-4 transition-all shadow-inner ${colorClass} dark:bg-opacity-10"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="${iconPath}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><span class="font-black uppercase text-xs dark:text-white tracking-widest italic">${text}</span></button>`,
 
             renderCatalog: (isSearch) => {
-                let html = `<div class="flex gap-3 mb-6"><div class="relative flex-1"><input type="text" id="search-input" onkeyup="UI.filterGrid()" placeholder="Buscar..." class="w-full p-5 rounded-2xl border dark:border-zinc-800 outline-none focus:ring-2 focus:ring-brand-green bg-white dark:bg-zinc-900 text-sm font-bold shadow-sm uppercase dark:text-white"><button onclick="document.getElementById('search-input').value=''; UI.filterGrid()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500">✕</button></div></div><div id="grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">`;
-                const isVisitor = STATE.currentUser.role === 'Visitante';
+                let html = `<div class="flex gap-3 mb-6"><div class="relative flex-1"><input type="text" id="search-input" onkeyup="UI.filterGrid()" placeholder="Buscar..." class="w-full p-5 rounded-2xl border dark:border-zinc-800 outline-none focus:ring-2 focus:ring-brand-green bg-white dark:bg-zinc-900 text-sm font-bold shadow-sm uppercase dark:text-white"><button onclick="document.getElementById('search-input').value=''; UI.filterGrid()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500">✕</button></div></div>`;
+                
                 const list = STATE.products; 
 
-                html += list.map(p => {
-                    const priceVal = Utils.cleanCurrency(p.sell);
-                    let actions = "";
-                    let priceDisplay = "";
+                if (list.length === 0) {
+                    html += `<div class="p-10 text-center bg-white dark:bg-zinc-900 rounded-[2.5rem] border dark:border-zinc-800"><p class="text-brand-orange font-black uppercase tracking-widest text-xs">Nenhum dado encontrado</p><p class="text-gray-400 text-[10px] mt-2 font-bold uppercase">Verifique se o arquivo produtos.json está na pasta.</p></div>`;
+                } else {
+                    html += `<div id="grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">`;
+                    const isVisitor = STATE.currentUser.role === 'Visitante';
+                    html += list.map(p => {
+                        const priceVal = Utils.cleanCurrency(p.sell);
+                        let actions = "";
+                        let priceDisplay = "";
 
-                    if (isVisitor) {
-                        actions = `<button onclick="Actions.finalizeSale('${p.name}')" class="w-full mt-4 bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all tracking-widest italic">Consultar Disponibilidade</button>`;
-                    } else {
-                        priceDisplay = `<div class="mt-4 pt-4 border-t dark:border-zinc-800"><p class="text-[8px] font-black text-gray-400 uppercase tracking-widest">Valor DJI</p><p class="text-2xl font-black text-brand-green dark:text-white italic tracking-tighter leading-none">${Utils.fmtBRL.format(priceVal)}</p></div>`;
-                        actions = `
-                            <div class="mt-4 flex flex-col gap-2">
-                                <button onclick="Actions.openAvailability('${p.name}')" class="w-full bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[9px] shadow-sm active:bg-emerald-900 tracking-widest">Disponibilidade</button>
-                                <div class="flex gap-2">
-                                    <button onclick="Actions.shareProduct('${p.name}', '${Utils.fmtBRL.format(priceVal)}')" class="flex-1 bg-gray-100 dark:bg-zinc-800 text-gray-500 py-3 rounded-2xl font-bold uppercase text-[9px] hover:text-brand-green" title="Compartilhar"><svg class="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-width="2"/></svg></button>
-                                    <button onclick="Actions.finalizeSale('${p.name}')" class="flex-[3] border-2 border-brand-orange/20 text-brand-orange py-3 rounded-2xl font-bold uppercase text-[9px] active:bg-brand-orange active:text-white transition-all">Finalizar Venda</button>
-                                </div>
-                            </div>`;
-                    }
+                        if (isVisitor) {
+                            actions = `<button onclick="Actions.finalizeSale('${p.name}')" class="w-full mt-4 bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all tracking-widest italic">Consultar Disponibilidade</button>`;
+                        } else {
+                            priceDisplay = `<div class="mt-4 pt-4 border-t dark:border-zinc-800"><p class="text-[8px] font-black text-gray-400 uppercase tracking-widest">Valor DJI</p><p class="text-2xl font-black text-brand-green dark:text-white italic tracking-tighter leading-none">${Utils.fmtBRL.format(priceVal)}</p></div>`;
+                            actions = `
+                                <div class="mt-4 flex flex-col gap-2">
+                                    <button onclick="Actions.openAvailability('${p.name}')" class="w-full bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[9px] shadow-sm active:bg-emerald-900 tracking-widest">Disponibilidade</button>
+                                    <div class="flex gap-2">
+                                        <button onclick="Actions.shareProduct('${p.name}', '${Utils.fmtBRL.format(priceVal)}')" class="flex-1 bg-gray-100 dark:bg-zinc-800 text-gray-500 py-3 rounded-2xl font-bold uppercase text-[9px] hover:text-brand-green" title="Compartilhar"><svg class="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-width="2"/></svg></button>
+                                        <button onclick="Actions.finalizeSale('${p.name}')" class="flex-[3] border-2 border-brand-orange/20 text-brand-orange py-3 rounded-2xl font-bold uppercase text-[9px] active:bg-brand-orange active:text-white transition-all">Finalizar Venda</button>
+                                    </div>
+                                </div>`;
+                        }
 
-                    return `
-                    <div class="product-card bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm hover:shadow-xl transition-all text-left">
-                        <h3 class="font-black text-brand-green dark:text-white uppercase italic text-xs tracking-tight">${p.name}</h3>
-                        <p class="text-[10px] text-gray-500 mt-1 uppercase font-bold tracking-widest text-slate-400">${p.line || 'DJI'}</p>
-                        ${priceDisplay}
-                        ${actions}
-                    </div>`;
-                }).join('');
+                        return `
+                        <div class="product-card bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm hover:shadow-xl transition-all text-left">
+                            <h3 class="font-black text-brand-green dark:text-white uppercase italic text-xs tracking-tight">${p.name}</h3>
+                            <p class="text-[10px] text-gray-500 mt-1 uppercase font-bold tracking-widest text-slate-400">${p.line || 'DJI'}</p>
+                            ${priceDisplay}
+                            ${actions}
+                        </div>`;
+                    }).join('');
+                    html += `</div>`;
+                }
 
-                html += `</div>`;
                 document.getElementById('main-content').innerHTML = html;
             },
 
