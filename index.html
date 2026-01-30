@@ -625,11 +625,48 @@
                     const d = index!==null ? STATE.users[index] : {name:'',username:'',password:'',avatar:'',role:'Vendedor'};
                     html = `<input id="af-name" value="${d.name}" placeholder="Nome" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-user" value="${d.username}" placeholder="User" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-pass" value="${d.password}" placeholder="Pass" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-avatar" value="${d.avatar||''}" placeholder="Img URL" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">`;
                 } else if (type === 'product') {
-                    const d = index!==null ? STATE.products[index] : {name:'',sell:'',cost:'',line:'Consumer'};
-                    html = `<input id="af-name" value="${d.name}" placeholder="Nome" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><div class="grid grid-cols-2 gap-2 mb-3"><input id="af-sell" value="${d.sell}" placeholder="Venda" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm"><input id="af-cost" value="${d.cost}" placeholder="Custo" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm"></div><input id="af-line" value="${d.line}" placeholder="Linha" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">`;
+                    const d = index!==null ? STATE.products[index] : {name:'',sell:'',cost:'',line:'Consumer', maxDist:'', flightTime:'', camera:'', weight:'', focusArea:''};
+                    html = `
+                        <input id="af-name" value="${d.name}" placeholder="Nome do Drone" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
+                        
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <input id="af-sell" value="${d.sell}" placeholder="Venda (R$)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm">
+                            <input id="af-cost" value="${d.cost}" placeholder="Custo (R$)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1 ml-1">Linha do Produto</label>
+                            <select id="af-line" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm appearance-none bg-white dark:text-white dark:bg-zinc-900">
+                                <option value="Consumer" ${d.line === 'Consumer' ? 'selected' : ''}>Consumer</option>
+                                <option value="Enterprise" ${d.line === 'Enterprise' ? 'selected' : ''}>Enterprise</option>
+                                <option value="Agriculture" ${d.line === 'Agriculture' ? 'selected' : ''}>Agriculture</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <input id="af-max-dist" value="${d.maxDist||''}" placeholder="Dist. Máx (km)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm">
+                            <input id="af-flight-time" value="${d.flightTime||''}" placeholder="Tempo Voo (min)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <input id="af-weight" value="${d.weight||''}" placeholder="Peso (g/kg)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm">
+                            <input id="af-camera" value="${d.camera||''}" placeholder="Câmera (ex: 4K)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm">
+                        </div>
+
+                        <input id="af-focus-area" value="${d.focusArea||''}" placeholder="Área de Foco (ex: Topografia, Pulverização)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">
+                    `;
                 } else {
-                    const d = index!==null ? STATE.suppliers[index] : {name:'',phone:'',address:''};
-                    html = `<input id="af-name" value="${d.name}" placeholder="Nome" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-phone" value="${d.phone}" placeholder="Zap" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><textarea id="af-addr" placeholder="Endereço" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">${d.address||''}</textarea>`;
+                    const d = index!==null ? STATE.suppliers[index] : {name:'',phone:'',address:'', droneTypes:'', seller:'', regCode:''};
+                    html = `
+                        <input id="af-name" value="${d.name}" placeholder="Nome" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
+                        <div class="grid grid-cols-2 gap-2 mb-3">
+                             <input id="af-phone" value="${d.phone}" placeholder="Contato" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">
+                             <input id="af-reg-code" value="${d.regCode||''}" placeholder="Cód. Cadastro" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">
+                        </div>
+                        <input id="af-drone-types" value="${d.droneTypes||''}" placeholder="Tipos de Drone (ex: Mini, Mavic, Agras)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
+                        <input id="af-seller" value="${d.seller||''}" placeholder="Vendedor Responsável" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
+                        <textarea id="af-addr" placeholder="Endereço" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${d.address||''}</textarea>
+                    `;
                 }
 
                 document.getElementById('admin-dynamic-form').innerHTML = html;
@@ -643,8 +680,23 @@
                 
                 let newItem = { name };
                 if (t==='user') { newItem.username = document.getElementById('af-user').value; newItem.password = document.getElementById('af-pass').value; newItem.avatar = document.getElementById('af-avatar').value; newItem.role = "Vendedor"; }
-                if (t==='product') { newItem.sell = document.getElementById('af-sell').value; newItem.cost = document.getElementById('af-cost').value; newItem.line = document.getElementById('af-line').value; }
-                if (t==='supplier') { newItem.phone = document.getElementById('af-phone').value; newItem.address = document.getElementById('af-addr').value; }
+                if (t==='product') { 
+                    newItem.sell = document.getElementById('af-sell').value; 
+                    newItem.cost = document.getElementById('af-cost').value; 
+                    newItem.line = document.getElementById('af-line').value;
+                    newItem.maxDist = document.getElementById('af-max-dist').value;
+                    newItem.flightTime = document.getElementById('af-flight-time').value;
+                    newItem.weight = document.getElementById('af-weight').value;
+                    newItem.camera = document.getElementById('af-camera').value;
+                    newItem.focusArea = document.getElementById('af-focus-area').value;
+                }
+                if (t==='supplier') { 
+                    newItem.phone = document.getElementById('af-phone').value; 
+                    newItem.address = document.getElementById('af-addr').value;
+                    newItem.droneTypes = document.getElementById('af-drone-types').value;
+                    newItem.seller = document.getElementById('af-seller').value;
+                    newItem.regCode = document.getElementById('af-reg-code').value;
+                }
 
                 const targetArr = t==='user' ? STATE.users : t==='product' ? STATE.products : STATE.suppliers;
                 if(i !== null) targetArr[i] = newItem; else targetArr.push(newItem);
