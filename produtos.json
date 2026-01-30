@@ -15,8 +15,8 @@
         { "id": 1011, "name": "Drone Dji Mini 5 Pro Standard (Sem tela)", "cost": "6.200,00", "sell": "8.680,00", "icon": "🛸", "type": "Equipamentos", "line": "Consumer" },
         { "id": 1012, "name": "Drone Dji Mini 5 Pro Fly More Combo (Sem tela)", "cost": "7.730,00", "sell": "10.822,00", "icon": "🛸", "type": "Equipamentos", "line": "Consumer" },
         { "id": 1013, "name": "Drone Dji Air 3s Standard (sem tela)", "cost": "8.200,00", "sell": "11.480,00", "icon": "🛸", "type": "Equipamentos", "line": "Consumer" },
-        { "id": 1014, "name": "Drone Dji Mavic 4 Pro Fly More Combo (com tela)", "cost": "20.760,00", "sell": "29.064,00", "icon": "🛸", "type": "Equipamentos", "line": "Enterprise" },
-        { "id": 1015, "name": "Drone DJI Mavic 4 Pro Creator Fly More Combo (Com tela) BR", "cost": "27.365,00", "sell": "38.311,00", "icon": "🛸", "type": "Equipamentos", "line": "Enterprise" },
+        { "id": 1014, "name": "Drone Dji Mavic 4 Pro Fly More Combo (com tela)", "cost": "20.760,00", "sell": "29.064,00", "icon": "🛸", "type": "Equipamentos", "line": "Consumer" },
+        { "id": 1015, "name": "Drone DJI Mavic 4 Pro Creator Fly More Combo (Com tela) BR", "cost": "27.365,00", "sell": "38.311,00", "icon": "🛸", "type": "Equipamentos", "line": "Consumer" },
         { "id": 1016, "name": "Camera Osmo 360 Standard Combo", "cost": "3.310,00", "sell": "4.634,00", "icon": "🎥", "type": "Equipamentos", "line": "Acessórios" },
         { "id": 1017, "name": "Câmera Dji Osmo 360 Adventure Combo", "cost": "3.720,00", "sell": "5.208,00", "icon": "🎥", "type": "Equipamentos", "line": "Acessórios" },
         { "id": 1018, "name": "Camera Dji Osmo Action 4 Standard Combo", "cost": "2.430,00", "sell": "3.402,00", "icon": "🎥", "type": "Equipamentos", "line": "Acessórios" },
@@ -26,7 +26,7 @@
         { "id": 1022, "name": "Estabilizador DJI Osmo SE", "cost": "615,00", "sell": "861,00", "icon": "🎛️", "type": "Equipamentos", "line": "Acessórios" },
         { "id": 1023, "name": "Estabilizador DJI Osmo 7", "cost": "770,00", "sell": "1.078,00", "icon": "🎛️", "type": "Equipamentos", "line": "Acessórios" },
         { "id": 1024, "name": "Estabilizador Osmo 7P", "cost": "1.305,00", "sell": "1.827,00", "icon": "🎛️", "type": "Equipamentos", "line": "Acessórios" },
-        { "id": 1025, "name": "Estabilizador RS 4 Combo", "cost": "5.530,00", "sell": "7.742,00", "icon": "🎛️", "type": "Equipamentos", "line": "Enterprise" },
+        { "id": 1025, "name": "Estabilizador RS 4 Combo", "cost": "5.530,00", "sell": "7.742,00", "icon": "🎛️", "type": "Equipamentos", "line": "Consumer" },
         { "id": 1026, "name": "Microfone dji Mic 2 (2 mic + 1 recp + 1 case)", "cost": "2.855,00", "sell": "3.997,00", "icon": "🎙️", "type": "Acessórios", "line": "Universal" },
         { "id": 1027, "name": "Microfone dji Mic 3 (2 mic + 1 recp + 1 case)", "cost": "3.000,00", "sell": "4.200,00", "icon": "🎙️", "type": "Acessórios", "line": "Universal" },
         { "id": 1028, "name": "Case para Air 2 / Air 2s", "cost": "450,00", "sell": "630,00", "icon": "🔋", "type": "Acessórios", "line": "Consumer" },
@@ -40,4 +40,5 @@
         { "id": 1036, "name": "Protetor de helices Neo", "cost": "100,00", "sell": "140,00", "icon": "⚡", "type": "Acessórios", "line": "Consumer" }
     ]
 }
+
 
