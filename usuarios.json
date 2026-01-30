@@ -29,7 +29,7 @@
         {
             "name": "Ryan Rodrigues",
             "username": "ryan",
-            "password": "mk0639",
+            "password": "0639",
             "role": "Administrador",
             "phone": "62920007396",
             "avatar": "https://i.imgur.com/7nZVEsE.jpeg"
@@ -44,6 +44,7 @@
         }
     ]
 }
+
 
 
 
