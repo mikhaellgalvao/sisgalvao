@@ -637,31 +637,44 @@
             confirmShare: () => {
                 const p = STATE.currentShareProduct;
                 const mode = STATE.shareMode;
-                let text = `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor Base:* ${Utils.fmtBRL.format(p.price)}\n`;
+                
+                // Variáveis para lógica
+                let hasCondition = false;
+                let detailsText = "";
 
                 if (mode === 'vista') {
                     const discountInput = document.getElementById('share-discount');
-                    let disc = parseFloat(discountInput.value) || 0;
-                    if(disc < 0) disc = 0; 
-                    if(disc > 10) disc = 10;
+                    let disc = parseFloat(discountInput.value);
                     
-                    const finalPrice = p.price * (1 - (disc/100));
-                    text += `\n🔥 *Condição à Vista:* ${disc}% OFF\n*Valor Final:* ${Utils.fmtBRL.format(finalPrice)}`;
+                    if (!isNaN(disc) && disc > 0) {
+                        hasCondition = true;
+                        if(disc > 10) disc = 10; // Cap at 10%
+                        const finalPrice = p.price * (1 - (disc/100));
+                        detailsText = `\n\n🔥 *Condição à Vista:* ${disc}% OFF\n*Valor Final:* ${Utils.fmtBRL.format(finalPrice)}`;
+                    }
                 } else {
                     const instInput = document.getElementById('share-installments');
                     const n = parseInt(instInput.value);
-                    if (!n) { alert("Selecione as parcelas"); return; }
                     
-                    const rate = CONFIG.installmentRates[n] || 0;
-                    const totalWithRate = p.price * (1 + (rate/100));
-                    const parcelVal = totalWithRate / n;
-                    
-                    text += `\n💳 *Condição Parcelada:* ${n}x\n*Parcela:* ${Utils.fmtBRL.format(parcelVal)}\n*Total:* ${Utils.fmtBRL.format(totalWithRate)}`;
+                    if (n) {
+                        hasCondition = true;
+                        const rate = CONFIG.installmentRates[n] || 0;
+                        const totalWithRate = p.price * (1 + (rate/100));
+                        const parcelVal = totalWithRate / n;
+                        detailsText = `\n\n💳 *Condição Parcelada:* ${n}x\n*Parcela:* ${Utils.fmtBRL.format(parcelVal)}\n*Total:* ${Utils.fmtBRL.format(totalWithRate)}`;
+                    }
                 }
 
-                text += `\n\n🎁 *Bônus Especial:*\nLembrando, ao comprar um Drone, você ganha uma *Aula de Pilotagem* de brinde e já sai sabendo pilotar seu drone! 🚀`;
+                let finalMessage = "";
+                if (hasCondition) {
+                    // Mensagem Completa
+                    finalMessage = `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor Base:* ${Utils.fmtBRL.format(p.price)}${detailsText}\n\n🎁 *Bônus Especial:*\nLembrando, ao comprar um Drone, você ganha uma *Aula de Pilotagem* de brinde e já sai sabendo pilotar seu drone! 🚀`;
+                } else {
+                    // Mensagem Simples (apenas produto e valor)
+                    finalMessage = `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor:* ${Utils.fmtBRL.format(p.price)}`;
+                }
 
-                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
                 UI.closeModal('share-modal');
             },
 
