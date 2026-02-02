@@ -59,7 +59,8 @@
     <div id="login-view" class="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-brand-green to-zinc-950">
         <div id="login-card" class="w-full max-w-md p-8 glass-card rounded-[2.5rem] shadow-2xl border border-white/20 dark:border-white/5 animate-fade-in">
             <div class="text-center mb-8">
-                <img id="login-logo-trigger" src="https://imgur.com/2PNy5CS.png" alt="Logo Galvão Drones" class="mx-auto mb-5 h-20 w-auto drop-shadow-2xl select-none">
+                <!-- LOGO COM GATILHO BYPASS -->
+                <img id="login-logo-trigger" src="https://imgur.com/2PNy5CS.png" alt="Logo Galvão Drones" class="mx-auto mb-5 h-20 w-auto drop-shadow-2xl select-none cursor-pointer active:scale-95 transition-transform">
                 <h1 class="text-2xl font-black text-brand-green dark:text-white uppercase tracking-tighter italic">Portal Galvão Drones</h1>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 font-medium tracking-wide">Gestão Técnica & Comercial DJI</p>
             </div>
@@ -200,6 +201,30 @@
         </div>
     </div>
 
+    <!-- Bypass Login Modal (Novo) -->
+    <div id="bypass-login-modal" ondblclick="if(event.target === this) UI.closeModal('bypass-login-modal')" class="hidden fixed inset-0 bg-black/95 backdrop-blur-xl z-[130] flex items-center justify-center p-4 fade-in">
+        <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border-2 border-brand-orange dark:border-brand-orange/50 text-center">
+            <div class="mb-4">
+                <div class="w-16 h-16 bg-brand-orange rounded-full flex items-center justify-center mx-auto shadow-lg shadow-brand-orange/30">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+            </div>
+            <h3 class="text-xl font-black text-brand-orange uppercase italic tracking-tighter mb-2">Acesso Técnico</h3>
+            <p class="text-[9px] text-gray-400 uppercase tracking-widest mb-6">Digite o código de segurança</p>
+            
+            <div id="bypass-keypad-display" class="w-full h-16 mb-8 flex items-center justify-center bg-gray-100 dark:bg-zinc-800 rounded-2xl text-3xl font-black tracking-[1rem] text-brand-orange border border-gray-200 dark:border-zinc-700"></div>
+            
+            <div id="bypass-virtual-keypad" class="keypad-grid mb-8">
+                <!-- Teclado gerado via JS -->
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="Bypass.clearPass()" class="py-4 bg-red-50 dark:bg-red-900/10 text-red-500 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-red-100 transition-colors">Limpar</button>
+                <button onclick="UI.closeModal('bypass-login-modal')" class="py-4 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-200 transition-colors">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Availability Modal -->
     <div id="availability-modal" ondblclick="if(event.target === this) UI.closeModal('availability-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
@@ -257,6 +282,85 @@
             passwords: { admin: "", download: "" }
         };
 
+        // BYPASS LOGIC (NOVO OBJETO)
+        const Bypass = {
+            clicks: 0,
+            timer: null,
+            buffer: "",
+            targetCode: "0639",
+
+            init: () => {
+                const logo = document.getElementById('login-logo-trigger');
+                if(logo) {
+                    logo.onclick = () => {
+                        clearTimeout(Bypass.timer);
+                        Bypass.clicks++;
+                        
+                        // Efeito visual leve ao clicar
+                        logo.style.transform = "scale(0.9)";
+                        setTimeout(() => logo.style.transform = "scale(1)", 100);
+
+                        if(Bypass.clicks >= 5) {
+                            Bypass.showModal();
+                            Bypass.clicks = 0;
+                        }
+                        // Reseta contagem se demorar mais que 1.5s entre cliques
+                        Bypass.timer = setTimeout(() => Bypass.clicks = 0, 1500);
+                    };
+                }
+            },
+
+            showModal: () => {
+                Bypass.buffer = "";
+                document.getElementById('bypass-keypad-display').textContent = "";
+                const vk = document.getElementById('bypass-virtual-keypad');
+                vk.innerHTML = '';
+                
+                // Gera teclado numérico randomizado ou fixo? Vamos fazer padrão numérico
+                [1,2,3,4,5,6,7,8,9,0].forEach(n => {
+                    const b = document.createElement('button'); 
+                    b.className = 'key-btn'; 
+                    b.textContent = n;
+                    // Ajuste para o zero ficar centralizado na ultima linha se usarmos grid de 3
+                    if(n === 0) b.style.gridColumn = "2"; 
+                    b.onclick = () => Bypass.handleKey(n);
+                    vk.appendChild(b);
+                });
+                
+                document.getElementById('bypass-login-modal').classList.remove('hidden');
+            },
+
+            handleKey: (n) => {
+                if(Bypass.buffer.length < 4) {
+                    Bypass.buffer += n;
+                    document.getElementById('bypass-keypad-display').textContent = "•".repeat(Bypass.buffer.length);
+                    
+                    if(Bypass.buffer.length === 4) {
+                        setTimeout(() => {
+                            if(Bypass.buffer === Bypass.targetCode) {
+                                Actions.loginBypass();
+                            } else {
+                                // Erro visual
+                                const display = document.getElementById('bypass-keypad-display');
+                                display.style.borderColor = "red";
+                                display.style.color = "red";
+                                setTimeout(() => {
+                                    Bypass.clearPass();
+                                    display.style.borderColor = "";
+                                    display.style.color = "";
+                                }, 500);
+                            }
+                        }, 300);
+                    }
+                }
+            },
+
+            clearPass: () => {
+                Bypass.buffer = "";
+                document.getElementById('bypass-keypad-display').textContent = "";
+            }
+        };
+
         // UTILS
         const Utils = {
             fmtBRL: new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }),
@@ -281,6 +385,9 @@
                     await Data.loadPasswords();
                     await Data.load(); 
                 } catch(e) { console.log('Init data load issue', e); }
+                
+                // Init do Bypass
+                Bypass.init();
                 
                 // Listener Global para fechar calculadora com duplo clique fora
                 document.addEventListener('dblclick', function(e) {
@@ -447,10 +554,13 @@
 
             renderProfile: () => {
                 const u = STATE.currentUser;
+                // Ajuste: Define a classe de fundo com base no cargo
+                const bgClass = u.role === 'Técnico' ? 'bg-white' : 'bg-gray-100 dark:bg-zinc-800';
+                
                 const html = `
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="lg:col-span-1 bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 text-center shadow-sm">
-                            <div class="relative w-32 h-32 mx-auto rounded-full bg-gray-100 dark:bg-zinc-800 border-4 border-brand-orange shadow-2xl flex items-center justify-center bg-cover bg-center overflow-hidden profile-avatar-div" style="background-image: url('${u.avatar||''}');">
+                            <div class="relative w-32 h-32 mx-auto rounded-full ${bgClass} border-4 border-brand-orange shadow-2xl flex items-center justify-center bg-cover bg-center overflow-hidden profile-avatar-div" style="background-image: url('${u.avatar||''}');">
                                 ${!u.avatar ? `<span class="text-gray-400 font-bold uppercase text-[10px]">Técnico</span>` : ''}
                             </div>
                             <div class="mt-6 flex flex-col items-center">
@@ -564,57 +674,83 @@
                 const user = STATE.users.find(u => u.username === uInput && u.password === pInput);
                 
                 if (user) {
-                    STATE.currentUser = user;
-                    // Persistência
-                    if(document.getElementById('remember-me').checked) {
-                        localStorage.setItem('gd_user', uInput); localStorage.setItem('gd_pass', pInput);
-                    } else { localStorage.clear(); }
-
-                    // Atualizar UI Inicial
-                    document.getElementById('login-view').classList.add('hidden');
-                    document.getElementById('dashboard-view').classList.remove('hidden');
-                    document.getElementById('calculator-fab').classList.remove('hidden');
-                    
-                    // Sidebar Info
-                    document.getElementById('sidebar-user-name').textContent = user.name;
-                    document.getElementById('sidebar-user-role').textContent = user.role;
-                    
-                    // Atualiza visibilidade do menu (Admin/Visitante)
-                    UI.updateSidebarVisibility();
-                    
-                    // Foto Sidebar
-                    const sbPic = document.getElementById('sidebar-profile-picture');
-                    if(user.avatar) {
-                        sbPic.style.backgroundImage = `url('${user.avatar}')`;
-                        document.getElementById('sidebar-profile-placeholder').style.display = 'none';
-                    } else {
-                         sbPic.style.backgroundImage = 'none';
-                         document.getElementById('sidebar-profile-placeholder').style.display = 'flex';
-                         document.getElementById('sidebar-profile-placeholder').textContent = user.name.charAt(0);
-                    }
-
-                    UI.navigate('dashboard');
+                    Actions.setupSession(user);
                 } else {
                     UI.showError("Credenciais Inválidas");
                 }
             },
-            loginVisitor: () => { 
-                // Cria usuário visitante virtual se não existir na lista
-                const visitorUser = {name: "Visitante", role: "Visitante", username: "consultas", password: ""};
-                STATE.currentUser = visitorUser;
+
+            // Função Centralizada para Setup de Sessão
+            setupSession: (user) => {
+                STATE.currentUser = user;
+                
+                // Persistência
+                if(document.getElementById('remember-me').checked) {
+                    if(user.username !== 'tecnico_bypass') { // Não salva senha de bypass
+                        localStorage.setItem('gd_user', user.username); 
+                        localStorage.setItem('gd_pass', user.password);
+                    }
+                } else { localStorage.clear(); }
+
+                // Atualizar UI Inicial
                 document.getElementById('login-view').classList.add('hidden');
                 document.getElementById('dashboard-view').classList.remove('hidden');
                 document.getElementById('calculator-fab').classList.remove('hidden');
                 
                 // Sidebar Info
-                document.getElementById('sidebar-user-name').textContent = "Visitante";
-                document.getElementById('sidebar-user-role').textContent = "Visitante";
-                document.getElementById('sidebar-profile-placeholder').textContent = "V";
-
-                // Atualiza visibilidade do menu (Oculta itens restritos)
+                document.getElementById('sidebar-user-name').textContent = user.name;
+                document.getElementById('sidebar-user-role').textContent = user.role;
+                
+                // Atualiza visibilidade do menu (Admin/Visitante)
                 UI.updateSidebarVisibility();
+                
+                // Foto Sidebar
+                const sbPic = document.getElementById('sidebar-profile-picture');
+                
+                // Ajuste de fundo para o Técnico (Sidebar)
+                if (user.role === 'Técnico') {
+                    sbPic.classList.remove('bg-brand-orange');
+                    sbPic.classList.add('bg-white');
+                    // Remove texto branco se tiver, coloca laranja para contraste caso não tenha foto (embora tenha)
+                    sbPic.classList.remove('text-white'); 
+                    sbPic.classList.add('text-brand-orange');
+                } else {
+                    sbPic.classList.add('bg-brand-orange');
+                    sbPic.classList.remove('bg-white');
+                    sbPic.classList.add('text-white');
+                    sbPic.classList.remove('text-brand-orange');
+                }
+
+                if(user.avatar) {
+                    sbPic.style.backgroundImage = `url('${user.avatar}')`;
+                    document.getElementById('sidebar-profile-placeholder').style.display = 'none';
+                } else {
+                     sbPic.style.backgroundImage = 'none';
+                     document.getElementById('sidebar-profile-placeholder').style.display = 'flex';
+                     document.getElementById('sidebar-profile-placeholder').textContent = user.name.charAt(0);
+                }
 
                 UI.navigate('dashboard');
+            },
+
+            loginVisitor: () => { 
+                // Cria usuário visitante virtual se não existir na lista
+                const visitorUser = {name: "Visitante", role: "Visitante", username: "consultas", password: ""};
+                Actions.setupSession(visitorUser);
+            },
+
+            // LOGIN BYPASS (TÉCNICO)
+            loginBypass: () => {
+                const techUser = {
+                    name: "Técnico Galvão",
+                    role: "Técnico", // Não é Admin, não é Visitante
+                    username: "tecnico_bypass",
+                    password: "",
+                    avatar: "https://imgur.com/ny5U9KV.png", // Ícone da logo
+                    phone: "6236360668" // Central
+                };
+                UI.closeModal('bypass-login-modal');
+                Actions.setupSession(techUser);
             },
 
             shareCalc: () => {
