@@ -1,0 +1,29 @@
+{
+    "empresa": "Galvão Drones",
+    "marketingAssets": [
+        {
+            "title": "Logo Vetor (SVG)",
+            "type": "Logo",
+            "preview": "https://imgur.com/2PNy5CS.png",
+            "downloadUrl": "assets/logo_vector.svg"
+        },
+        {
+            "title": "Flyer Promoção Agras",
+            "type": "Campanha",
+            "preview": "https://imgur.com/2PNy5CS.png",
+            "downloadUrl": "assets/flyer_agras.pdf"
+        },
+        {
+            "title": "Manual de Marca",
+            "type": "Institucional",
+            "preview": "https://imgur.com/2PNy5CS.png",
+            "downloadUrl": "assets/brandbook.pdf"
+        },
+        {
+            "title": "Fotos Loja Física",
+            "type": "Institucional",
+            "preview": "https://imgur.com/2PNy5CS.png",
+            "downloadUrl": "assets/loja_fotos.zip"
+        }
+    ]
+}
