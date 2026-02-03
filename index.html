@@ -191,7 +191,7 @@
                     </button>
                     
                     <div class="flex-[2] flex flex-col gap-2 w-full">
-                        <button id="modal-used-init-contact" onclick="UI.showContactOptions()" class="w-full py-5 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all hover:bg-emerald-900">
+                        <button id="modal-used-init-contact" onclick="UI.showContactOptions('used')" class="w-full py-5 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all hover:bg-emerald-900">
                             Entrar em Contato
                         </button>
                         
@@ -200,11 +200,11 @@
                             <p class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest text-center">Selecione uma opção:</p>
                             
                             <div class="flex gap-2 mb-4">
-                                <button onclick="UI.selectContactOption('availability')" id="btn-opt-availability" class="flex-1 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest bg-white dark:bg-zinc-700 shadow-sm text-brand-green border-2 border-transparent transition-all">Disponibilidade</button>
-                                <button onclick="UI.selectContactOption('reserve')" id="btn-opt-reserve" class="flex-1 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest bg-gray-200 dark:bg-zinc-800 text-gray-500 border-2 border-transparent transition-all">Reservar</button>
+                                <button onclick="UI.selectContactOption('availability', 'used')" id="btn-opt-availability-used" class="flex-1 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest bg-white dark:bg-zinc-700 shadow-sm text-brand-green border-2 border-transparent transition-all">Disponibilidade</button>
+                                <button onclick="UI.selectContactOption('reserve', 'used')" id="btn-opt-reserve-used" class="flex-1 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest bg-gray-200 dark:bg-zinc-800 text-gray-500 border-2 border-transparent transition-all">Reservar</button>
                             </div>
 
-                            <div id="reservation-warning" class="hidden mb-4 p-3 bg-brand-orange/10 border border-brand-orange/20 rounded-xl text-center">
+                            <div id="reservation-warning-used" class="hidden mb-4 p-3 bg-brand-orange/10 border border-brand-orange/20 rounded-xl text-center">
                                 <p class="text-[9px] font-bold text-brand-orange leading-tight">⚠ Para reservar e retirar dos anúncios, é necessário um sinal de 30% do valor.</p>
                             </div>
 
@@ -287,15 +287,30 @@
         </div>
     </div>
 
-    <!-- Availability Modal -->
+    <!-- Availability Modal (Updated for New & Used Logic) -->
     <div id="availability-modal" ondblclick="if(event.target === this) UI.closeModal('availability-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
-            <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-2">Consultar Equipe</h3>
-            <p class="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest mb-6" id="modal-product-name"></p>
-            <div class="space-y-3 mb-8" id="modal-sellers-list"></div>
+            <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-2">Painel de Ação</h3>
+            <p class="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest mb-4" id="modal-product-name"></p>
+            
+            <div class="space-y-3 mb-6 max-h-40 overflow-y-auto hide-scrollbar" id="modal-sellers-list"></div>
+            
+            <!-- New Options Block -->
+            <div id="modal-new-options" class="mb-6 bg-gray-50 dark:bg-zinc-800/50 p-4 rounded-2xl border dark:border-zinc-700">
+                <p class="text-[9px] font-bold text-gray-500 mb-2 uppercase tracking-widest text-center">Tipo de Ação</p>
+                <div class="flex flex-wrap gap-2 mb-3 justify-center">
+                    <button onclick="UI.selectNewContactOption('availability')" id="btn-new-availability" class="px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest bg-white dark:bg-zinc-700 shadow-sm text-brand-green border-2 border-transparent transition-all">Consulta</button>
+                    <button onclick="UI.selectNewContactOption('reserve')" id="btn-new-reserve" class="px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest bg-gray-200 dark:bg-zinc-800 text-gray-500 border-2 border-transparent transition-all">Reserva</button>
+                    <button onclick="UI.selectNewContactOption('sale')" id="btn-new-sale" class="px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest bg-gray-200 dark:bg-zinc-800 text-gray-500 border-2 border-transparent transition-all">Venda</button>
+                </div>
+                <div id="new-reservation-warning" class="hidden p-2 bg-brand-orange/10 border border-brand-orange/20 rounded-xl text-center">
+                    <p class="text-[8px] font-bold text-brand-orange leading-tight">⚠ Necessário sinal de 30%.</p>
+                </div>
+            </div>
+
             <div class="grid grid-cols-2 gap-3">
                 <button onclick="UI.closeModal('availability-modal')" class="py-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-500 active:scale-95 transition-all">Voltar</button>
-                <button onclick="Actions.sendAvailabilityRequest()" class="py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all">Enviar</button>
+                <button onclick="Actions.sendAvailabilityRequest()" class="py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all">Confirmar</button>
             </div>
         </div>
     </div>
@@ -335,7 +350,8 @@
             adminEdit: { type: null, index: null },
             passwords: { admin: "", download: "" },
             intervals: [],
-            contactOption: 'availability',
+            contactOption: 'availability', // For Used modal
+            newContactOption: 'availability', // For New modal
             currentUsedIdx: null
         };
 
@@ -502,10 +518,9 @@
                             priceDisplay = `<div class="mt-4 pt-4 border-t dark:border-zinc-800"><p class="text-[8px] font-black text-gray-400 uppercase tracking-widest">Valor DJI</p><p class="text-2xl font-black text-brand-green dark:text-white italic tracking-tighter leading-none">${Utils.fmtBRL.format(priceVal)}</p></div>`;
                             actions = `
                                 <div class="mt-4 flex flex-col gap-2">
-                                    <button onclick="Actions.openAvailability('${p.name}')" class="w-full bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[9px] shadow-sm active:bg-emerald-900 tracking-widest">Disponibilidade</button>
+                                    <button onclick="Actions.openAvailability('${p.name}')" class="w-full bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[9px] shadow-sm active:bg-emerald-900 tracking-widest">Entrar em Contato</button>
                                     <div class="flex gap-2">
-                                        <button onclick="Actions.openShareModal('${p.name}', ${priceVal})" class="flex-1 bg-gray-100 dark:bg-zinc-800 text-gray-500 py-3 rounded-2xl font-bold uppercase text-[9px] hover:text-brand-green active:scale-95 transition-all" title="Compartilhar"><svg class="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" stroke-width="2"/></svg></button>
-                                        <button onclick="Actions.finalizeSale('${p.name}')" class="flex-[3] border-2 border-brand-orange/20 text-brand-orange py-3 rounded-2xl font-bold uppercase text-[9px] active:bg-brand-orange active:text-white transition-all">Vender</button>
+                                        <button onclick="Actions.openShareModal('${p.name}', ${priceVal})" class="w-full bg-gray-100 dark:bg-zinc-800 text-gray-500 py-3 rounded-2xl font-bold uppercase text-[9px] hover:text-brand-green active:scale-95 transition-all" title="Compartilhar">Compartilhar Card</button>
                                     </div>
                                 </div>`;
                         }
@@ -564,7 +579,7 @@
                                 <p class="text-2xl font-black text-brand-orange italic tracking-tighter leading-none">${Utils.fmtBRL.format(priceVal)}</p>
                             </div>
                             
-                            <button onclick="event.stopPropagation(); Actions.openUsedDetails(${idx})" class="w-full mt-4 bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all tracking-widest relative z-10 hover:bg-emerald-900">Tenho Interesse</button>
+                            <button onclick="event.stopPropagation(); Actions.openUsedDetails(${idx})" class="w-full mt-4 bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all tracking-widest relative z-10 hover:bg-emerald-900">Entrar em Contato</button>
                         </div>`;
                     }).join('');
                     html += `</div>`;
@@ -702,38 +717,67 @@
                 }
             },
 
-            // New UI Functions for Used Contact Flow
-            showContactOptions: () => {
-                document.getElementById('modal-used-init-contact').classList.add('hidden');
-                document.getElementById('modal-used-options').classList.remove('hidden');
-                // Set default to availability
-                UI.selectContactOption('availability');
+            // New UI Functions for Contact Flow (Shared for New & Used)
+            showContactOptions: (context = 'used') => {
+                const btnInit = document.getElementById(context === 'used' ? 'modal-used-init-contact' : 'modal-new-init-contact');
+                const optionsPanel = document.getElementById(context === 'used' ? 'modal-used-options' : 'modal-new-options');
+                
+                // For New products, the button is outside/not used same way, handled directly in openAvailability.
+                // But for Used, we toggle visibility.
+                if(context === 'used' && btnInit && optionsPanel) {
+                    btnInit.classList.add('hidden');
+                    optionsPanel.classList.remove('hidden');
+                    UI.selectContactOption('availability', 'used');
+                }
             },
 
-            selectContactOption: (opt) => {
-                STATE.contactOption = opt;
-                const btnAvail = document.getElementById('btn-opt-availability');
-                const btnRes = document.getElementById('btn-opt-reserve');
-                const warning = document.getElementById('reservation-warning');
+            selectContactOption: (opt, context) => {
+                if(context === 'used') STATE.contactOption = opt;
+                else STATE.newContactOption = opt; // For 'new' items in availability modal
+
+                const suffix = context === 'used' ? '-used' : ''; // Suffix for ID uniqueness if needed (Used IDs have -used)
+                // Note: In New Modal (Availability Modal), IDs are like 'btn-new-availability'.
+                // In Used Modal (Details Modal), IDs are like 'btn-opt-availability-used'.
+                
+                const btnAvail = document.getElementById(context === 'used' ? 'btn-opt-availability-used' : 'btn-new-availability');
+                const btnRes = document.getElementById(context === 'used' ? 'btn-opt-reserve-used' : 'btn-new-reserve');
+                // Sale button only in 'new' context based on prompt, but let's support it if needed.
+                const btnSale = document.getElementById('btn-new-sale'); 
+
+                const warning = document.getElementById(context === 'used' ? 'reservation-warning-used' : 'new-reservation-warning');
+
+                // Reset styles
+                const activeClasses = ['bg-white', 'dark:bg-zinc-700', 'shadow-sm', 'text-brand-green'];
+                const inactiveClasses = ['bg-gray-200', 'text-gray-500', 'dark:bg-zinc-800'];
+
+                // Helper to set active/inactive
+                const setActive = (btn) => {
+                    if(!btn) return;
+                    btn.classList.remove(...inactiveClasses);
+                    btn.classList.add(...activeClasses);
+                    btn.classList.remove('border-transparent');
+                };
+                const setInactive = (btn) => {
+                    if(!btn) return;
+                    btn.classList.remove(...activeClasses);
+                    btn.classList.add(...inactiveClasses);
+                    btn.classList.add('border-transparent');
+                };
 
                 if(opt === 'availability') {
-                    btnAvail.classList.remove('bg-gray-200', 'text-gray-500', 'dark:bg-zinc-800');
-                    btnAvail.classList.add('bg-white', 'dark:bg-zinc-700', 'shadow-sm', 'text-brand-green');
-                    
-                    btnRes.classList.add('bg-gray-200', 'text-gray-500', 'dark:bg-zinc-800');
-                    btnRes.classList.remove('bg-white', 'dark:bg-zinc-700', 'shadow-sm', 'text-brand-green');
-                    
+                    setActive(btnAvail); setInactive(btnRes); if(context !== 'used') setInactive(btnSale);
                     warning.classList.add('hidden');
-                } else {
-                    btnRes.classList.remove('bg-gray-200', 'text-gray-500', 'dark:bg-zinc-800');
-                    btnRes.classList.add('bg-white', 'dark:bg-zinc-700', 'shadow-sm', 'text-brand-green');
-                    
-                    btnAvail.classList.add('bg-gray-200', 'text-gray-500', 'dark:bg-zinc-800');
-                    btnAvail.classList.remove('bg-white', 'dark:bg-zinc-700', 'shadow-sm', 'text-brand-green');
-                    
+                } else if (opt === 'reserve') {
+                    setInactive(btnAvail); setActive(btnRes); if(context !== 'used') setInactive(btnSale);
                     warning.classList.remove('hidden');
+                } else if (opt === 'sale') {
+                    setInactive(btnAvail); setInactive(btnRes); if(context !== 'used') setActive(btnSale);
+                    warning.classList.add('hidden');
                 }
-            }
+            },
+            
+            // Wrapper for New Context specifically
+            selectNewContactOption: (opt) => UI.selectContactOption(opt, 'new')
         };
 
         const Actions = {
@@ -889,12 +933,30 @@
                     const info = k==='ryan'?'Vendas Geral':'Enterprise/Agras';
                     return `<label class="vendedor-option block cursor-pointer group"><input type="checkbox" name="vend_chk" value="${k}" class="hidden"><div class="p-4 border-2 border-gray-100 dark:border-zinc-800 rounded-2xl flex justify-between transition-all"><div class="text-left"><span class="block font-black text-sm dark:text-white uppercase">${k}</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest">${info}</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full"></div></div></label>`;
                 }).join('');
+                
+                // Initialize default options in modal
+                UI.selectNewContactOption('availability');
+                
                 document.getElementById('availability-modal').classList.remove('hidden');
             },
 
             sendAvailabilityRequest: () => {
-                document.querySelectorAll('input[name="vend_chk"]:checked').forEach((c, i) => {
-                    setTimeout(() => window.open(`https://wa.me/55${CONFIG.contacts[c.value]}?text=${encodeURIComponent("Consulta de Estoque: " + STATE.currentProduct)}`, '_blank'), i*800);
+                const selectedSellers = Array.from(document.querySelectorAll('input[name="vend_chk"]:checked')).map(cb => cb.value);
+                
+                if(selectedSellers.length === 0) {
+                    alert('Selecione pelo menos um vendedor.');
+                    return;
+                }
+
+                let msgPrefix = "";
+                if(STATE.newContactOption === 'sale') msgPrefix = "🚀 *VENDA CONCLUÍDA*";
+                else if (STATE.newContactOption === 'reserve') msgPrefix = "🛑 *SOLICITAÇÃO DE RESERVA (30%)*";
+                else msgPrefix = "🔍 *CONSULTA DE ESTOQUE*";
+
+                const finalMsg = `${msgPrefix}: ${STATE.currentProduct}`;
+
+                selectedSellers.forEach((seller, i) => {
+                    setTimeout(() => window.open(`https://wa.me/55${CONFIG.contacts[seller]}?text=${encodeURIComponent(finalMsg)}`, '_blank'), i*800);
                 });
                 UI.closeModal('availability-modal');
             },
