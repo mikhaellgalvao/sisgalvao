@@ -304,7 +304,7 @@
         </div>
     </div>
     
-    <!-- Admin Form Modal -->
+    <!-- Admin Form Modal (Preserved) -->
     <div id="admin-form-modal" ondblclick="if(event.target === this) UI.closeModal('admin-form-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-lg p-8 shadow-2xl border dark:border-white/10 text-left">
             <div class="flex justify-between items-center mb-6">
@@ -556,9 +556,11 @@
                         
                         const images = Array.isArray(p.images) ? p.images : [p.image];
                         const imgUrl = images[0] || '';
+
                         let firstCycle = 'N/A';
                         if(p.details && p.details.batteries && p.details.batteries.length > 0) { firstCycle = p.details.batteries[0]; } else if (p.cycles) { firstCycle = p.cycles; }
 
+                        // Lógica de Preço Condicional
                         let priceHtml = '';
                         if (isVisitor) {
                              priceHtml = `<div class="pt-4 border-t dark:border-zinc-800"><p class="text-[8px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Investimento</p><p class="text-xl font-black text-gray-400 italic tracking-tighter leading-none">CONSULTE</p></div>`;
@@ -928,6 +930,11 @@
                 const p = STATE.currentShareProduct; const mode = STATE.shareMode;
                 let hasCondition = false; let detailsText = "";
 
+                // Calculate Signal (30%)
+                const signalVal = p.price * 0.30;
+                const signalFormatted = Utils.fmtBRL.format(signalVal);
+                const signalMsg = `\n📝 *Sinal de Reserva (30%):* ${signalFormatted} (Não reembolsável)`;
+
                 if (mode === 'vista') {
                     const discountInput = document.getElementById('share-discount'); let disc = parseFloat(discountInput.value);
                     if (!isNaN(disc) && disc > 0) {
@@ -945,8 +952,8 @@
                 }
 
                 let finalMessage = hasCondition 
-                    ? `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor Base:* ${Utils.fmtBRL.format(p.price)}${detailsText}\n\n🎁 *Bônus Especial:*\nLembrando, ao comprar um Drone, você ganha uma *Aula de Pilotagem* de brinde e já sai sabendo pilotar seu drone! 🚀`
-                    : `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor:* ${Utils.fmtBRL.format(p.price)}`;
+                    ? `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor Base:* ${Utils.fmtBRL.format(p.price)}${detailsText}\n${signalMsg}\n\n🎁 *Bônus Especial:*\nLembrando, ao comprar um Drone, você ganha uma *Aula de Pilotagem* de brinde e já sai sabendo pilotar seu drone! 🚀`
+                    : `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor:* ${Utils.fmtBRL.format(p.price)}${signalMsg}`;
                 
                 window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
                 UI.closeModal('share-modal');
@@ -955,7 +962,19 @@
             shareUsedCard: (idx) => {
                 const p = STATE.usedProducts[idx];
                 const isVisitor = STATE.currentUser.role === 'Visitante';
-                const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(Utils.cleanCurrency(p.price));
+                
+                // Valores
+                const priceVal = Utils.cleanCurrency(p.price);
+                const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(priceVal);
+                
+                // Cálculo do Sinal (30%)
+                let signalMsg = "";
+                if (!isVisitor) {
+                    const signalVal = priceVal * 0.30;
+                    const signalFormatted = Utils.fmtBRL.format(signalVal);
+                    signalMsg = `📝 *Sinal de Reserva (30%):* ${signalFormatted} (Não reembolsável)\n`;
+                }
+
                 const details = p.details || {};
                 const check = "✅"; const uncheck = "❌";
                 const images = Array.isArray(p.images) ? p.images : [p.image];
@@ -965,7 +984,9 @@
                 let msg = `🔥 *OPORTUNIDADE GALVÃO DRONES*\n\n`;
                 msg += `🚁 *Modelo:* ${p.name}\n`;
                 msg += `💎 *Condição:* ${p.condition}\n`;
-                msg += `💰 *Investimento:* ${priceFormatted}\n\n`;
+                msg += `💰 *Investimento:* ${priceFormatted}\n`;
+                if(signalMsg) msg += signalMsg; // Adiciona o sinal se calculado
+                msg += `\n`;
                 
                 msg += `🔋 *Status Baterias (Ciclos):*\n`;
                 if(details.batteries && details.batteries.length) {
@@ -1289,110 +1310,3 @@
                         price: document.getElementById('af-price').value, 
                         condition: document.getElementById('af-condition').value, 
                         images: imgStr.split(',').map(s=>s.trim()).filter(s=>s),
-                        details: {
-                            batteries: batStr.split(',').map(s=>s.trim()).filter(s=>s),
-                            propellers: document.getElementById('af-props').value,
-                            hub: document.getElementById('af-hub').checked,
-                            cables: document.getElementById('af-cables').checked,
-                            bag: document.getElementById('af-bag').checked
-                        },
-                        desc: document.getElementById('af-desc').value 
-                    };
-                } else if (t==='marketing') {
-                    const varStr = document.getElementById('af-variations').value;
-                    const variations = varStr.split('\n').map(line => {
-                        const [name, url] = line.split('|');
-                        return name && url ? { name: name.trim(), url: url.trim() } : null;
-                    }).filter(v => v);
-
-                    newItem = { 
-                        title: document.getElementById('af-title').value, 
-                        type: document.getElementById('af-type').value, 
-                        preview: document.getElementById('af-preview').value, 
-                        variations: variations
-                    };
-                }
-
-                const targetArr = t==='user' ? STATE.users : t==='product' ? STATE.products : t==='used' ? STATE.usedProducts : STATE.marketingAssets;
-                if(i !== null) targetArr[i] = newItem; else targetArr.push(newItem);
-                UI.closeModal('admin-form-modal'); UI.renderAdmin();
-            },
-
-            askDelete: (type, index) => {
-                STATE.deleteTarget = { type, index };
-                document.getElementById('delete-confirm-modal').classList.remove('hidden');
-            },
-
-            confirmDelete: () => {
-                const { type, index } = STATE.deleteTarget;
-                const targetArr = type==='user' ? STATE.users : type==='product' ? STATE.products : type==='used' ? STATE.usedProducts : STATE.marketingAssets;
-                targetArr.splice(index, 1);
-                UI.closeModal('delete-confirm-modal');
-                UI.renderAdmin();
-            },
-
-            deleteItem: (type, index) => {
-                // Legacy wrapper if needed, now redirecting to askDelete
-                Admin.askDelete(type, index);
-            }
-        };
-
-        const Data = {
-            load: async () => {
-                try {
-                    const [u, p, us, m, pass, d] = await Promise.all([
-                        fetch('usuarios.json').then(r => r.ok?r.json():null),
-                        fetch('produtos.json').then(r => r.ok?r.json():null),
-                        fetch('usados.json').then(r => r.ok?r.json():null),
-                        fetch('marketing.json').then(r => r.ok?r.json():null),
-                        fetch('pas.json').then(r => r.ok?r.json():null),
-                        fetch('drive.json').then(r => r.ok?r.json():null)
-                    ]);
-                    
-                    if(u?.users) STATE.users = u.users;
-                    if(p?.products) STATE.products = p.products;
-                    if(us?.usedProducts) STATE.usedProducts = us.usedProducts; else STATE.usedProducts = [];
-                    // Ensure fallback has variations structure if simple structure was loaded or failed
-                    if(m?.marketingAssets) {
-                        STATE.marketingAssets = m.marketingAssets.map(asset => {
-                            if(!asset.variations && asset.downloadUrl) {
-                                return { ...asset, variations: [{name: 'Padrão', url: asset.downloadUrl}] };
-                            }
-                            return asset;
-                        });
-                    } else { 
-                        STATE.marketingAssets = []; 
-                    }
-                    if(pass) STATE.passwords = pass;
-                    if(d?.links) STATE.driveLinks = d.links;
-                } catch(e) { console.log("Dados base vazios."); }
-            },
-            loadPasswords: async () => { try { const res = await fetch('pas.json'); if(res.ok) { STATE.passwords = await res.json(); } } catch(e) {} }
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            UI.init();
-            if(localStorage.getItem('gd_user')) { document.getElementById('username-input').value = localStorage.getItem('gd_user'); document.getElementById('password-input').value = localStorage.getItem('gd_pass'); document.getElementById('remember-me').checked = true; }
-            document.getElementById('admin-save-btn').onclick = Admin.saveItem;
-            
-            const saleInput = document.getElementById('popup-sale-value');
-            if(saleInput) saleInput.oninput = () => {
-                const val = parseFloat(saleInput.value) || 0; const inst = parseInt(document.getElementById('popup-installments').value) || 0;
-                if (val > 0 && inst > 0) {
-                    const total = val * (1 + (CONFIG.installmentRates[inst] || 0)/100);
-                    document.getElementById('popup-total-value').textContent = Utils.fmtBRL.format(total);
-                    document.getElementById('popup-installment-value').textContent = `${inst}x de ${Utils.fmtBRL.format(total/inst)}`;
-                    document.getElementById('popup-calculator-results').classList.remove('hidden');
-                }
-            };
-        });
-
-        // Make functions globally available for inline handlers
-        window.UI = UI;
-        window.Actions = Actions;
-        window.Admin = Admin;
-        window.Utils = Utils;
-        window.Bypass = Bypass;
-    </script>
-</body>
-</html>
