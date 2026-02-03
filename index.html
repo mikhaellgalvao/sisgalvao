@@ -350,7 +350,6 @@
             currentUser: null, adminSession: false,
             adminPassBuffer: "", currentProduct: "", 
             currentShareProduct: { name: "", price: 0 },
-            currentProductPrice: 0, // NEW: Store price for reservation calc
             shareMode: 'vista',
             adminEdit: { type: null, index: null },
             passwords: { admin: "", download: "" },
@@ -519,10 +518,9 @@
                             actions = `<button onclick="Actions.finalizeSale('${p.name}')" class="w-full mt-4 bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all tracking-widest italic">Consultar Disponibilidade</button>`;
                         } else {
                             priceDisplay = `<div class="mt-4 pt-4 border-t dark:border-zinc-800"><p class="text-[8px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Valor DJI</p><p class="text-2xl font-black text-brand-green dark:text-white italic tracking-tighter leading-none">${Utils.fmtBRL.format(priceVal)}</p></div>`;
-                            // Pass price to openAvailability
                             actions = `
                                 <div class="mt-4 flex flex-col gap-2">
-                                    <button onclick="Actions.openAvailability('${p.name}', ${priceVal})" class="w-full bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[9px] shadow-sm active:bg-emerald-900 tracking-widest">Entrar em Contato</button>
+                                    <button onclick="Actions.openAvailability('${p.name}')" class="w-full bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[9px] shadow-sm active:bg-emerald-900 tracking-widest">Entrar em Contato</button>
                                     <div class="flex gap-2">
                                         <button onclick="Actions.openShareModal('${p.name}', ${priceVal})" class="w-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-white py-3 rounded-2xl font-bold uppercase text-[9px] hover:text-brand-green active:scale-95 transition-all" title="Compartilhar">Compartilhar Card</button>
                                     </div>
@@ -562,6 +560,7 @@
                         let firstCycle = 'N/A';
                         if(p.details && p.details.batteries && p.details.batteries.length > 0) { firstCycle = p.details.batteries[0]; } else if (p.cycles) { firstCycle = p.cycles; }
 
+                        // Lógica de Preço Condicional
                         let priceHtml = '';
                         if (isVisitor) {
                              priceHtml = `<div class="pt-4 border-t dark:border-zinc-800"><p class="text-[8px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Investimento</p><p class="text-xl font-black text-gray-400 italic tracking-tighter leading-none">CONSULTE</p></div>`;
@@ -708,6 +707,7 @@
                 }
             },
 
+            // New UI Functions for Contact Flow (Shared for New & Used)
             showContactOptions: (context = 'used') => {
                 const btnInit = document.getElementById(context === 'used' ? 'modal-used-init-contact' : 'modal-new-init-contact');
                 const optionsPanel = document.getElementById(context === 'used' ? 'modal-used-options' : 'modal-new-options');
@@ -928,6 +928,7 @@
                     if (!isNaN(disc) && disc > 0) {
                         if(disc > 10) disc = 10;
                         const finalPrice = p.price * (1 - (disc/100));
+                        // Destaque solicitado para o valor com desconto
                         detailsText = `\n\n🔥 *Condição à Vista:* ${disc}% OFF\n✅ *VALOR COM DESCONTO:* *${Utils.fmtBRL.format(finalPrice)}*`;
                     }
                 } else {
@@ -1027,9 +1028,8 @@
                 window.open(`https://wa.me/55${CONFIG.central}?text=${encodeURIComponent(msg)}`, '_blank');
             },
 
-            openAvailability: (name, price = 0) => {
+            openAvailability: (name) => {
                 STATE.currentProduct = name;
-                STATE.currentProductPrice = price; // Store price for reservation calc
                 document.getElementById('modal-product-name').textContent = name;
                 
                 const sellers = ['central', 'mikhaell', 'maikhon', 'ryan'];
@@ -1075,12 +1075,8 @@
                     
                     if(!cName || !cPhone) { alert('Por favor, preencha o Nome e Telefone do cliente para a reserva.'); return; }
                     
-                    // Calculate Signal
-                    const signalVal = STATE.currentProductPrice * 0.30;
-                    const signalFormatted = Utils.fmtBRL.format(signalVal);
-                    
                     msgPrefix = "🛑 *SOLICITAÇÃO DE RESERVA (30%)*";
-                    clientDetails = `\n\n💰 *Valor Total:* ${Utils.fmtBRL.format(STATE.currentProductPrice)}\n📉 *Sinal (30%):* ${signalFormatted}\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}\n⚠ *Condição:* Sinal sem devolução confirmado.`;
+                    clientDetails = `\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}\n⚠ *Condição:* Sinal sem devolução confirmado.`;
                 } else {
                     msgPrefix = "🔍 *CONSULTA DE ESTOQUE*";
                 }
@@ -1113,226 +1109,6 @@
                     const blob = new Blob([JSON.stringify(d, null, 4)], {type: "application/json"});
                     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `${type}_galvao.json`; a.click();
                 }
-            },
-
-            startCarousels: () => {
-                STATE.intervals.forEach(clearInterval); STATE.intervals = [];
-                STATE.usedProducts.forEach((p, idx) => {
-                    const images = Array.isArray(p.images) ? p.images : [p.image];
-                    if(images.length > 1) {
-                        let current = 0;
-                        const el = document.getElementById(`card-img-${idx}`);
-                        if(!el) return;
-                        
-                        const interval = setInterval(() => {
-                            current = (current + 1) % images.length;
-                            el.style.backgroundImage = `url('${images[current]}')`;
-                        }, 3000);
-                        STATE.intervals.push(interval);
-                    }
-                });
-            },
-
-            openUsedDetails: (idx) => {
-                STATE.currentUsedIdx = idx; // Store current index
-                const p = STATE.usedProducts[idx];
-                const images = Array.isArray(p.images) ? p.images : [p.image];
-                const details = p.details || {};
-                const isVisitor = STATE.currentUser.role === 'Visitante';
-
-                // Popula Imagem Principal e Thumbs
-                const mainImg = document.getElementById('modal-used-main-img');
-                mainImg.style.backgroundImage = `url('${images[0]}')`;
-                
-                const thumbsContainer = document.getElementById('modal-used-thumbnails');
-                thumbsContainer.innerHTML = images.map(img => `
-                    <div class="w-20 h-20 flex-shrink-0 bg-gray-100 dark:bg-zinc-800 rounded-xl bg-cover bg-center border-2 border-transparent hover:border-brand-orange cursor-pointer transition-all" 
-                         style="background-image: url('${img}')"
-                         onclick="document.getElementById('modal-used-main-img').style.backgroundImage = 'url(\\'${img}\\')'">
-                    </div>
-                `).join('');
-
-                // Textos Básicos
-                document.getElementById('modal-used-title').textContent = p.name;
-                
-                // Formatação BRL Condicional
-                const priceEl = document.getElementById('modal-used-price');
-                if (isVisitor) {
-                    priceEl.textContent = "CONSULTE";
-                    priceEl.classList.remove('text-3xl', 'text-brand-orange');
-                    priceEl.classList.add('text-2xl', 'text-gray-400');
-                } else {
-                    priceEl.textContent = Utils.fmtBRL.format(Utils.cleanCurrency(p.price));
-                    priceEl.classList.add('text-3xl', 'text-brand-orange');
-                    priceEl.classList.remove('text-2xl', 'text-gray-400');
-                }
-
-                document.getElementById('modal-used-desc').textContent = p.desc;
-                
-                const badge = document.getElementById('modal-used-badge');
-                badge.className = 'px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest';
-                if(p.condition.includes('Seminovo')) badge.classList.add('badge-seminovo');
-                else if(p.condition.includes('Open Box')) badge.classList.add('badge-openbox');
-                else badge.classList.add('badge-revisado');
-                badge.textContent = p.condition;
-
-                // Baterias
-                const batsContainer = document.getElementById('modal-used-batteries');
-                const bats = details.batteries || [];
-                if(bats.length === 0) {
-                    batsContainer.innerHTML = '<span class="text-xs text-gray-400 italic">Sem informação de bateria</span>';
-                } else {
-                    batsContainer.innerHTML = bats.map((cycle, i) => `
-                        <div class="flex flex-col items-center p-3 bg-white dark:bg-zinc-900 rounded-xl border dark:border-zinc-700 w-20">
-                            <svg class="w-6 h-6 text-green-500 mb-1" fill="currentColor" viewBox="0 0 20 20"><path d="M16 6H4a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 00-2-2zM4 8h12v6H4V8zm14 2h.5a1.5 1.5 0 110 3H18v-3z"></path></svg>
-                            <span class="text-[10px] font-black text-gray-500 uppercase">Bat ${i+1}</span>
-                            <span class="text-sm font-bold dark:text-white">${cycle}</span>
-                        </div>
-                    `).join('');
-                }
-
-                // Acessórios Checklist
-                const accContainer = document.getElementById('modal-used-accessories');
-                const checkIcon = '<span class="text-green-500 mr-2">✔</span>';
-                const xIcon = '<span class="text-red-400 mr-2">✖</span>';
-                
-                accContainer.innerHTML = `
-                    <li class="flex items-center">${details.hub ? checkIcon : xIcon} Hub de Carregamento</li>
-                    <li class="flex items-center">${details.cables ? checkIcon : xIcon} Cabos / Conectores</li>
-                    <li class="flex items-center">${details.bag ? checkIcon : xIcon} Bolsa / Case</li>
-                    <li class="flex items-center"><span class="text-brand-orange mr-2">⚙</span> Hélices: ${details.propellers || 'Padrão'}</li>
-                `;
-
-                // Reset do Botão de Contato
-                document.getElementById('modal-used-init-contact').classList.remove('hidden');
-                document.getElementById('modal-used-options').classList.add('hidden');
-                
-                // Botões de Ação
-                document.getElementById('modal-used-share').onclick = () => Actions.shareUsedCard(idx);
-
-                document.getElementById('used-details-modal').classList.remove('hidden');
-            }
-        };
-
-        const Admin = {
-            showLogin: () => {
-                STATE.adminPassBuffer = ""; document.getElementById('keypad-display').textContent = "";
-                const vk = document.getElementById('virtual-keypad'); vk.innerHTML = '';
-                [0,1,2,3,4,5,6,7,8,9].sort(()=>Math.random()-0.5).forEach(n => {
-                    const b = document.createElement('button'); b.className = 'key-btn'; b.textContent = n; b.onclick = () => Admin.handleKey(n); vk.appendChild(b);
-                });
-                document.getElementById('admin-login-modal').classList.remove('hidden');
-            },
-            handleKey: (n) => {
-                STATE.adminPassBuffer += n; document.getElementById('keypad-display').textContent = "*".repeat(STATE.adminPassBuffer.length);
-                if(STATE.adminPassBuffer === STATE.passwords.admin) { setTimeout(() => { STATE.adminSession = true; UI.closeModal('admin-login-modal'); UI.navigate('admin'); }, 300); } 
-                else if(STATE.adminPassBuffer.length === 4) { setTimeout(() => { STATE.adminPassBuffer = ""; document.getElementById('keypad-display').textContent = ""; }, 300); }
-            },
-            clearPass: () => { STATE.adminPassBuffer = ""; document.getElementById('keypad-display').textContent = ""; },
-
-            openForm: (type, index = null) => {
-                STATE.adminEdit = { type, index };
-                document.getElementById('admin-modal-title').textContent = (index !== null ? `Editar ${type}` : `Novo ${type}`).toUpperCase();
-                let html = "";
-                
-                if(type === 'user') {
-                    const d = index!==null ? STATE.users[index] : {name:'',username:'',password:'',avatar:'',role:'Vendedor'};
-                    html = `<input id="af-name" value="${d.name}" placeholder="Nome" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-user" value="${d.username}" placeholder="User" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-pass" value="${d.password}" placeholder="Pass" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-avatar" value="${d.avatar||''}" placeholder="Img URL" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">`;
-                } else if (type === 'product') {
-                    const d = index!==null ? STATE.products[index] : {name:'',sell:'',line:'Consumer'};
-                    html = `<input id="af-name" value="${d.name}" placeholder="Nome do Drone" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-sell" value="${d.sell}" placeholder="Venda (R$)" class="w-full p-4 mb-3 border rounded-xl dark:bg-zinc-800 text-sm"><select id="af-line" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3 bg-white dark:bg-zinc-900"><option value="Consumer" ${d.line === 'Consumer' ? 'selected' : ''}>Consumer</option><option value="Enterprise" ${d.line === 'Enterprise' ? 'selected' : ''}>Enterprise</option><option value="Agriculture" ${d.line === 'Agriculture' ? 'selected' : ''}>Agriculture</option></select>`;
-                } else if (type === 'used') {
-                    const d = index!==null ? STATE.usedProducts[index] : {name:'',price:'',condition:'Seminovo', images:[], details:{batteries:[], hub:false, cables:false, propellers:'', bag:false}, desc:''};
-                    const imgs = Array.isArray(d.images) ? d.images.join(', ') : d.image || '';
-                    const bats = d.details.batteries ? d.details.batteries.join(', ') : '';
-                    
-                    html = `
-                        <input id="af-name" value="${d.name}" placeholder="Modelo" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
-                        <div class="grid grid-cols-2 gap-3 mb-3">
-                            <input id="af-price" value="${d.price}" placeholder="Preço (R$)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm">
-                            <select id="af-condition" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm bg-white dark:bg-zinc-900">
-                                <option value="Seminovo" ${d.condition === 'Seminovo' ? 'selected' : ''}>Seminovo</option>
-                                <option value="Open Box" ${d.condition === 'Open Box' ? 'selected' : ''}>Open Box</option>
-                                <option value="Revisado" ${d.condition === 'Revisado' ? 'selected' : ''}>Revisado</option>
-                            </select>
-                        </div>
-                        <input id="af-images" value="${imgs}" placeholder="URLs das Imagens (separadas por vírgula)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
-                        
-                        <div class="bg-gray-50 dark:bg-zinc-800/50 p-3 rounded-xl mb-3">
-                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Detalhes Técnicos</label>
-                            <input id="af-bats" value="${bats}" placeholder="Ciclos Baterias (ex: 12, 15, 10)" class="w-full p-3 rounded-lg border dark:bg-zinc-800 text-sm mb-2">
-                            <input id="af-props" value="${d.details.propellers||''}" placeholder="Hélices (ex: 3 pares)" class="w-full p-3 rounded-lg border dark:bg-zinc-800 text-sm mb-2">
-                            <div class="flex gap-4">
-                                <label class="flex items-center text-xs"><input type="checkbox" id="af-hub" ${d.details.hub?'checked':''} class="mr-2"> Hub</label>
-                                <label class="flex items-center text-xs"><input type="checkbox" id="af-cables" ${d.details.cables?'checked':''} class="mr-2"> Cabos</label>
-                                <label class="flex items-center text-xs"><input type="checkbox" id="af-bag" ${d.details.bag?'checked':''} class="mr-2"> Bag</label>
-                            </div>
-                        </div>
-
-                        <textarea id="af-desc" placeholder="Descrição Geral" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${d.desc}</textarea>
-                    `;
-                } else if (type === 'marketing') {
-                    const d = index!==null ? STATE.marketingAssets[index] : {title:'',type:'Logo',preview:'',variations:[]};
-                    const varStr = d.variations ? d.variations.map(v => `${v.name}|${v.url}`).join('\n') : '';
-                    html = `
-                        <input id="af-title" value="${d.title}" placeholder="Título (Ex: Logo Vetor)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
-                        <select id="af-type" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3 bg-white dark:bg-zinc-900">
-                            <option value="Logo" ${d.type === 'Logo' ? 'selected' : ''}>Logo</option>
-                            <option value="Campanha" ${d.type === 'Campanha' ? 'selected' : ''}>Campanha</option>
-                            <option value="Institucional" ${d.type === 'Institucional' ? 'selected' : ''}>Institucional</option>
-                        </select>
-                        <input id="af-preview" value="${d.preview}" placeholder="URL Preview (Imagem)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
-                        <textarea id="af-variations" placeholder="Variações (Nome|URL por linha)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${varStr}</textarea>
-                    `;
-                }
-
-                document.getElementById('admin-dynamic-form').innerHTML = html;
-                document.getElementById('admin-form-modal').classList.remove('hidden');
-            },
-
-            saveItem: () => {
-                const t = STATE.adminEdit.type; const i = STATE.adminEdit.index;
-                let newItem = {};
-                
-                if (t==='user') { 
-                    newItem = { name: document.getElementById('af-name').value, username: document.getElementById('af-user').value, password: document.getElementById('af-pass').value, avatar: document.getElementById('af-avatar').value, role: "Vendedor" };
-                } else if (t==='product') { 
-                    newItem = { name: document.getElementById('af-name').value, sell: document.getElementById('af-sell').value, line: document.getElementById('af-line').value };
-                } else if (t==='used') {
-                    const imgStr = document.getElementById('af-images').value;
-                    const batStr = document.getElementById('af-bats').value;
-                    newItem = { 
-                        name: document.getElementById('af-name').value, 
-                        price: document.getElementById('af-price').value, 
-                        condition: document.getElementById('af-condition').value, 
-                        images: imgStr.split(',').map(s=>s.trim()).filter(s=>s),
-                        details: {
-                            batteries: batStr.split(',').map(s=>s.trim()).filter(s=>s),
-                            propellers: document.getElementById('af-props').value,
-                            hub: document.getElementById('af-hub').checked,
-                            cables: document.getElementById('af-cables').checked,
-                            bag: document.getElementById('af-bag').checked
-                        },
-                        desc: document.getElementById('af-desc').value 
-                    };
-                } else if (t==='marketing') {
-                    const varStr = document.getElementById('af-variations').value;
-                    const variations = varStr.split('\n').map(line => {
-                        const [name, url] = line.split('|');
-                        return name && url ? { name: name.trim(), url: url.trim() } : null;
-                    }).filter(v => v);
-
-                    newItem = { 
-                        title: document.getElementById('af-title').value, 
-                        type: document.getElementById('af-type').value, 
-                        preview: document.getElementById('af-preview').value, 
-                        variations: variations
-                    };
-                }
-
-                const targetArr = t==='user' ? STATE.users : t==='product' ? STATE.products : t==='used' ? STATE.usedProducts : STATE.marketingAssets;
-                if(i !== null) targetArr[i] = newItem; else targetArr.push(newItem);
-                UI.closeModal('admin-form-modal'); UI.renderAdmin();
             },
 
             askDelete: (type, index) => {
@@ -1392,4 +1168,24 @@
             if(localStorage.getItem('gd_user')) { document.getElementById('username-input').value = localStorage.getItem('gd_user'); document.getElementById('password-input').value = localStorage.getItem('gd_pass'); document.getElementById('remember-me').checked = true; }
             document.getElementById('admin-save-btn').onclick = Admin.saveItem;
             
-            const saleInput = document.getElementById('
+            const saleInput = document.getElementById('popup-sale-value');
+            if(saleInput) saleInput.oninput = () => {
+                const val = parseFloat(saleInput.value) || 0; const inst = parseInt(document.getElementById('popup-installments').value) || 0;
+                if (val > 0 && inst > 0) {
+                    const total = val * (1 + (CONFIG.installmentRates[inst] || 0)/100);
+                    document.getElementById('popup-total-value').textContent = Utils.fmtBRL.format(total);
+                    document.getElementById('popup-installment-value').textContent = `${inst}x de ${Utils.fmtBRL.format(total/inst)}`;
+                    document.getElementById('popup-calculator-results').classList.remove('hidden');
+                }
+            };
+        });
+
+        // Make functions globally available for inline handlers
+        window.UI = UI;
+        window.Actions = Actions;
+        window.Admin = Admin;
+        window.Utils = Utils;
+        window.Bypass = Bypass;
+    </script>
+</body>
+</html>
