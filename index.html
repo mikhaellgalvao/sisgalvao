@@ -204,8 +204,15 @@
                                 <button onclick="UI.selectContactOption('reserve', 'used')" id="btn-opt-reserve-used" class="flex-1 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest bg-gray-200 dark:bg-zinc-800 text-gray-500 border-2 border-transparent transition-all">Reservar</button>
                             </div>
 
+                            <!-- Formulário de Reserva (USADOS) -->
+                            <div id="reservation-form-used" class="hidden mb-4 space-y-2 animate-fade-in">
+                                <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Dados do Cliente</p>
+                                <input type="text" id="res-name-used" placeholder="Nome do Cliente" class="w-full p-3 rounded-xl border dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-bold focus:ring-2 focus:ring-brand-orange outline-none">
+                                <input type="tel" id="res-phone-used" placeholder="WhatsApp do Cliente" class="w-full p-3 rounded-xl border dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-bold focus:ring-2 focus:ring-brand-orange outline-none">
+                            </div>
+
                             <div id="reservation-warning-used" class="hidden mb-4 p-3 bg-brand-orange/10 border border-brand-orange/20 rounded-xl text-center">
-                                <p class="text-[9px] font-bold text-brand-orange leading-tight">⚠ Para reservar e retirar dos anúncios, é necessário um sinal de 30% do valor.</p>
+                                <p class="text-[9px] font-bold text-brand-orange leading-tight">⚠ Sinal de 30% obrigatório. Valor NÃO reembolsável em caso de desistência.</p>
                             </div>
 
                             <button onclick="Actions.proceedContact()" class="w-full py-3 bg-brand-green text-white rounded-xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 hover:bg-emerald-900 transition-all">Confirmar</button>
@@ -303,8 +310,16 @@
                     <button onclick="UI.selectNewContactOption('reserve')" id="btn-new-reserve" class="px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest bg-gray-200 dark:bg-zinc-800 text-gray-500 border-2 border-transparent transition-all">Reserva</button>
                     <button onclick="UI.selectNewContactOption('sale')" id="btn-new-sale" class="px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest bg-gray-200 dark:bg-zinc-800 text-gray-500 border-2 border-transparent transition-all">Venda</button>
                 </div>
+
+                <!-- Formulário de Reserva (NOVOS) -->
+                <div id="reservation-form-new" class="hidden mb-3 space-y-2 animate-fade-in text-left">
+                    <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Dados do Cliente</p>
+                    <input type="text" id="res-name-new" placeholder="Nome do Cliente" class="w-full p-3 rounded-xl border dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-bold focus:ring-2 focus:ring-brand-orange outline-none">
+                    <input type="tel" id="res-phone-new" placeholder="WhatsApp do Cliente" class="w-full p-3 rounded-xl border dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-bold focus:ring-2 focus:ring-brand-orange outline-none">
+                </div>
+
                 <div id="new-reservation-warning" class="hidden p-2 bg-brand-orange/10 border border-brand-orange/20 rounded-xl text-center">
-                    <p class="text-[8px] font-bold text-brand-orange leading-tight">⚠ Necessário sinal de 30%.</p>
+                    <p class="text-[8px] font-bold text-brand-orange leading-tight">⚠ Sinal de 30% obrigatório. Sem devolução.</p>
                 </div>
             </div>
 
@@ -332,7 +347,7 @@
 
     <script>
         const CONFIG = {
-            contacts: { mikhaell: "62984710639", maikhon: "62933001865", ryan: "62920007396" },
+            contacts: { central: "6236360668", mikhaell: "62984710639", maikhon: "62933001865", ryan: "62920007396" },
             central: "6236360668",
             installmentRates: { 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0 }
         };
@@ -735,16 +750,14 @@
                 if(context === 'used') STATE.contactOption = opt;
                 else STATE.newContactOption = opt; // For 'new' items in availability modal
 
-                const suffix = context === 'used' ? '-used' : ''; // Suffix for ID uniqueness if needed (Used IDs have -used)
-                // Note: In New Modal (Availability Modal), IDs are like 'btn-new-availability'.
-                // In Used Modal (Details Modal), IDs are like 'btn-opt-availability-used'.
+                const suffix = context === 'used' ? '-used' : ''; 
                 
                 const btnAvail = document.getElementById(context === 'used' ? 'btn-opt-availability-used' : 'btn-new-availability');
                 const btnRes = document.getElementById(context === 'used' ? 'btn-opt-reserve-used' : 'btn-new-reserve');
-                // Sale button only in 'new' context based on prompt, but let's support it if needed.
                 const btnSale = document.getElementById('btn-new-sale'); 
 
                 const warning = document.getElementById(context === 'used' ? 'reservation-warning-used' : 'new-reservation-warning');
+                const form = document.getElementById(context === 'used' ? 'reservation-form-used' : 'reservation-form-new');
 
                 // Reset styles
                 const activeClasses = ['bg-white', 'dark:bg-zinc-700', 'shadow-sm', 'text-brand-green'];
@@ -767,12 +780,15 @@
                 if(opt === 'availability') {
                     setActive(btnAvail); setInactive(btnRes); if(context !== 'used') setInactive(btnSale);
                     warning.classList.add('hidden');
+                    if(form) form.classList.add('hidden');
                 } else if (opt === 'reserve') {
                     setInactive(btnAvail); setActive(btnRes); if(context !== 'used') setInactive(btnSale);
                     warning.classList.remove('hidden');
+                    if(form) form.classList.remove('hidden');
                 } else if (opt === 'sale') {
                     setInactive(btnAvail); setInactive(btnRes); if(context !== 'used') setActive(btnSale);
                     warning.classList.add('hidden');
+                    if(form) form.classList.add('hidden');
                 }
             },
             
@@ -876,7 +892,7 @@
                 const check = "✅"; const uncheck = "❌";
                 const images = Array.isArray(p.images) ? p.images : [p.image];
                 
-                const includePhoto = confirm("Incluir link da foto na mensagem?");
+                const includePhoto = confirm("Incluir link das fotos na mensagem?");
                 
                 let msg = `🔥 *OPORTUNIDADE GALVÃO DRONES*\n\n`;
                 msg += `🚁 *Modelo:* ${p.name}\n`;
@@ -896,7 +912,7 @@
                 
                 if(p.desc) msg += `📝 *Detalhes:* ${p.desc}\n\n`;
                 
-                // Nova Lógica de Fotos Múltiplas
+                // Nova Lógica de Fotos Múltiplas (Used)
                 if(includePhoto && images.length > 0) {
                     msg += `📸 *Fotos:*\n`;
                     images.forEach((img, i) => {
@@ -918,7 +934,12 @@
                 
                 let msg = "";
                 if(STATE.contactOption === 'reserve') {
-                    msg = `🛑 *SOLICITAÇÃO DE RESERVA*\n\n*Modelo:* ${p.name} (${p.condition})\n*Valor:* ${priceFormatted}\n\nEstou ciente do sinal de 30% e gostaria de prosseguir com a reserva para retirada do anúncio.`;
+                    const cName = document.getElementById('res-name-used').value.trim();
+                    const cPhone = document.getElementById('res-phone-used').value.trim();
+                    
+                    if(!cName || !cPhone) { alert('Por favor, preencha o Nome e Telefone do cliente para a reserva.'); return; }
+
+                    msg = `🛑 *SOLICITAÇÃO DE RESERVA*\n\n*Modelo:* ${p.name} (${p.condition})\n*Valor:* ${priceFormatted}\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}\n\n⚠ *Ciente:* Sinal de 30% obrigatório e sem devolução em caso de desistência.`;
                 } else {
                     msg = `🔍 *CONSULTA DE DISPONIBILIDADE*\n\n*Modelo:* ${p.name} (${p.condition})\n*Valor:* ${priceFormatted}\n\nGostaria de saber se este item ainda está disponível.`;
                 }
@@ -929,14 +950,30 @@
             openAvailability: (name) => {
                 STATE.currentProduct = name;
                 document.getElementById('modal-product-name').textContent = name;
-                document.getElementById('modal-sellers-list').innerHTML = ['mikhaell', 'maikhon', 'ryan'].map(k => {
-                    const info = k==='ryan'?'Vendas Geral':'Enterprise/Agras';
-                    return `<label class="vendedor-option block cursor-pointer group"><input type="checkbox" name="vend_chk" value="${k}" class="hidden"><div class="p-4 border-2 border-gray-100 dark:border-zinc-800 rounded-2xl flex justify-between transition-all"><div class="text-left"><span class="block font-black text-sm dark:text-white uppercase">${k}</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest">${info}</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full"></div></div></label>`;
+                
+                const sellers = ['central', 'mikhaell', 'maikhon', 'ryan'];
+                
+                document.getElementById('modal-sellers-list').innerHTML = sellers.map(k => {
+                    let displayName = k.toUpperCase();
+                    let subInfo = 'ENTERPRISE/AGRAS';
+                    
+                    if(k === 'central') {
+                        displayName = 'CENTRAL GALVÃO DRONES';
+                        subInfo = 'ATENDIMENTO GERAL';
+                    } else if (k === 'ryan') {
+                        subInfo = 'VENDAS GERAL';
+                    }
+                    
+                    return `<label class="vendedor-option block cursor-pointer group"><input type="checkbox" name="vend_chk" value="${k}" class="hidden"><div class="p-4 border-2 border-gray-100 dark:border-zinc-800 rounded-2xl flex justify-between transition-all"><div class="text-left"><span class="block font-black text-sm dark:text-white uppercase">${displayName}</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest">${subInfo}</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full"></div></div></label>`;
                 }).join('');
                 
                 // Initialize default options in modal
                 UI.selectNewContactOption('availability');
                 
+                // Limpa campos
+                document.getElementById('res-name-new').value = '';
+                document.getElementById('res-phone-new').value = '';
+
                 document.getElementById('availability-modal').classList.remove('hidden');
             },
 
@@ -949,11 +986,23 @@
                 }
 
                 let msgPrefix = "";
-                if(STATE.newContactOption === 'sale') msgPrefix = "🚀 *VENDA CONCLUÍDA*";
-                else if (STATE.newContactOption === 'reserve') msgPrefix = "🛑 *SOLICITAÇÃO DE RESERVA (30%)*";
-                else msgPrefix = "🔍 *CONSULTA DE ESTOQUE*";
+                let clientDetails = "";
 
-                const finalMsg = `${msgPrefix}: ${STATE.currentProduct}`;
+                if(STATE.newContactOption === 'sale') {
+                    msgPrefix = "🚀 *VENDA CONCLUÍDA*";
+                } else if (STATE.newContactOption === 'reserve') {
+                    const cName = document.getElementById('res-name-new').value.trim();
+                    const cPhone = document.getElementById('res-phone-new').value.trim();
+                    
+                    if(!cName || !cPhone) { alert('Por favor, preencha o Nome e Telefone do cliente para a reserva.'); return; }
+                    
+                    msgPrefix = "🛑 *SOLICITAÇÃO DE RESERVA (30%)*";
+                    clientDetails = `\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}\n⚠ *Condição:* Sinal sem devolução confirmado.`;
+                } else {
+                    msgPrefix = "🔍 *CONSULTA DE ESTOQUE*";
+                }
+
+                const finalMsg = `${msgPrefix}: ${STATE.currentProduct}${clientDetails}`;
 
                 selectedSellers.forEach((seller, i) => {
                     setTimeout(() => window.open(`https://wa.me/55${CONFIG.contacts[seller]}?text=${encodeURIComponent(finalMsg)}`, '_blank'), i*800);
