@@ -184,9 +184,15 @@
 
                 <p id="modal-used-desc" class="text-sm text-gray-500 dark:text-gray-400 italic mb-6"></p>
                 
-                <button id="modal-used-action" class="w-full py-5 bg-brand-green text-white rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg active:scale-95 transition-all hover:bg-emerald-900">
-                    Chamar no WhatsApp
-                </button>
+                <div class="flex gap-3">
+                    <button id="modal-used-share" class="flex-1 py-5 bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-200 dark:hover:bg-zinc-700 transition-all flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                        Compartilhar
+                    </button>
+                    <button id="modal-used-action" class="flex-[2] py-5 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all hover:bg-emerald-900">
+                        Chamar no WhatsApp
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -723,7 +729,6 @@
             consultUsed: (details) => window.open(`https://wa.me/55${CONFIG.central}?text=${encodeURIComponent("🔍 Interesse em Seminovo: " + details)}`, '_blank'),
             
             downloadAsset: (url) => {
-                // Simula download criando um link temporário
                 if(url.startsWith('http')) {
                     window.open(url, '_blank');
                 } else {
@@ -764,6 +769,49 @@
                 
                 window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
                 UI.closeModal('share-modal');
+            },
+
+            shareUsedCard: (idx) => {
+                const p = STATE.usedProducts[idx];
+                const priceFormatted = Utils.fmtBRL.format(Utils.cleanCurrency(p.price));
+                const details = p.details || {};
+                const check = "✅"; const uncheck = "❌";
+                const images = Array.isArray(p.images) ? p.images : [p.image];
+                
+                // Perguntar se quer incluir foto
+                const includePhoto = confirm("Incluir link da foto na mensagem?");
+                
+                let msg = `🔥 *OPORTUNIDADE GALVÃO DRONES*\n\n`;
+                msg += `🚁 *Modelo:* ${p.name}\n`;
+                msg += `💎 *Condição:* ${p.condition}\n`;
+                msg += `💰 *Investimento:* ${priceFormatted}\n\n`;
+                
+                msg += `🔋 *Status Baterias (Ciclos):*\n`;
+                if(details.batteries && details.batteries.length) {
+                    msg += details.batteries.map((c, i) => `- Bat ${i+1}: ${c}`).join('\n') + `\n\n`;
+                } else { msg += `- Não informado\n\n`; }
+                
+                msg += `📦 *Incluso:*\n`;
+                msg += `${details.hub ? check : uncheck} Hub de Carregamento\n`;
+                msg += `${details.cables ? check : uncheck} Cabos / Conectores\n`;
+                msg += `${details.bag ? check : uncheck} Bolsa / Case\n`;
+                msg += `⚙ Hélices: ${details.propellers || 'Padrão'}\n\n`;
+                
+                if(p.desc) msg += `📝 *Detalhes:* ${p.desc}\n\n`;
+                
+                if(includePhoto && images[0]) {
+                    msg += `📸 *Foto:* ${images[0]}`;
+                }
+
+                // Tenta API nativa de compartilhamento (Mobile) ou WhatsApp (Desktop)
+                if (navigator.share) {
+                    navigator.share({
+                        title: `Galvão Drones - ${p.name}`,
+                        text: msg
+                    }).catch(console.error);
+                } else {
+                    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+                }
             },
 
             openAvailability: (name) => {
@@ -844,6 +892,7 @@
 
                 // Textos Básicos
                 document.getElementById('modal-used-title').textContent = p.name;
+                // Formatação BRL rigorosa
                 document.getElementById('modal-used-price').textContent = Utils.fmtBRL.format(Utils.cleanCurrency(p.price));
                 document.getElementById('modal-used-desc').textContent = p.desc;
                 
@@ -881,8 +930,9 @@
                     <li class="flex items-center"><span class="text-brand-orange mr-2">⚙</span> Hélices: ${details.propellers || 'Padrão'}</li>
                 `;
 
-                // Botão de Ação
-                document.getElementById('modal-used-action').onclick = () => Actions.consultUsed(`${p.name} - ${p.condition} (R$ ${p.price})`);
+                // Botões de Ação
+                document.getElementById('modal-used-action').onclick = () => Actions.consultUsed(`${p.name} - ${p.condition} (${Utils.fmtBRL.format(Utils.cleanCurrency(p.price))})`);
+                document.getElementById('modal-used-share').onclick = () => Actions.shareUsedCard(idx);
 
                 document.getElementById('used-details-modal').classList.remove('hidden');
             }
