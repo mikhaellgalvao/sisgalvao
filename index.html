@@ -55,10 +55,6 @@
         .skeleton { background: #e5e7eb; background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
         .dark .skeleton { background: #27272a; background: linear-gradient(90deg, #27272a 25%, #3f3f46 50%, #27272a 75%); }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-        /* Custom Checkbox for Marketing */
-        .mkt-checkbox:checked + div { border-color: #EF7E13; background-color: rgba(239, 126, 19, 0.1); }
-        .mkt-checkbox:checked + div .check-icon { display: block; }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-black transition-colors duration-300 text-slate-900 dark:text-zinc-100 overflow-x-hidden font-sans antialiased">
@@ -958,14 +954,23 @@
                 
                 const list = document.getElementById('mkt-variations-list');
                 list.innerHTML = variations.map((v, i) => `
-                    <label class="mkt-checkbox flex items-center p-3 rounded-xl border dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-700 transition-all">
-                        <input type="checkbox" value="${v.url}" class="hidden mkt-checkbox-input">
-                        <div class="w-12 h-12 bg-white dark:bg-zinc-600 rounded-lg flex items-center justify-center mr-4 border dark:border-zinc-600">
+                    <label class="relative flex items-center p-3 rounded-xl bg-gray-50 dark:bg-zinc-800 cursor-pointer transition-all hover:bg-gray-100 dark:hover:bg-zinc-700 group overflow-hidden">
+                        <input type="checkbox" value="${v.url}" class="peer sr-only mkt-checkbox-input">
+                        
+                        <!-- Active State Overlay (Border & Background) -->
+                        <div class="absolute inset-0 border-2 border-transparent peer-checked:border-brand-orange peer-checked:bg-brand-orange/5 rounded-xl pointer-events-none transition-all"></div>
+
+                        <!-- Icon Box -->
+                        <div class="w-12 h-12 bg-white dark:bg-zinc-600 rounded-lg flex items-center justify-center mr-4 border dark:border-zinc-600 relative z-10">
                             <img src="${v.preview || asset.preview || 'https://imgur.com/2PNy5CS.png'}" class="w-8 h-8 object-contain">
                         </div>
-                        <span class="flex-1 text-xs font-bold text-slate-700 dark:text-white uppercase">${v.name}</span>
-                        <div class="w-6 h-6 rounded-full border-2 border-gray-300 dark:border-zinc-500 flex items-center justify-center transition-colors">
-                            <svg class="check-icon w-4 h-4 text-brand-orange hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                        
+                        <!-- Text -->
+                        <span class="flex-1 text-xs font-bold text-slate-700 dark:text-white uppercase relative z-10">${v.name}</span>
+                        
+                        <!-- Checkbox Circle -->
+                        <div class="w-6 h-6 rounded-full border-2 border-gray-300 dark:border-zinc-500 peer-checked:bg-brand-orange peer-checked:border-brand-orange flex items-center justify-center transition-all relative z-10">
+                            <svg class="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                         </div>
                     </label>
                 `).join('');
