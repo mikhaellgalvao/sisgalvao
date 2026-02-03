@@ -50,6 +50,11 @@
 
         /* Carousel Transition */
         .card-image-transition { transition: background-image 0.5s ease-in-out; }
+
+        /* Skeleton Animation */
+        .skeleton { background: #e5e7eb; background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        .dark .skeleton { background: #27272a; background: linear-gradient(90deg, #27272a 25%, #3f3f46 50%, #27272a 75%); }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-black transition-colors duration-300 text-slate-900 dark:text-zinc-100 overflow-x-hidden font-sans antialiased">
@@ -62,15 +67,15 @@
             <div class="text-center mb-8">
                 <img id="login-logo-trigger" src="https://imgur.com/2PNy5CS.png" alt="Logo Galvão Drones" class="mx-auto mb-5 h-20 w-auto drop-shadow-2xl select-none cursor-pointer active:scale-95 transition-transform">
                 <h1 class="text-2xl font-black text-brand-green dark:text-white uppercase tracking-tighter italic">Portal Galvão Drones</h1>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 font-medium tracking-wide">Gestão Técnica & Comercial DJI</p>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400 font-medium tracking-wide">Gestão Técnica & Comercial DJI</p>
             </div>
             <form onsubmit="Actions.login(event)" class="space-y-5">
                 <div>
-                    <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 pl-1">Acesso</label>
+                    <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2 pl-1">Acesso</label>
                     <input type="text" id="username-input" required class="w-full rounded-2xl border-0 bg-gray-100 dark:bg-zinc-800/80 px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange transition-all placeholder-gray-400" placeholder="Usuário">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 pl-1">Credencial</label>
+                    <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2 pl-1">Credencial</label>
                     <div class="relative">
                         <input type="password" id="password-input" required class="w-full rounded-2xl border-0 bg-gray-100 dark:bg-zinc-800/80 px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange transition-all placeholder-gray-400" placeholder="Senha">
                         <button type="button" onclick="UI.togglePassword()" class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-orange transition-colors p-2">
@@ -80,14 +85,15 @@
                 </div>
                 <div class="flex items-center gap-3 px-1">
                     <input type="checkbox" id="remember-me" class="w-5 h-5 rounded border-gray-300 text-brand-orange focus:ring-brand-orange cursor-pointer">
-                    <label for="remember-me" class="text-xs font-bold text-gray-500 uppercase tracking-wide cursor-pointer select-none">Manter conectado</label>
+                    <label for="remember-me" class="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide cursor-pointer select-none">Manter conectado</label>
                 </div>
                 <div class="space-y-3 pt-2">
-                    <button type="submit" class="w-full py-4 bg-brand-green hover:bg-emerald-900 text-white font-black rounded-2xl shadow-lg shadow-emerald-900/20 transition-all active:scale-[0.98] uppercase text-xs tracking-widest">Entrar no Sistema</button>
+                    <button type="submit" id="btn-login-submit" class="w-full py-4 bg-brand-green hover:bg-emerald-900 text-white font-black rounded-2xl shadow-lg shadow-emerald-900/20 transition-all active:scale-[0.98] uppercase text-xs tracking-widest disabled:opacity-50 disabled:cursor-not-allowed">Entrar no Sistema</button>
                     <button type="button" onclick="Actions.loginVisitor()" class="w-full py-4 bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-gray-600 dark:text-gray-300 font-bold rounded-2xl transition-all uppercase text-[10px] tracking-widest">Acesso Visitante</button>
                 </div>
             </form>
             <div id="error-message" class="hidden mt-4 p-3 bg-red-100 text-red-700 text-xs rounded-lg text-center font-bold"></div>
+            <div id="login-lockout-msg" class="hidden mt-4 text-center text-xs font-bold text-red-500 uppercase tracking-widest animate-pulse"></div>
         </div>
     </div>
 
@@ -141,7 +147,7 @@
             </header>
 
             <main id="main-content" class="p-4 sm:p-8 space-y-6">
-                <!-- Conteúdo Injetado via JS -->
+                <!-- Conteúdo Injetado via JS (Skeleton ou Real) -->
             </main>
         </div>
     </div>
@@ -167,22 +173,22 @@
                 <h3 id="modal-used-title" class="text-3xl font-black text-slate-800 dark:text-white uppercase italic tracking-tighter mb-4 leading-none"></h3>
                 
                 <div class="bg-gray-50 dark:bg-zinc-800/50 p-4 rounded-2xl mb-6">
-                    <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Saúde das Baterias (Ciclos)</h4>
+                    <h4 class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">Saúde das Baterias (Ciclos)</h4>
                     <div id="modal-used-batteries" class="flex flex-wrap gap-3"></div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-6">
                     <div class="bg-gray-50 dark:bg-zinc-800/50 p-4 rounded-2xl">
-                        <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Acessórios</h4>
+                        <h4 class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Acessórios</h4>
                         <ul id="modal-used-accessories" class="space-y-1 text-sm font-bold dark:text-white"></ul>
                     </div>
                     <div class="flex flex-col justify-end">
-                         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Valor de Investimento</p>
+                         <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Valor de Investimento</p>
                          <p id="modal-used-price" class="text-3xl font-black text-brand-orange italic tracking-tighter leading-none"></p>
                     </div>
                 </div>
 
-                <p id="modal-used-desc" class="text-sm text-gray-500 dark:text-gray-400 italic mb-6"></p>
+                <p id="modal-used-desc" class="text-sm text-gray-600 dark:text-gray-400 italic mb-6"></p>
                 
                 <div class="flex gap-3 items-start">
                     <button id="modal-used-share" class="flex-1 py-5 bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-200 dark:hover:bg-zinc-700 transition-all flex items-center justify-center gap-2">
@@ -271,6 +277,23 @@
             <div class="grid grid-cols-2 gap-3">
                 <button onclick="Admin.clearPass()" class="py-4 bg-red-100 dark:bg-red-900/20 text-red-600 rounded-2xl font-black uppercase text-[10px] tracking-widest">Limpar</button>
                 <button onclick="UI.closeModal('admin-login-modal')" class="py-4 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-2xl font-black uppercase text-[10px] tracking-widest">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-confirm-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[130] flex items-center justify-center p-4 fade-in">
+        <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
+            <div class="mb-4">
+                <div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto">
+                    <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </div>
+            </div>
+            <h3 class="text-xl font-black text-slate-800 dark:text-white uppercase italic tracking-tighter mb-2">Tem certeza?</h3>
+            <p class="text-[10px] text-gray-500 mb-6 font-bold uppercase tracking-widest">Essa ação não pode ser desfeita.</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="UI.closeModal('delete-confirm-modal')" class="py-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-500 active:scale-95 transition-all">Cancelar</button>
+                <button onclick="Admin.confirmDelete()" class="py-4 bg-red-500 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all hover:bg-red-600">Excluir</button>
             </div>
         </div>
     </div>
@@ -365,9 +388,13 @@
             adminEdit: { type: null, index: null },
             passwords: { admin: "", download: "" },
             intervals: [],
-            contactOption: 'availability', // For Used modal
-            newContactOption: 'availability', // For New modal
-            currentUsedIdx: null
+            contactOption: 'availability',
+            newContactOption: 'availability',
+            currentUsedIdx: null,
+            loginAttempts: 0,
+            isLocked: false,
+            lockoutTimer: null,
+            deleteTarget: null
         };
 
         // BYPASS LOGIC
@@ -436,7 +463,6 @@
             updateSidebarVisibility: () => {
                 const role = STATE.currentUser.role;
                 const isVisitor = role === 'Visitante';
-                const isTech = role === 'Técnico';
                 const isAdmin = role === 'Administrador';
 
                 ['sidebar-marketing-link', 'sidebar-perfil-link'].forEach(id => {
@@ -452,6 +478,20 @@
 
                 const adminBtn = document.getElementById('admin-link');
                 if(adminBtn) isAdmin ? adminBtn.classList.remove('hidden') : adminBtn.classList.add('hidden');
+            },
+
+            showLoading: () => {
+                const content = document.getElementById('main-content');
+                content.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
+                        <div class="h-64 bg-gray-200 dark:bg-zinc-800 rounded-[2.5rem]"></div>
+                        <div class="h-64 bg-gray-200 dark:bg-zinc-800 rounded-[2.5rem]"></div>
+                        <div class="h-64 bg-gray-200 dark:bg-zinc-800 rounded-[2.5rem]"></div>
+                        <div class="h-64 bg-gray-200 dark:bg-zinc-800 rounded-[2.5rem]"></div>
+                        <div class="h-64 bg-gray-200 dark:bg-zinc-800 rounded-[2.5rem]"></div>
+                        <div class="h-64 bg-gray-200 dark:bg-zinc-800 rounded-[2.5rem]"></div>
+                    </div>
+                `;
             },
 
             navigate: (pageId) => {
@@ -470,20 +510,26 @@
                 document.getElementById('page-title').textContent = titleMap[pageId] || 'Portal Galvão';
 
                 const content = document.getElementById('main-content');
-                content.innerHTML = ''; content.classList.remove('fade-in'); void content.offsetWidth; content.classList.add('fade-in');
-
-                // Clear Intervals when navigating
+                // Show Skeleton First
+                UI.showLoading();
+                
+                // Clear Intervals
                 STATE.intervals.forEach(clearInterval); STATE.intervals = [];
 
-                switch(pageId) {
-                    case 'dashboard': UI.renderDashboard(); break;
-                    case 'consultas': UI.renderCatalog(); break;
-                    case 'usados': UI.renderUsed(); break;
-                    case 'marketing': UI.renderMarketing(); break;
-                    case 'perfil': UI.renderProfile(); break;
-                    case 'sobre': UI.renderAbout(); break;
-                    case 'admin': UI.renderAdmin(); break;
-                }
+                // Simulate brief load for smoothness (or if data was fetching)
+                setTimeout(() => {
+                    content.innerHTML = ''; content.classList.remove('fade-in'); void content.offsetWidth; content.classList.add('fade-in');
+                    
+                    switch(pageId) {
+                        case 'dashboard': UI.renderDashboard(); break;
+                        case 'consultas': UI.renderCatalog(); break;
+                        case 'usados': UI.renderUsed(); break;
+                        case 'marketing': UI.renderMarketing(); break;
+                        case 'perfil': UI.renderProfile(); break;
+                        case 'sobre': UI.renderAbout(); break;
+                        case 'admin': UI.renderAdmin(); break;
+                    }
+                }, 300);
 
                 document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
                 const activeBtn = document.querySelector(`button[onclick="UI.navigate('${pageId}')"]`);
@@ -493,7 +539,6 @@
 
             renderDashboard: () => {
                 const isVisitor = STATE.currentUser.role === 'Visitante';
-                const isTech = STATE.currentUser.role === 'Técnico';
                 const isAdmin = STATE.currentUser.role === 'Administrador';
                 const html = `
                     <section class="space-y-6">
@@ -530,12 +575,12 @@
                         if (isVisitor) {
                             actions = `<button onclick="Actions.finalizeSale('${p.name}')" class="w-full mt-4 bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all tracking-widest italic">Consultar Disponibilidade</button>`;
                         } else {
-                            priceDisplay = `<div class="mt-4 pt-4 border-t dark:border-zinc-800"><p class="text-[8px] font-black text-gray-400 uppercase tracking-widest">Valor DJI</p><p class="text-2xl font-black text-brand-green dark:text-white italic tracking-tighter leading-none">${Utils.fmtBRL.format(priceVal)}</p></div>`;
+                            priceDisplay = `<div class="mt-4 pt-4 border-t dark:border-zinc-800"><p class="text-[8px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Valor DJI</p><p class="text-2xl font-black text-brand-green dark:text-white italic tracking-tighter leading-none">${Utils.fmtBRL.format(priceVal)}</p></div>`;
                             actions = `
                                 <div class="mt-4 flex flex-col gap-2">
                                     <button onclick="Actions.openAvailability('${p.name}')" class="w-full bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[9px] shadow-sm active:bg-emerald-900 tracking-widest">Entrar em Contato</button>
                                     <div class="flex gap-2">
-                                        <button onclick="Actions.openShareModal('${p.name}', ${priceVal})" class="w-full bg-gray-100 dark:bg-zinc-800 text-gray-500 py-3 rounded-2xl font-bold uppercase text-[9px] hover:text-brand-green active:scale-95 transition-all" title="Compartilhar">Compartilhar Card</button>
+                                        <button onclick="Actions.openShareModal('${p.name}', ${priceVal})" class="w-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-white py-3 rounded-2xl font-bold uppercase text-[9px] hover:text-brand-green active:scale-95 transition-all" title="Compartilhar">Compartilhar Card</button>
                                     </div>
                                 </div>`;
                         }
@@ -566,11 +611,9 @@
                         if(p.condition.includes('Open Box')) badgeClass = 'badge-openbox';
                         if(p.condition.includes('Revisado')) badgeClass = 'badge-revisado';
                         
-                        // Determinar imagem inicial (primeira do array ou string única)
                         const images = Array.isArray(p.images) ? p.images : [p.image];
                         const imgUrl = images[0] || '';
 
-                        // Ciclos da primeira bateria (se houver) para exibir no card
                         let firstCycle = 'N/A';
                         if(p.details && p.details.batteries && p.details.batteries.length > 0) {
                             firstCycle = p.details.batteries[0];
@@ -580,28 +623,21 @@
                         <div class="used-card bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm hover:shadow-xl transition-all text-left group relative" onclick="Actions.openUsedDetails(${idx})">
                             <div class="flex justify-between items-start mb-2">
                                 <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${badgeClass}">${p.condition}</span>
-                                <span class="text-[9px] font-bold text-gray-400 uppercase">Ciclos: ${firstCycle}</span>
+                                <span class="text-[9px] font-bold text-gray-500 dark:text-gray-400 uppercase">Ciclos: ${firstCycle}</span>
                             </div>
                             <h3 class="font-black text-slate-800 dark:text-white uppercase italic text-lg tracking-tight mb-2">${p.name}</h3>
-                            
-                            <!-- Imagem com Carrossel Automático -->
                             <div id="card-img-${idx}" class="w-full h-40 bg-gray-50 dark:bg-zinc-800 rounded-xl mb-4 bg-cover bg-center card-image-transition cursor-pointer" style="background-image: url('${imgUrl}');"></div>
-                            
-                            <p class="text-xs text-gray-500 dark:text-gray-400 italic mb-4 h-10 overflow-hidden line-clamp-2">${p.desc || 'Sem descrição.'}</p>
-                            
+                            <p class="text-xs text-gray-600 dark:text-gray-400 italic mb-4 h-10 overflow-hidden line-clamp-2">${p.desc || 'Sem descrição.'}</p>
                             <div class="pt-4 border-t dark:border-zinc-800">
-                                <p class="text-[8px] font-black text-gray-400 uppercase tracking-widest">Investimento</p>
+                                <p class="text-[8px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Investimento</p>
                                 <p class="text-2xl font-black text-brand-orange italic tracking-tighter leading-none">${Utils.fmtBRL.format(priceVal)}</p>
                             </div>
-                            
                             <button onclick="event.stopPropagation(); Actions.openUsedDetails(${idx})" class="w-full mt-4 bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all tracking-widest relative z-10 hover:bg-emerald-900">Entrar em Contato</button>
                         </div>`;
                     }).join('');
                     html += `</div>`;
                 }
                 document.getElementById('main-content').innerHTML = html;
-                
-                // Iniciar Carrosseis
                 Actions.startCarousels();
             },
 
@@ -621,7 +657,7 @@
                                 ${m.preview ? `<img src="${m.preview}" class="w-full h-full object-cover">` : '📂'}
                             </div>
                             <h4 class="font-bold text-xs uppercase text-slate-800 dark:text-white leading-tight mb-1">${m.title}</h4>
-                            <p class="text-[9px] text-gray-400 uppercase tracking-widest mb-3">${m.type}</p>
+                            <p class="text-[9px] text-gray-500 uppercase tracking-widest mb-3">${m.type}</p>
                             <button onclick="Actions.downloadAsset('${m.downloadUrl}')" class="w-full py-2 bg-brand-orange/10 text-brand-orange rounded-xl font-bold text-[9px] uppercase tracking-widest hover:bg-brand-orange hover:text-white transition-all">Baixar</button>
                         </div>
                     `).join('');
@@ -633,7 +669,6 @@
             renderProfile: () => {
                 const u = STATE.currentUser;
                 const bgClass = u.role === 'Técnico' ? 'bg-white' : 'bg-gray-100 dark:bg-zinc-800';
-                
                 const html = `
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="lg:col-span-1 bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 text-center shadow-sm">
@@ -647,15 +682,15 @@
                             <div class="mt-4"><h3 class="text-2xl font-black dark:text-white uppercase italic">${u.name}</h3><p class="text-brand-orange font-bold uppercase text-[10px] tracking-widest">${u.role}</p></div>
                         </div>
                         <div class="lg:col-span-2 bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm space-y-6 text-left">
-                             <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Nome Completo</label><input value="${u.name}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl font-bold text-sm dark:text-white" readonly></div>
-                             <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">WhatsApp</label><input value="${u.phone || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl font-bold text-sm dark:text-white" readonly></div>
+                             <div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Nome Completo</label><input value="${u.name}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl font-bold text-sm dark:text-white" readonly></div>
+                             <div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">WhatsApp</label><input value="${u.phone || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl font-bold text-sm dark:text-white" readonly></div>
                              <div class="pt-4 border-t dark:border-zinc-800">
                                 <h4 class="text-lg font-black text-brand-green uppercase italic mb-4">Informações Comerciais</h4>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">CNPJ</label><input value="48.429.698/0001-91" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div>
-                                    <div><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Sede</label><input value="Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div>
+                                    <div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">CNPJ</label><input value="48.429.698/0001-91" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div>
+                                    <div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Sede</label><input value="Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div>
                                 </div>
-                                <div class="mt-4"><label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Endereço</label><input value="Setor Aeroviário, Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div>
+                                <div class="mt-4"><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Endereço</label><input value="Setor Aeroviário, Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div>
                                 <button onclick="Actions.shareCommercial()" class="w-full mt-4 bg-brand-orange/10 text-brand-orange py-4 rounded-2xl font-black uppercase text-[10px] border border-brand-orange/20 hover:bg-brand-orange hover:text-white transition-all">Compartilhar Dados Comerciais</button>
                              </div>
                         </div>
@@ -682,17 +717,17 @@
                                     ${renderRow(item)}
                                     <div class="flex gap-1">
                                         <button onclick="Admin.openForm('${type}', ${idx})" class="text-blue-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button>
-                                        <button onclick="Admin.deleteItem('${type}', ${idx})" class="text-red-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9z"></path></svg></button>
+                                        <button onclick="Admin.askDelete('${type}', ${idx})" class="text-red-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9z"></path></svg></button>
                                     </div>
                                 </div>
                             `).join('')}
                         </div>
                     </div>`;
 
-                html += makeList("Equipe", STATE.users, 'user', u => `<div class="overflow-hidden"><p class="text-xs font-bold truncate dark:text-white">${u.name}</p><p class="text-[9px] text-gray-400 uppercase">${u.role}</p></div>`);
+                html += makeList("Equipe", STATE.users, 'user', u => `<div class="overflow-hidden"><p class="text-xs font-bold truncate dark:text-white">${u.name}</p><p class="text-[9px] text-gray-500 uppercase">${u.role}</p></div>`);
                 html += makeList("Novos", STATE.products, 'product', p => `<div class="overflow-hidden"><p class="text-xs font-bold truncate dark:text-white">${p.name}</p><p class="text-[9px] text-brand-green font-bold">${p.sell}</p></div>`);
                 html += makeList("Usados", STATE.usedProducts, 'used', u => `<div class="overflow-hidden"><p class="text-xs font-bold truncate dark:text-white">${u.name}</p><p class="text-[9px] text-brand-orange">${u.condition}</p></div>`);
-                html += makeList("Mkt", STATE.marketingAssets, 'marketing', m => `<div class="overflow-hidden"><p class="text-xs font-bold truncate dark:text-white">${m.title}</p><p class="text-[9px] text-gray-400">${m.type}</p></div>`);
+                html += makeList("Mkt", STATE.marketingAssets, 'marketing', m => `<div class="overflow-hidden"><p class="text-xs font-bold truncate dark:text-white">${m.title}</p><p class="text-[9px] text-gray-500">${m.type}</p></div>`);
                 
                 html += `</div>`;
                 document.getElementById('main-content').innerHTML = html;
@@ -737,8 +772,6 @@
                 const btnInit = document.getElementById(context === 'used' ? 'modal-used-init-contact' : 'modal-new-init-contact');
                 const optionsPanel = document.getElementById(context === 'used' ? 'modal-used-options' : 'modal-new-options');
                 
-                // For New products, the button is outside/not used same way, handled directly in openAvailability.
-                // But for Used, we toggle visibility.
                 if(context === 'used' && btnInit && optionsPanel) {
                     btnInit.classList.add('hidden');
                     optionsPanel.classList.remove('hidden');
@@ -748,10 +781,8 @@
 
             selectContactOption: (opt, context) => {
                 if(context === 'used') STATE.contactOption = opt;
-                else STATE.newContactOption = opt; // For 'new' items in availability modal
+                else STATE.newContactOption = opt; 
 
-                const suffix = context === 'used' ? '-used' : ''; 
-                
                 const btnAvail = document.getElementById(context === 'used' ? 'btn-opt-availability-used' : 'btn-new-availability');
                 const btnRes = document.getElementById(context === 'used' ? 'btn-opt-reserve-used' : 'btn-new-reserve');
                 const btnSale = document.getElementById('btn-new-sale'); 
@@ -759,11 +790,9 @@
                 const warning = document.getElementById(context === 'used' ? 'reservation-warning-used' : 'new-reservation-warning');
                 const form = document.getElementById(context === 'used' ? 'reservation-form-used' : 'reservation-form-new');
 
-                // Reset styles
                 const activeClasses = ['bg-white', 'dark:bg-zinc-700', 'shadow-sm', 'text-brand-green'];
                 const inactiveClasses = ['bg-gray-200', 'text-gray-500', 'dark:bg-zinc-800'];
 
-                // Helper to set active/inactive
                 const setActive = (btn) => {
                     if(!btn) return;
                     btn.classList.remove(...inactiveClasses);
@@ -792,18 +821,60 @@
                 }
             },
             
-            // Wrapper for New Context specifically
             selectNewContactOption: (opt) => UI.selectContactOption(opt, 'new')
         };
 
         const Actions = {
             login: async (e) => {
                 e.preventDefault();
+                
+                if (STATE.isLocked) {
+                    const timeLeft = Math.ceil((STATE.lockoutTimer - Date.now()) / 1000);
+                    if (timeLeft > 0) {
+                        UI.showError(`Muitas tentativas. Aguarde ${timeLeft}s.`);
+                        return;
+                    } else {
+                        STATE.isLocked = false;
+                        STATE.loginAttempts = 0;
+                        document.getElementById('btn-login-submit').disabled = false;
+                        document.getElementById('login-lockout-msg').classList.add('hidden');
+                    }
+                }
+
                 const uInput = document.getElementById('username-input').value;
                 const pInput = document.getElementById('password-input').value;
                 await Data.load();
                 const user = STATE.users.find(u => u.username === uInput && u.password === pInput);
-                if (user) { Actions.setupSession(user); } else { UI.showError("Credenciais Inválidas"); }
+                
+                if (user) { 
+                    STATE.loginAttempts = 0;
+                    Actions.setupSession(user); 
+                } else { 
+                    STATE.loginAttempts++;
+                    if (STATE.loginAttempts >= 3) {
+                        STATE.isLocked = true;
+                        STATE.lockoutTimer = Date.now() + 30000; // 30 seconds
+                        document.getElementById('btn-login-submit').disabled = true;
+                        
+                        const msgEl = document.getElementById('login-lockout-msg');
+                        msgEl.classList.remove('hidden');
+                        
+                        const interval = setInterval(() => {
+                            const timeLeft = Math.ceil((STATE.lockoutTimer - Date.now()) / 1000);
+                            if (timeLeft <= 0) {
+                                clearInterval(interval);
+                                STATE.isLocked = false;
+                                STATE.loginAttempts = 0;
+                                document.getElementById('btn-login-submit').disabled = false;
+                                msgEl.classList.add('hidden');
+                            } else {
+                                msgEl.textContent = `BLOQUEADO: ${timeLeft}s`;
+                            }
+                        }, 1000);
+                        msgEl.textContent = `BLOQUEADO: 30s`;
+                    }
+                    UI.showError("Credenciais Inválidas"); 
+                }
             },
 
             setupSession: (user) => {
@@ -912,7 +983,6 @@
                 
                 if(p.desc) msg += `📝 *Detalhes:* ${p.desc}\n\n`;
                 
-                // Nova Lógica de Fotos Múltiplas (Used)
                 if(includePhoto && images.length > 0) {
                     msg += `📸 *Fotos:*\n`;
                     images.forEach((img, i) => {
@@ -967,10 +1037,8 @@
                     return `<label class="vendedor-option block cursor-pointer group"><input type="checkbox" name="vend_chk" value="${k}" class="hidden"><div class="p-4 border-2 border-gray-100 dark:border-zinc-800 rounded-2xl flex justify-between transition-all"><div class="text-left"><span class="block font-black text-sm dark:text-white uppercase">${displayName}</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest">${subInfo}</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full"></div></div></label>`;
                 }).join('');
                 
-                // Initialize default options in modal
                 UI.selectNewContactOption('availability');
                 
-                // Limpa campos
                 document.getElementById('res-name-new').value = '';
                 document.getElementById('res-phone-new').value = '';
 
@@ -1032,8 +1100,6 @@
                 }
             },
 
-            // --- FUNÇÕES NOVAS DE SEMINOVOS ---
-            
             startCarousels: () => {
                 STATE.intervals.forEach(clearInterval); STATE.intervals = [];
                 STATE.usedProducts.forEach((p, idx) => {
@@ -1230,9 +1296,22 @@
                 UI.closeModal('admin-form-modal'); UI.renderAdmin();
             },
 
-            deleteItem: (type, index) => {
+            askDelete: (type, index) => {
+                STATE.deleteTarget = { type, index };
+                document.getElementById('delete-confirm-modal').classList.remove('hidden');
+            },
+
+            confirmDelete: () => {
+                const { type, index } = STATE.deleteTarget;
                 const targetArr = type==='user' ? STATE.users : type==='product' ? STATE.products : type==='used' ? STATE.usedProducts : STATE.marketingAssets;
-                targetArr.splice(index, 1); UI.renderAdmin();
+                targetArr.splice(index, 1);
+                UI.closeModal('delete-confirm-modal');
+                UI.renderAdmin();
+            },
+
+            deleteItem: (type, index) => {
+                // Legacy wrapper if needed, now redirecting to askDelete
+                Admin.askDelete(type, index);
             }
         };
 
