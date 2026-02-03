@@ -36,15 +36,12 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         #sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 35; backdrop-filter: blur(2px); }
         .sidebar-link.active { background-color: #EF7E13; color: white !important; box-shadow: 0 4px 15px rgba(239, 126, 19, 0.25); }
-        .vendedor-option input:checked + div { border-color: #EF7E13; background-color: rgba(239, 126, 19, 0.08); }
-        .keypad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .key-btn { height: 64px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; border-radius: 1.25rem; background: #f3f4f6; transition: all 0.15s; color: #1f2937; user-select: none; box-shadow: 0 2px 0 rgba(0,0,0,0.05); touch-action: manipulation; }
-        .dark .key-btn { background: #27272a; color: white; border: 1px solid rgba(255,255,255,0.05); }
-        .key-btn:active { transform: scale(0.95); background: #EF7E13; color: white; border-color: #EF7E13; }
-        .badge-seminovo { background-color: #dbeafe; color: #1e40af; }
-        .badge-openbox { background-color: #fce7f3; color: #be185d; }
-        .badge-revisado { background-color: #d1fae5; color: #065f46; }
         .card-image-transition { transition: background-image 0.5s ease-in-out; }
+        
+        /* Shimmer effect for buttons */
+        .btn-shimmer { position: relative; overflow: hidden; }
+        .btn-shimmer::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent); transform: rotate(45deg); transition: 0.5s; }
+        .btn-shimmer:hover::after { left: 120%; }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-black transition-colors duration-300 text-slate-900 dark:text-zinc-100 overflow-x-hidden font-sans antialiased">
@@ -99,6 +96,7 @@
                 <button onclick="UI.navigate('dashboard')" class="sidebar-link active flex items-center w-full px-6 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic text-left">Dashboard</button>
                 <button onclick="UI.navigate('consultas')" class="sidebar-link flex items-center w-full px-6 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic text-left">Catálogo Novos</button>
                 <button onclick="UI.navigate('usados')" class="sidebar-link flex items-center w-full px-6 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic text-left">Seminovos / Usados</button>
+                <button onclick="UI.navigate('marketing')" class="sidebar-link flex items-center w-full px-6 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic text-left">Marketing</button>
                 <button onclick="Utils.reload()" class="flex items-center w-full px-6 py-4 rounded-2xl font-bold text-red-500 transition-all text-sm uppercase tracking-tighter italic text-left mt-10">Sair</button>
             </nav>
         </aside>
@@ -118,7 +116,23 @@
         </div>
     </div>
 
-    <!-- MODAL SHARE (NOVO) -->
+    <!-- MODAL REDIRECIONAMENTO -->
+    <div id="redirect-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-xl z-[200] flex items-center justify-center p-4 fade-in">
+        <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-10 shadow-2xl border-2 border-brand-orange text-center">
+            <div class="mb-6 animate-bounce">
+                <svg class="w-16 h-16 text-brand-orange mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-2">Saindo do Portal</h3>
+            <p class="text-sm font-bold text-gray-500 dark:text-gray-400 mb-6 uppercase tracking-widest">Você será redirecionado para o Google Drive em instantes...</p>
+            <div class="w-full bg-gray-100 dark:bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-brand-orange h-full animate-[shimmer_2s_infinite]" style="width: 100%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SHARE -->
     <div id="share-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
             <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-4">Gerar Proposta</h3>
@@ -172,7 +186,7 @@
     <script>
         const CONFIG = {
             central: "6236360668",
-            installmentRates: { 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12 }
+            installmentRates: { 12: 12, 10: 10, 6: 6 }
         };
 
         const STATE = {
@@ -184,6 +198,11 @@
             usedProducts: [
                 { name: "DJI Mavic 2 Pro", price: "7.500,00", condition: "Seminovo", image: "https://imgur.com/2PNy5CS.png", desc: "Equipamento em excelente estado, revisado.", images: ["https://imgur.com/2PNy5CS.png"] }
             ],
+            driveLinks: {
+                postados: "https://drive.google.com/drive/folders/1-postados",
+                paraPostar: "https://drive.google.com/drive/folders/2-para-postar",
+                paraEditar: "https://drive.google.com/drive/folders/3-para-editar"
+            },
             currentUser: null,
             currentUsedIdx: null,
             currentShareProduct: { name: "", price: 0 },
@@ -210,6 +229,7 @@
                 if(pageId === 'dashboard') UI.renderDashboard();
                 if(pageId === 'consultas') UI.renderCatalog();
                 if(pageId === 'usados') UI.renderUsed();
+                if(pageId === 'marketing') UI.renderMarketing();
                 
                 document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
                 const btn = document.querySelector(`button[onclick="UI.navigate('${pageId}')"]`);
@@ -218,9 +238,58 @@
             },
             renderDashboard: () => {
                 document.getElementById('main-content').innerHTML = `
-                    <div class="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] shadow-sm border dark:border-zinc-800">
+                    <div class="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] shadow-sm border dark:border-zinc-800 animate-fade-in text-center sm:text-left">
                         <h2 class="text-3xl font-black italic tracking-tighter text-slate-800 dark:text-white uppercase">Olá, <span class="text-brand-orange">${STATE.currentUser?.name || 'Visitante'}</span>!</h2>
                         <p class="text-gray-500 mt-2 font-bold uppercase tracking-widest text-[10px]">Gestão Galvão Drones | Goiânia</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-brand-green p-8 rounded-[2rem] text-white">
+                            <h4 class="font-black italic uppercase text-lg mb-2">Novo em Estoque?</h4>
+                            <p class="text-xs font-medium opacity-80 mb-6">Consulte o catálogo e gere propostas rápidas.</p>
+                            <button onclick="UI.navigate('consultas')" class="px-6 py-3 bg-white text-brand-green rounded-xl font-black uppercase text-[10px] tracking-widest">Ver Catálogo</button>
+                        </div>
+                        <div class="bg-brand-orange p-8 rounded-[2rem] text-white">
+                            <h4 class="font-black italic uppercase text-lg mb-2">Redes Sociais</h4>
+                            <p class="text-xs font-medium opacity-80 mb-6">Acesse materiais de marketing agora.</p>
+                            <button onclick="UI.navigate('marketing')" class="px-6 py-3 bg-white text-brand-orange rounded-xl font-black uppercase text-[10px] tracking-widest">Abrir Marketing</button>
+                        </div>
+                    </div>
+                `;
+            },
+            renderMarketing: () => {
+                document.getElementById('main-content').innerHTML = `
+                    <div class="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] shadow-sm border dark:border-zinc-800 mb-8 animate-fade-in">
+                        <h2 class="text-2xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter">Central de Marketing</h2>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Galvão Drones | Drive de Produção</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
+                        <!-- Botão Postados -->
+                        <button onclick="Actions.openDrive('postados')" class="group p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border-2 border-transparent hover:border-brand-green shadow-xl transition-all text-center flex flex-col items-center btn-shimmer">
+                            <div class="w-20 h-20 bg-emerald-50 dark:bg-emerald-900/20 rounded-3xl flex items-center justify-center text-brand-green mb-4">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span class="font-black uppercase text-brand-green text-sm tracking-tighter italic">Arquivos Postados</span>
+                            <span class="text-[9px] font-bold text-gray-400 uppercase mt-2">Histórico de Redes Sociais</span>
+                        </button>
+
+                        <!-- Botão Para Postar -->
+                        <button onclick="Actions.openDrive('paraPostar')" class="group p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border-2 border-transparent hover:border-brand-orange shadow-xl transition-all text-center flex flex-col items-center btn-shimmer">
+                            <div class="w-20 h-20 bg-orange-50 dark:bg-orange-900/20 rounded-3xl flex items-center justify-center text-brand-orange mb-4">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            </div>
+                            <span class="font-black uppercase text-brand-orange text-sm tracking-tighter italic">Prontos para Postar</span>
+                            <span class="text-[9px] font-bold text-gray-400 uppercase mt-2">Novos Lançamentos</span>
+                        </button>
+
+                        <!-- Botão Para Editar -->
+                        <button onclick="Actions.openDrive('paraEditar')" class="group p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border-2 border-transparent hover:border-slate-800 shadow-xl transition-all text-center flex flex-col items-center btn-shimmer">
+                            <div class="w-20 h-20 bg-slate-50 dark:bg-slate-800/50 rounded-3xl flex items-center justify-center text-slate-800 dark:text-white mb-4">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            </div>
+                            <span class="font-black uppercase text-slate-800 dark:text-white text-sm tracking-tighter italic">Em Edição</span>
+                            <span class="text-[9px] font-bold text-gray-400 uppercase mt-2">Produção em Andamento</span>
+                        </button>
                     </div>
                 `;
             },
@@ -229,7 +298,7 @@
                 STATE.products.forEach(p => {
                     const price = Utils.cleanCurrency(p.sell);
                     html += `
-                        <div class="bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm text-left">
+                        <div class="bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm text-left animate-fade-in">
                             <h3 class="font-black text-brand-green dark:text-white uppercase italic text-xs">${p.name}</h3>
                             <div class="mt-4 pt-4 border-t dark:border-zinc-800">
                                 <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest">Valor DJI</p>
@@ -247,7 +316,7 @@
                 STATE.usedProducts.forEach((p, idx) => {
                     const price = Utils.cleanCurrency(p.price);
                     html += `
-                        <div class="bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm text-left" onclick="Actions.openUsedDetails(${idx})">
+                        <div class="bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm text-left animate-fade-in" onclick="Actions.openUsedDetails(${idx})">
                             <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest badge-seminovo mb-2 inline-block">${p.condition}</span>
                             <h3 class="font-black text-slate-800 dark:text-white uppercase italic text-lg mb-2">${p.name}</h3>
                             <div class="w-full h-40 bg-gray-50 rounded-xl mb-4 bg-cover bg-center" style="background-image: url('${p.image}')"></div>
@@ -296,6 +365,18 @@
                 document.getElementById('login-view').classList.add('hidden');
                 document.getElementById('dashboard-view').classList.remove('hidden');
                 UI.init();
+            },
+            openDrive: (key) => {
+                const link = STATE.driveLinks[key];
+                if(!link) return;
+                
+                const modal = document.getElementById('redirect-modal');
+                modal.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    window.open(link, '_blank');
+                    modal.classList.add('hidden');
+                }, 1800);
             },
             openShareModal: (name, price) => {
                 STATE.currentShareProduct = { name, price };
@@ -352,7 +433,24 @@
             }
         };
 
-        window.onload = UI.init;
+        const Data = {
+            load: async () => {
+                try {
+                    const res = await fetch('drive.json');
+                    if(res.ok) {
+                        const data = await res.json();
+                        if(data.links) STATE.driveLinks = data.links;
+                    }
+                } catch(e) {
+                    console.log("Usando links de drive padrão.");
+                }
+            }
+        }
+
+        window.onload = () => {
+            Data.load();
+            UI.init();
+        };
     </script>
 </body>
 </html>
