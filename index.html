@@ -55,6 +55,10 @@
         .skeleton { background: #e5e7eb; background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
         .dark .skeleton { background: #27272a; background: linear-gradient(90deg, #27272a 25%, #3f3f46 50%, #27272a 75%); }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* Custom Checkbox for Marketing */
+        .mkt-checkbox:checked + div { border-color: #EF7E13; background-color: rgba(239, 126, 19, 0.1); }
+        .mkt-checkbox:checked + div .check-icon { display: block; }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-black transition-colors duration-300 text-slate-900 dark:text-zinc-100 overflow-x-hidden font-sans antialiased">
@@ -204,7 +208,7 @@
                     </div>
                     <div class="flex flex-col justify-end">
                          <p class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Valor de Investimento</p>
-                         <p id="modal-used-price" class="text-3xl font-black text-brand-orange italic tracking-tighter leading-none"></p>
+                         <p id="modal-used-price" class="text-3xl font-black italic tracking-tighter leading-none"></p>
                     </div>
                 </div>
 
@@ -624,6 +628,7 @@
                     html += `<div class="p-10 text-center bg-white dark:bg-zinc-900 rounded-[2.5rem] border dark:border-zinc-800"><p class="text-brand-orange font-black uppercase tracking-widest text-xs">Nenhum Seminovo Disponível</p></div>`;
                 } else {
                     html += `<div id="grid-used" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">`;
+                    const isVisitor = STATE.currentUser.role === 'Visitante';
                     html += STATE.usedProducts.map((p, idx) => {
                         const priceVal = Utils.cleanCurrency(p.price);
                         let badgeClass = 'bg-gray-100 text-gray-600';
@@ -639,6 +644,20 @@
                             firstCycle = p.details.batteries[0];
                         } else if (p.cycles) { firstCycle = p.cycles; }
 
+                        // Lógica de Preço Condicional (Novo)
+                        let priceHtml = '';
+                        if (isVisitor) {
+                             priceHtml = `<div class="pt-4 border-t dark:border-zinc-800">
+                                <p class="text-[8px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Investimento</p>
+                                <p class="text-xl font-black text-gray-400 italic tracking-tighter leading-none">CONSULTE</p>
+                            </div>`;
+                        } else {
+                             priceHtml = `<div class="pt-4 border-t dark:border-zinc-800">
+                                <p class="text-[8px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Investimento</p>
+                                <p class="text-2xl font-black text-brand-orange italic tracking-tighter leading-none">${Utils.fmtBRL.format(priceVal)}</p>
+                            </div>`;
+                        }
+
                         return `
                         <div class="used-card bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm hover:shadow-xl transition-all text-left group relative" onclick="Actions.openUsedDetails(${idx})">
                             <div class="flex justify-between items-start mb-2">
@@ -648,10 +667,9 @@
                             <h3 class="font-black text-slate-800 dark:text-white uppercase italic text-lg tracking-tight mb-2">${p.name}</h3>
                             <div id="card-img-${idx}" class="w-full h-40 bg-gray-50 dark:bg-zinc-800 rounded-xl mb-4 bg-cover bg-center card-image-transition cursor-pointer" style="background-image: url('${imgUrl}');"></div>
                             <p class="text-xs text-gray-600 dark:text-gray-400 italic mb-4 h-10 overflow-hidden line-clamp-2">${p.desc || 'Sem descrição.'}</p>
-                            <div class="pt-4 border-t dark:border-zinc-800">
-                                <p class="text-[8px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Investimento</p>
-                                <p class="text-2xl font-black text-brand-orange italic tracking-tighter leading-none">${Utils.fmtBRL.format(priceVal)}</p>
-                            </div>
+                            
+                            ${priceHtml}
+                            
                             <button onclick="event.stopPropagation(); Actions.openUsedDetails(${idx})" class="w-full mt-4 bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all tracking-widest relative z-10 hover:bg-emerald-900">Entrar em Contato</button>
                         </div>`;
                     }).join('');
@@ -1031,7 +1049,8 @@
 
             shareUsedCard: (idx) => {
                 const p = STATE.usedProducts[idx];
-                const priceFormatted = Utils.fmtBRL.format(Utils.cleanCurrency(p.price));
+                const isVisitor = STATE.currentUser.role === 'Visitante';
+                const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(Utils.cleanCurrency(p.price));
                 const details = p.details || {};
                 const check = "✅"; const uncheck = "❌";
                 const images = Array.isArray(p.images) ? p.images : [p.image];
@@ -1073,7 +1092,8 @@
             proceedContact: () => {
                 if(STATE.currentUsedIdx === null) return;
                 const p = STATE.usedProducts[STATE.currentUsedIdx];
-                const priceFormatted = Utils.fmtBRL.format(Utils.cleanCurrency(p.price));
+                const isVisitor = STATE.currentUser.role === 'Visitante';
+                const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(Utils.cleanCurrency(p.price));
                 
                 let msg = "";
                 if(STATE.contactOption === 'reserve') {
@@ -1196,6 +1216,7 @@
                 const p = STATE.usedProducts[idx];
                 const images = Array.isArray(p.images) ? p.images : [p.image];
                 const details = p.details || {};
+                const isVisitor = STATE.currentUser.role === 'Visitante';
 
                 // Popula Imagem Principal e Thumbs
                 const mainImg = document.getElementById('modal-used-main-img');
@@ -1211,8 +1232,19 @@
 
                 // Textos Básicos
                 document.getElementById('modal-used-title').textContent = p.name;
-                // Formatação BRL rigorosa
-                document.getElementById('modal-used-price').textContent = Utils.fmtBRL.format(Utils.cleanCurrency(p.price));
+                
+                // Formatação BRL Condicional
+                const priceEl = document.getElementById('modal-used-price');
+                if (isVisitor) {
+                    priceEl.textContent = "CONSULTE";
+                    priceEl.classList.remove('text-3xl', 'text-brand-orange');
+                    priceEl.classList.add('text-2xl', 'text-gray-400');
+                } else {
+                    priceEl.textContent = Utils.fmtBRL.format(Utils.cleanCurrency(p.price));
+                    priceEl.classList.add('text-3xl', 'text-brand-orange');
+                    priceEl.classList.remove('text-2xl', 'text-gray-400');
+                }
+
                 document.getElementById('modal-used-desc').textContent = p.desc;
                 
                 const badge = document.getElementById('modal-used-badge');
