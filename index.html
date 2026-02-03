@@ -55,6 +55,10 @@
         .skeleton { background: #e5e7eb; background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
         .dark .skeleton { background: #27272a; background: linear-gradient(90deg, #27272a 25%, #3f3f46 50%, #27272a 75%); }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* Custom Checkbox for Marketing */
+        .mkt-checkbox:checked + div { border-color: #EF7E13; background-color: rgba(239, 126, 19, 0.1); }
+        .mkt-checkbox:checked + div .check-icon { display: block; }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-black transition-colors duration-300 text-slate-900 dark:text-zinc-100 overflow-x-hidden font-sans antialiased">
@@ -153,6 +157,26 @@
     </div>
 
     <!-- MODAIS E POPUPS -->
+
+    <!-- Marketing Variations Modal (NEW) -->
+    <div id="marketing-modal" ondblclick="if(event.target === this) UI.closeModal('marketing-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4 fade-in">
+        <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-lg p-8 shadow-2xl border dark:border-white/10 text-center flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="mkt-modal-title" class="text-xl font-black text-brand-orange uppercase italic tracking-tighter text-left">Downloads</h3>
+                <button onclick="UI.closeModal('marketing-modal')" class="text-2xl text-gray-400 hover:text-red-500">×</button>
+            </div>
+            
+            <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-6 text-left">Selecione as versões para baixar:</p>
+            
+            <div id="mkt-variations-list" class="flex-1 overflow-y-auto hide-scrollbar space-y-3 mb-6">
+                <!-- Variações injetadas aqui -->
+            </div>
+
+            <button onclick="Actions.downloadSelectedMarketing()" class="w-full py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 hover:bg-emerald-900 transition-all">
+                Baixar Selecionados
+            </button>
+        </div>
+    </div>
 
     <!-- Details Modal (SEMINOVOS) -->
     <div id="used-details-modal" ondblclick="if(event.target === this) UI.closeModal('used-details-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4 fade-in">
@@ -651,16 +675,21 @@
                     html += `<div class="p-10 text-center bg-white dark:bg-zinc-900 rounded-[2.5rem] border dark:border-zinc-800"><p class="text-gray-400 font-bold uppercase text-xs">Nenhum material disponível</p></div>`;
                 } else {
                     html += `<div class="grid grid-cols-2 md:grid-cols-4 gap-4">`;
-                    html += STATE.marketingAssets.map(m => `
-                        <div class="bg-white dark:bg-zinc-900 p-4 rounded-[2rem] border dark:border-zinc-800 flex flex-col items-center text-center shadow-sm hover:shadow-lg transition-all">
-                            <div class="w-20 h-20 mb-3 rounded-full bg-gray-50 dark:bg-zinc-800 flex items-center justify-center text-3xl overflow-hidden">
-                                ${m.preview ? `<img src="${m.preview}" class="w-full h-full object-cover">` : '📂'}
+                    html += STATE.marketingAssets.map((m, index) => {
+                        // Use preview or a generic folder icon
+                        const preview = m.preview || m.variations?.[0]?.url || 'https://imgur.com/2PNy5CS.png'; // Fallback
+                        
+                        return `
+                        <div class="bg-white dark:bg-zinc-900 p-4 rounded-[2rem] border dark:border-zinc-800 flex flex-col items-center text-center shadow-sm hover:shadow-lg transition-all cursor-pointer" onclick="Actions.openMarketingModal(${index})">
+                            <div class="w-20 h-20 mb-3 rounded-full bg-gray-50 dark:bg-zinc-800 flex items-center justify-center text-3xl overflow-hidden border-2 border-transparent hover:border-brand-orange transition-colors">
+                                <img src="${preview}" class="w-full h-full object-cover">
                             </div>
                             <h4 class="font-bold text-xs uppercase text-slate-800 dark:text-white leading-tight mb-1">${m.title}</h4>
                             <p class="text-[9px] text-gray-500 uppercase tracking-widest mb-3">${m.type}</p>
-                            <button onclick="Actions.downloadAsset('${m.downloadUrl}')" class="w-full py-2 bg-brand-orange/10 text-brand-orange rounded-xl font-bold text-[9px] uppercase tracking-widest hover:bg-brand-orange hover:text-white transition-all">Baixar</button>
+                            <button class="w-full py-2 bg-brand-orange/10 text-brand-orange rounded-xl font-bold text-[9px] uppercase tracking-widest hover:bg-brand-orange hover:text-white transition-all">Ver Variações</button>
                         </div>
-                    `).join('');
+                    `;
+                    }).join('');
                     html += `</div>`;
                 }
                 document.getElementById('main-content').innerHTML = html;
@@ -919,6 +948,45 @@
                 } else {
                     alert('Arquivo não encontrado no servidor.');
                 }
+            },
+
+            openMarketingModal: (idx) => {
+                const asset = STATE.marketingAssets[idx];
+                document.getElementById('mkt-modal-title').textContent = asset.title;
+                
+                const variations = asset.variations || [{name: 'Padrão', url: asset.downloadUrl, preview: asset.preview}];
+                
+                const list = document.getElementById('mkt-variations-list');
+                list.innerHTML = variations.map((v, i) => `
+                    <label class="mkt-checkbox flex items-center p-3 rounded-xl border dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-700 transition-all">
+                        <input type="checkbox" value="${v.url}" class="hidden mkt-checkbox-input">
+                        <div class="w-12 h-12 bg-white dark:bg-zinc-600 rounded-lg flex items-center justify-center mr-4 border dark:border-zinc-600">
+                            <img src="${v.preview || asset.preview || 'https://imgur.com/2PNy5CS.png'}" class="w-8 h-8 object-contain">
+                        </div>
+                        <span class="flex-1 text-xs font-bold text-slate-700 dark:text-white uppercase">${v.name}</span>
+                        <div class="w-6 h-6 rounded-full border-2 border-gray-300 dark:border-zinc-500 flex items-center justify-center transition-colors">
+                            <svg class="check-icon w-4 h-4 text-brand-orange hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                    </label>
+                `).join('');
+                
+                document.getElementById('marketing-modal').classList.remove('hidden');
+            },
+
+            downloadSelectedMarketing: () => {
+                const checked = document.querySelectorAll('.mkt-checkbox-input:checked');
+                if(checked.length === 0) {
+                    alert("Selecione pelo menos uma opção para baixar.");
+                    return;
+                }
+                
+                checked.forEach((cb, i) => {
+                    setTimeout(() => {
+                        window.open(cb.value, '_blank');
+                    }, i * 1000); // Stagger downloads slightly to avoid pop-up blockers
+                });
+                
+                UI.closeModal('marketing-modal');
             },
 
             openShareModal: (name, price) => {
@@ -1245,7 +1313,8 @@
                         <textarea id="af-desc" placeholder="Descrição Geral" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${d.desc}</textarea>
                     `;
                 } else if (type === 'marketing') {
-                    const d = index!==null ? STATE.marketingAssets[index] : {title:'',type:'Logo',preview:'',downloadUrl:''};
+                    const d = index!==null ? STATE.marketingAssets[index] : {title:'',type:'Logo',preview:'',variations:[]};
+                    const varStr = d.variations ? d.variations.map(v => `${v.name}|${v.url}`).join('\n') : '';
                     html = `
                         <input id="af-title" value="${d.title}" placeholder="Título (Ex: Logo Vetor)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
                         <select id="af-type" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3 bg-white dark:bg-zinc-900">
@@ -1254,7 +1323,7 @@
                             <option value="Institucional" ${d.type === 'Institucional' ? 'selected' : ''}>Institucional</option>
                         </select>
                         <input id="af-preview" value="${d.preview}" placeholder="URL Preview (Imagem)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
-                        <input id="af-download" value="${d.downloadUrl}" placeholder="URL Download (Arquivo)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">
+                        <textarea id="af-variations" placeholder="Variações (Nome|URL por linha)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${varStr}</textarea>
                     `;
                 }
 
@@ -1288,7 +1357,18 @@
                         desc: document.getElementById('af-desc').value 
                     };
                 } else if (t==='marketing') {
-                    newItem = { title: document.getElementById('af-title').value, type: document.getElementById('af-type').value, preview: document.getElementById('af-preview').value, downloadUrl: document.getElementById('af-download').value };
+                    const varStr = document.getElementById('af-variations').value;
+                    const variations = varStr.split('\n').map(line => {
+                        const [name, url] = line.split('|');
+                        return name && url ? { name: name.trim(), url: url.trim() } : null;
+                    }).filter(v => v);
+
+                    newItem = { 
+                        title: document.getElementById('af-title').value, 
+                        type: document.getElementById('af-type').value, 
+                        preview: document.getElementById('af-preview').value, 
+                        variations: variations
+                    };
                 }
 
                 const targetArr = t==='user' ? STATE.users : t==='product' ? STATE.products : t==='used' ? STATE.usedProducts : STATE.marketingAssets;
@@ -1329,7 +1409,17 @@
                     if(u?.users) STATE.users = u.users;
                     if(p?.products) STATE.products = p.products;
                     if(us?.usedProducts) STATE.usedProducts = us.usedProducts; else STATE.usedProducts = [];
-                    if(m?.marketingAssets) STATE.marketingAssets = m.marketingAssets; else STATE.marketingAssets = [];
+                    // Ensure fallback has variations structure if simple structure was loaded or failed
+                    if(m?.marketingAssets) {
+                        STATE.marketingAssets = m.marketingAssets.map(asset => {
+                            if(!asset.variations && asset.downloadUrl) {
+                                return { ...asset, variations: [{name: 'Padrão', url: asset.downloadUrl}] };
+                            }
+                            return asset;
+                        });
+                    } else { 
+                        STATE.marketingAssets = []; 
+                    }
                     if(pass) STATE.passwords = pass;
                 } catch(e) { console.log("Dados base vazios."); }
             },
