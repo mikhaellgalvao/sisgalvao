@@ -3,7 +3,7 @@
     "usedProducts": [
         {
             "name": "Mavic 3 Classic",
-            "price": "10.500,00",
+            "price": "10.500",
             "condition": "Seminovo",
             "cycles": 12,
             "image": "https://imgur.com/2PNy5CS.png",
@@ -11,7 +11,7 @@
         },
         {
             "name": "Mini 3 Pro",
-            "price": "4.200,00",
+            "price": "4.200",
             "condition": "Open Box",
             "cycles": 0,
             "image": "https://imgur.com/2PNy5CS.png",
@@ -19,7 +19,7 @@
         },
         {
             "name": "Air 2S",
-            "price": "5.800,00",
+            "price": "5.800",
             "condition": "Revisado",
             "cycles": 45,
             "image": "https://imgur.com/2PNy5CS.png",
