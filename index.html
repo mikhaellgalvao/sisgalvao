@@ -29,33 +29,22 @@
         body { -webkit-tap-highlight-color: transparent; }
         .fade-in { animation: fadeIn 0.2s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        
         .glass-card { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); }
         .dark .glass-card { background: rgba(24, 24, 27, 0.98); }
-        
         .profile-avatar-div { background-size: cover !important; background-position: center !important; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
         #sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 35; backdrop-filter: blur(2px); }
         .sidebar-link.active { background-color: #EF7E13; color: white !important; box-shadow: 0 4px 15px rgba(239, 126, 19, 0.25); }
         .vendedor-option input:checked + div { border-color: #EF7E13; background-color: rgba(239, 126, 19, 0.08); }
-        
-        /* Keypad Styles */
         .keypad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         .key-btn { height: 64px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; border-radius: 1.25rem; background: #f3f4f6; transition: all 0.15s; color: #1f2937; user-select: none; box-shadow: 0 2px 0 rgba(0,0,0,0.05); touch-action: manipulation; }
         .dark .key-btn { background: #27272a; color: white; border: 1px solid rgba(255,255,255,0.05); }
         .key-btn:active { transform: scale(0.95); background: #EF7E13; color: white; border-color: #EF7E13; }
-        
-        /* Badge Styles for Condition */
         .badge-seminovo { background-color: #dbeafe; color: #1e40af; }
         .badge-openbox { background-color: #fce7f3; color: #be185d; }
         .badge-revisado { background-color: #d1fae5; color: #065f46; }
-
-        /* Carousel Transition */
         .card-image-transition { transition: background-image 0.5s ease-in-out; }
-
-        /* Custom Checkbox for Marketing */
         .mkt-checkbox-input:checked ~ div.peer-checked\:border-brand-orange { border-color: #EF7E13; background-color: rgba(239, 126, 19, 0.05); }
         .mkt-checkbox-input:checked ~ div .check-icon { display: block; }
     </style>
@@ -571,6 +560,7 @@
                         let firstCycle = 'N/A';
                         if(p.details && p.details.batteries && p.details.batteries.length > 0) { firstCycle = p.details.batteries[0]; } else if (p.cycles) { firstCycle = p.cycles; }
 
+                        // Lógica de Preço Condicional (Novo)
                         let priceHtml = '';
                         if (isVisitor) {
                              priceHtml = `<div class="pt-4 border-t dark:border-zinc-800"><p class="text-[8px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Investimento</p><p class="text-xl font-black text-gray-400 italic tracking-tighter leading-none">CONSULTE</p></div>`;
@@ -982,7 +972,7 @@
                 msg += `🚁 *Modelo:* ${p.name}\n`;
                 msg += `💎 *Condição:* ${p.condition}\n`;
                 msg += `💰 *Investimento:* ${priceFormatted}\n`;
-                if(signalMsg) msg += signalMsg; // Adiciona o sinal se calculado
+                if(signalMsg) msg += signalMsg; 
                 msg += `\n`;
                 
                 msg += `🔋 *Status Baterias (Ciclos):*\n`;
@@ -1016,7 +1006,8 @@
                 if(STATE.currentUsedIdx === null) return;
                 const p = STATE.usedProducts[STATE.currentUsedIdx];
                 const isVisitor = STATE.currentUser.role === 'Visitante';
-                const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(Utils.cleanCurrency(p.price));
+                const priceVal = Utils.cleanCurrency(p.price);
+                const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(priceVal);
                 
                 let msg = "";
                 if(STATE.contactOption === 'reserve') {
@@ -1025,7 +1016,11 @@
                     
                     if(!cName || !cPhone) { alert('Por favor, preencha o Nome e Telefone do cliente para a reserva.'); return; }
 
-                    msg = `🛑 *SOLICITAÇÃO DE RESERVA*\n\n*Modelo:* ${p.name} (${p.condition})\n*Valor:* ${priceFormatted}\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}\n\n⚠ *Ciente:* Sinal de30% obrigatório e sem devolução em caso de desistência.`;
+                    // CALCULO SINAL NO WHATSAPP DA CENTRAL
+                    const signalVal = priceVal * 0.30;
+                    const signalFormatted = Utils.fmtBRL.format(signalVal);
+
+                    msg = `🛑 *SOLICITAÇÃO DE RESERVA*\n\n*Modelo:* ${p.name} (${p.condition})\n*Valor Total:* ${priceFormatted}\n\n📉 *Sinal Obrigatório (30%):* ${signalFormatted}\n(Valor abatido no total, não reembolsável em caso de desistência)\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}`;
                 } else {
                     msg = `🔍 *CONSULTA DE DISPONIBILIDADE*\n\n*Modelo:* ${p.name} (${p.condition})\n*Valor:* ${priceFormatted}\n\nGostaria de saber se este item ainda está disponível.`;
                 }
@@ -1054,8 +1049,10 @@
                 }).join('');
                 
                 UI.selectNewContactOption('availability');
+                
                 document.getElementById('res-name-new').value = '';
                 document.getElementById('res-phone-new').value = '';
+
                 document.getElementById('availability-modal').classList.remove('hidden');
             },
 
