@@ -304,7 +304,7 @@
         </div>
     </div>
     
-    <!-- Admin Form Modal (Preserved) -->
+    <!-- Admin Form Modal -->
     <div id="admin-form-modal" ondblclick="if(event.target === this) UI.closeModal('admin-form-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-lg p-8 shadow-2xl border dark:border-white/10 text-left">
             <div class="flex justify-between items-center mb-6">
@@ -364,7 +364,6 @@
             driveLinks: {}
         };
 
-        // BYPASS LOGIC
         const Bypass = {
             clicks: 0, timer: null, buffer: "", targetCode: "0639",
             init: () => {
@@ -408,7 +407,11 @@
 
         const Utils = {
             fmtBRL: new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }),
-            cleanCurrency: (val) => parseFloat((val || "0").toString().replace(/\./g, '').replace(',', '.')),
+            cleanCurrency: (val) => {
+                if(typeof val === 'number') return val;
+                if(typeof val === 'string' && val.includes(',')) return parseFloat(val.replace(/\./g, '').replace(',', '.'));
+                return parseFloat(val || "0");
+            },
             toggleTheme: () => document.documentElement.classList.toggle('dark'),
             reload: () => location.reload()
         };
@@ -560,7 +563,6 @@
                         let firstCycle = 'N/A';
                         if(p.details && p.details.batteries && p.details.batteries.length > 0) { firstCycle = p.details.batteries[0]; } else if (p.cycles) { firstCycle = p.cycles; }
 
-                        // Lógica de Preço Condicional
                         let priceHtml = '';
                         if (isVisitor) {
                              priceHtml = `<div class="pt-4 border-t dark:border-zinc-800"><p class="text-[8px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Investimento</p><p class="text-xl font-black text-gray-400 italic tracking-tighter leading-none">CONSULTE</p></div>`;
@@ -927,7 +929,6 @@
                     if (!isNaN(disc) && disc > 0) {
                         if(disc > 10) disc = 10;
                         const finalPrice = p.price * (1 - (disc/100));
-                        // Destaque solicitado para o valor com desconto
                         detailsText = `\n\n🔥 *Condição à Vista:* ${disc}% OFF\n✅ *VALOR COM DESCONTO:* *${Utils.fmtBRL.format(finalPrice)}*`;
                     }
                 } else {
@@ -938,7 +939,6 @@
                     }
                 }
 
-                // Mensagem do brinde sempre incluída
                 let finalMessage = `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor:* ${Utils.fmtBRL.format(p.price)}${detailsText}\n\n🎁 *Bônus Especial:*\nLembrando, ao comprar um Drone, você ganha uma *Aula de Pilotagem* de brinde e já sai sabendo pilotar seu drone! 🚀`;
                 
                 window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
@@ -949,11 +949,9 @@
                 const p = STATE.usedProducts[idx];
                 const isVisitor = STATE.currentUser.role === 'Visitante';
                 
-                // Valores
                 const priceVal = Utils.cleanCurrency(p.price);
                 const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(priceVal);
                 
-                // Cálculo do Sinal (30%)
                 let signalMsg = "";
                 if (!isVisitor) {
                     const signalVal = priceVal * 0.30;
@@ -971,7 +969,7 @@
                 msg += `🚁 *Modelo:* ${p.name}\n`;
                 msg += `💎 *Condição:* ${p.condition}\n`;
                 msg += `💰 *Investimento:* ${priceFormatted}\n`;
-                if(signalMsg) msg += signalMsg; // Adiciona o sinal se calculado
+                if(signalMsg) msg += signalMsg; 
                 msg += `\n`;
                 
                 msg += `🔋 *Status Baterias (Ciclos):*\n`;
@@ -1001,6 +999,86 @@
                 }
             },
 
+            openUsedDetails: (idx) => {
+                STATE.currentUsedIdx = idx; // Store current index
+                const p = STATE.usedProducts[idx];
+                const images = Array.isArray(p.images) ? p.images : [p.image];
+                const details = p.details || {};
+                const isVisitor = STATE.currentUser.role === 'Visitante';
+
+                // Popula Imagem Principal e Thumbs
+                const mainImg = document.getElementById('modal-used-main-img');
+                mainImg.style.backgroundImage = `url('${images[0]}')`;
+                
+                const thumbsContainer = document.getElementById('modal-used-thumbnails');
+                thumbsContainer.innerHTML = images.map(img => `
+                    <div class="w-20 h-20 flex-shrink-0 bg-gray-100 dark:bg-zinc-800 rounded-xl bg-cover bg-center border-2 border-transparent hover:border-brand-orange cursor-pointer transition-all" 
+                         style="background-image: url('${img}')"
+                         onclick="document.getElementById('modal-used-main-img').style.backgroundImage = 'url(\\'${img}\\')'">
+                    </div>
+                `).join('');
+
+                // Textos Básicos
+                document.getElementById('modal-used-title').textContent = p.name;
+                
+                // Formatação BRL Condicional
+                const priceEl = document.getElementById('modal-used-price');
+                if (isVisitor) {
+                    priceEl.textContent = "CONSULTE";
+                    priceEl.classList.remove('text-3xl', 'text-brand-orange');
+                    priceEl.classList.add('text-2xl', 'text-gray-400');
+                } else {
+                    priceEl.textContent = Utils.fmtBRL.format(Utils.cleanCurrency(p.price));
+                    priceEl.classList.add('text-3xl', 'text-brand-orange');
+                    priceEl.classList.remove('text-2xl', 'text-gray-400');
+                }
+
+                document.getElementById('modal-used-desc').textContent = p.desc;
+                
+                const badge = document.getElementById('modal-used-badge');
+                badge.className = 'px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest';
+                if(p.condition.includes('Seminovo')) badge.classList.add('badge-seminovo');
+                else if(p.condition.includes('Open Box')) badge.classList.add('badge-openbox');
+                else badge.classList.add('badge-revisado');
+                badge.textContent = p.condition;
+
+                // Baterias
+                const batsContainer = document.getElementById('modal-used-batteries');
+                const bats = details.batteries || [];
+                if(bats.length === 0) {
+                    batsContainer.innerHTML = '<span class="text-xs text-gray-400 italic">Sem informação de bateria</span>';
+                } else {
+                    batsContainer.innerHTML = bats.map((cycle, i) => `
+                        <div class="flex flex-col items-center p-3 bg-white dark:bg-zinc-900 rounded-xl border dark:border-zinc-700 w-20">
+                            <svg class="w-6 h-6 text-green-500 mb-1" fill="currentColor" viewBox="0 0 20 20"><path d="M16 6H4a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 00-2-2zM4 8h12v6H4V8zm14 2h.5a1.5 1.5 0 110 3H18v-3z"></path></svg>
+                            <span class="text-[10px] font-black text-gray-500 uppercase">Bat ${i+1}</span>
+                            <span class="text-sm font-bold dark:text-white">${cycle}</span>
+                        </div>
+                    `).join('');
+                }
+
+                // Acessórios Checklist
+                const accContainer = document.getElementById('modal-used-accessories');
+                const checkIcon = '<span class="text-green-500 mr-2">✔</span>';
+                const xIcon = '<span class="text-red-400 mr-2">✖</span>';
+                
+                accContainer.innerHTML = `
+                    <li class="flex items-center">${details.hub ? checkIcon : xIcon} Hub de Carregamento</li>
+                    <li class="flex items-center">${details.cables ? checkIcon : xIcon} Cabos / Conectores</li>
+                    <li class="flex items-center">${details.bag ? checkIcon : xIcon} Bolsa / Case</li>
+                    <li class="flex items-center"><span class="text-brand-orange mr-2">⚙</span> Hélices: ${details.propellers || 'Padrão'}</li>
+                `;
+
+                // Reset do Botão de Contato
+                document.getElementById('modal-used-init-contact').classList.remove('hidden');
+                document.getElementById('modal-used-options').classList.add('hidden');
+                
+                // Botões de Ação
+                document.getElementById('modal-used-share').onclick = () => Actions.shareUsedCard(idx);
+
+                document.getElementById('used-details-modal').classList.remove('hidden');
+            },
+
             proceedContact: () => {
                 if(STATE.currentUsedIdx === null) return;
                 const p = STATE.usedProducts[STATE.currentUsedIdx];
@@ -1012,10 +1090,8 @@
                 if(STATE.contactOption === 'reserve') {
                     const cName = document.getElementById('res-name-used').value.trim();
                     const cPhone = document.getElementById('res-phone-used').value.trim();
-                    
                     if(!cName || !cPhone) { alert('Por favor, preencha o Nome e Telefone do cliente para a reserva.'); return; }
 
-                    // CALCULO SINAL NO WHATSAPP DA CENTRAL
                     const signalVal = priceVal * 0.30;
                     const signalFormatted = Utils.fmtBRL.format(signalVal);
 
@@ -1048,10 +1124,8 @@
                 }).join('');
                 
                 UI.selectNewContactOption('availability');
-                
                 document.getElementById('res-name-new').value = '';
                 document.getElementById('res-phone-new').value = '';
-
                 document.getElementById('availability-modal').classList.remove('hidden');
             },
 
@@ -1124,7 +1198,6 @@
             },
 
             deleteItem: (type, index) => {
-                // Legacy wrapper if needed, now redirecting to askDelete
                 Admin.askDelete(type, index);
             }
         };
@@ -1162,6 +1235,13 @@
             loadPasswords: async () => { try { const res = await fetch('pas.json'); if(res.ok) { STATE.passwords = await res.json(); } } catch(e) {} }
         };
 
+        // Initialize Objects before DOMContentLoaded to ensure availability
+        window.UI = UI;
+        window.Actions = Actions;
+        window.Admin = Admin;
+        window.Utils = Utils;
+        window.Bypass = Bypass;
+
         document.addEventListener('DOMContentLoaded', () => {
             UI.init();
             if(localStorage.getItem('gd_user')) { document.getElementById('username-input').value = localStorage.getItem('gd_user'); document.getElementById('password-input').value = localStorage.getItem('gd_pass'); document.getElementById('remember-me').checked = true; }
@@ -1179,12 +1259,6 @@
             };
         });
 
-        // Make functions globally available for inline handlers
-        window.UI = UI;
-        window.Actions = Actions;
-        window.Admin = Admin;
-        window.Utils = Utils;
-        window.Bypass = Bypass;
     </script>
 </body>
 </html>
