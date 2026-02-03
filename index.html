@@ -929,27 +929,26 @@
 
             confirmShare: () => {
                 const p = STATE.currentShareProduct; const mode = STATE.shareMode;
-                let hasCondition = false; let detailsText = "";
+                let detailsText = "";
 
                 if (mode === 'vista') {
                     const discountInput = document.getElementById('share-discount'); let disc = parseFloat(discountInput.value);
                     if (!isNaN(disc) && disc > 0) {
-                        hasCondition = true; if(disc > 10) disc = 10;
+                        if(disc > 10) disc = 10;
                         const finalPrice = p.price * (1 - (disc/100));
-                        detailsText = `\n\n🔥 *Condição à Vista:* ${disc}% OFF\n*Valor Final:* ${Utils.fmtBRL.format(finalPrice)}`;
+                        // Destaque solicitado para o valor com desconto
+                        detailsText = `\n\n🔥 *Condição à Vista:* ${disc}% OFF\n✅ *VALOR COM DESCONTO:* *${Utils.fmtBRL.format(finalPrice)}*`;
                     }
                 } else {
                     const n = parseInt(document.getElementById('share-installments').value);
                     if (n) {
-                        hasCondition = true;
                         const rate = CONFIG.installmentRates[n] || 0; const totalWithRate = p.price * (1 + (rate/100)); const parcelVal = totalWithRate / n;
                         detailsText = `\n\n💳 *Condição Parcelada:* ${n}x\n*Parcela:* ${Utils.fmtBRL.format(parcelVal)}\n*Total:* ${Utils.fmtBRL.format(totalWithRate)}`;
                     }
                 }
 
-                let finalMessage = hasCondition 
-                    ? `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor Base:* ${Utils.fmtBRL.format(p.price)}${detailsText}\n\n🎁 *Bônus Especial:*\nLembrando, ao comprar um Drone, você ganha uma *Aula de Pilotagem* de brinde e já sai sabendo pilotar seu drone! 🚀`
-                    : `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor:* ${Utils.fmtBRL.format(p.price)}`;
+                // Mensagem do brinde sempre incluída
+                let finalMessage = `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor:* ${Utils.fmtBRL.format(p.price)}${detailsText}\n\n🎁 *Bônus Especial:*\nLembrando, ao comprar um Drone, você ganha uma *Aula de Pilotagem* de brinde e já sai sabendo pilotar seu drone! 🚀`;
                 
                 window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
                 UI.closeModal('share-modal');
