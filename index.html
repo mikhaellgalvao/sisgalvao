@@ -41,7 +41,7 @@
         .sidebar-link.active { background-color: #EF7E13; color: white !important; box-shadow: 0 4px 15px rgba(239, 126, 19, 0.25); }
         .vendedor-option input:checked + div { border-color: #EF7E13; background-color: rgba(239, 126, 19, 0.08); }
         
-        /* Keypad Styles */
+        /* Teclado Numérico */
         .keypad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         .key-btn { height: 64px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; border-radius: 1.25rem; background: #f3f4f6; transition: all 0.15s; color: #1f2937; user-select: none; box-shadow: 0 2px 0 rgba(0,0,0,0.05); touch-action: manipulation; }
         .dark .key-btn { background: #27272a; color: white; border: 1px solid rgba(255,255,255,0.05); }
@@ -286,6 +286,92 @@
     </div>
     <button id="calculator-fab" onclick="UI.toggleCalculator()" class="hidden fixed bottom-6 right-6 w-16 h-16 bg-brand-orange text-white rounded-full shadow-2xl flex items-center justify-center z-50 transition-all hover:scale-110 active:scale-90"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-width="2"></path></svg></button>
 
+    <!-- Admin Keypad (MODAL QUE ESTAVA FALTANDO) -->
+    <div id="admin-login-modal" ondblclick="if(event.target === this) UI.closeModal('admin-login-modal')" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-[120] flex items-center justify-center p-4 fade-in">
+        <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
+            <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-2">Acesso Restrito</h3>
+            <p class="text-[9px] text-gray-400 uppercase tracking-widest mb-6">Digite a senha administrativa</p>
+            <div id="keypad-display" class="w-full h-16 mb-8 flex items-center justify-center bg-gray-50 dark:bg-zinc-800 rounded-2xl text-3xl font-black tracking-[1rem] text-brand-orange h-20"></div>
+            <div id="virtual-keypad" class="keypad-grid mb-8"></div>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="Admin.clearPass()" class="py-4 bg-red-100 dark:bg-red-900/20 text-red-600 rounded-2xl font-black uppercase text-[10px] tracking-widest">Limpar</button>
+                <button onclick="UI.closeModal('admin-login-modal')" class="py-4 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-2xl font-black uppercase text-[10px] tracking-widest">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Form Modal (MODAL QUE ESTAVA FALTANDO) -->
+    <div id="admin-form-modal" ondblclick="if(event.target === this) UI.closeModal('admin-form-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4 fade-in">
+        <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-lg p-8 shadow-2xl border dark:border-white/10 text-left">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="admin-modal-title" class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter">Editar</h3>
+                <button onclick="UI.closeModal('admin-form-modal')" class="text-2xl text-gray-400 hover:text-white">×</button>
+            </div>
+            <div id="admin-dynamic-form" class="space-y-4 max-h-[60vh] overflow-y-auto hide-scrollbar italic"></div>
+            <div class="grid grid-cols-2 gap-3 mt-8">
+                <button onclick="UI.closeModal('admin-form-modal')" class="py-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-500">Cancelar</button>
+                <button id="admin-save-btn" class="py-4 bg-brand-orange text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirm Modal (MODAL QUE ESTAVA FALTANDO) -->
+    <div id="delete-confirm-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[130] flex items-center justify-center p-4 fade-in">
+        <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
+            <div class="mb-4"><div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto"><svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></div></div>
+            <h3 class="text-xl font-black text-slate-800 dark:text-white uppercase italic tracking-tighter mb-2">Tem certeza?</h3>
+            <p class="text-[10px] text-gray-500 mb-6 font-bold uppercase tracking-widest">Essa ação não pode ser desfeita.</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="UI.closeModal('delete-confirm-modal')" class="py-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-500 active:scale-95 transition-all">Cancelar</button>
+                <button onclick="Admin.confirmDelete()" class="py-4 bg-red-500 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all hover:bg-red-600">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Availability Modal (Painel de Ação - Restaurado) -->
+    <div id="availability-modal" ondblclick="if(event.target === this) UI.closeModal('availability-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
+        <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
+            <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-2">Painel de Ação</h3>
+            <p class="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest mb-4" id="modal-product-name"></p>
+            <div class="space-y-3 mb-6 max-h-40 overflow-y-auto hide-scrollbar" id="modal-sellers-list"></div>
+            <div id="modal-new-options" class="mb-6 bg-gray-50 dark:bg-zinc-800/50 p-4 rounded-2xl border dark:border-zinc-700">
+                <p class="text-[9px] font-bold text-gray-500 mb-2 uppercase tracking-widest text-center">Tipo de Ação</p>
+                <div class="flex flex-wrap gap-2 mb-3 justify-center">
+                    <button onclick="UI.selectNewContactOption('availability')" id="btn-new-availability" class="px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest bg-white dark:bg-zinc-700 shadow-sm text-brand-green border-2 border-transparent transition-all">Consulta</button>
+                    <button onclick="UI.selectNewContactOption('reserve')" id="btn-new-reserve" class="px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest bg-gray-200 dark:bg-zinc-800 text-gray-500 border-2 border-transparent transition-all">Reserva</button>
+                    <button onclick="UI.selectNewContactOption('sale')" id="btn-new-sale" class="px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest bg-gray-200 dark:bg-zinc-800 text-gray-500 border-2 border-transparent transition-all">Venda</button>
+                </div>
+                <div id="reservation-form-new" class="hidden mb-3 space-y-2 animate-fade-in text-left">
+                    <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Dados do Cliente</p>
+                    <input type="text" id="res-name-new" placeholder="Nome do Cliente" class="w-full p-3 rounded-xl border dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-bold focus:ring-2 focus:ring-brand-orange outline-none">
+                    <input type="tel" id="res-phone-new" placeholder="WhatsApp do Cliente" class="w-full p-3 rounded-xl border dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-bold focus:ring-2 focus:ring-brand-orange outline-none">
+                </div>
+                <div id="new-reservation-warning" class="hidden p-2 bg-brand-orange/10 border border-brand-orange/20 rounded-xl text-center">
+                    <p class="text-[8px] font-bold text-brand-orange leading-tight">⚠ Sinal de 30% obrigatório. Sem devolução.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="UI.closeModal('availability-modal')" class="py-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-500 active:scale-95 transition-all">Voltar</button>
+                <button onclick="Actions.sendAvailabilityRequest()" class="py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bypass Login Modal (Restaura funcionalidade técnica) -->
+    <div id="bypass-login-modal" ondblclick="if(event.target === this) UI.closeModal('bypass-login-modal')" class="hidden fixed inset-0 bg-black/95 backdrop-blur-xl z-[130] flex items-center justify-center p-4 fade-in">
+        <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border-2 border-brand-orange dark:border-brand-orange/50 text-center">
+             <div class="mb-4"><div class="w-16 h-16 bg-brand-orange rounded-full flex items-center justify-center mx-auto shadow-lg shadow-brand-orange/30"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div></div>
+             <h3 class="text-xl font-black text-brand-orange uppercase italic tracking-tighter mb-2">Acesso Técnico</h3>
+             <p class="text-[9px] text-gray-400 uppercase tracking-widest mb-6">Digite o código de segurança</p>
+             <div id="bypass-keypad-display" class="w-full h-16 mb-8 flex items-center justify-center bg-gray-100 dark:bg-zinc-800 rounded-2xl text-3xl font-black tracking-[1rem] text-brand-orange border border-gray-200 dark:border-zinc-700"></div>
+             <div id="bypass-virtual-keypad" class="keypad-grid mb-8"></div>
+             <div class="grid grid-cols-2 gap-3">
+                 <button onclick="Bypass.clearPass()" class="py-4 bg-red-50 dark:bg-red-900/10 text-red-500 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-red-100 transition-colors">Limpar</button>
+                 <button onclick="UI.closeModal('bypass-login-modal')" class="py-4 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-200 transition-colors">Cancelar</button>
+             </div>
+        </div>
+    </div>
+
     <script>
         const CONFIG = {
             contacts: { central: "6236360668", mikhaell: "62984710639", maikhon: "62933001865", ryan: "62920007396" },
@@ -359,7 +445,7 @@
             init: async () => {
                 const sel = document.getElementById("popup-installments");
                 if (sel) for (let i in CONFIG.installmentRates) { const opt = document.createElement("option"); opt.value = i; opt.textContent = `${i}x`; sel.appendChild(opt); }
-                try { await Data.loadPasswords(); await Data.load(); } catch(e) { console.log('Init data load issue', e); }
+                try { await Data.loadPasswords(); await Data.load(); } catch(e) { console.log('Erro ao carregar dados inicias', e); }
                 Bypass.init();
                 document.addEventListener('dblclick', function(e) {
                     const calc = document.getElementById('calculator-popup'); const fab = document.getElementById('calculator-fab');
@@ -375,13 +461,11 @@
                 const isAdmin = role === 'Administrador';
                 const isExternal = role === 'Vendas externa';
 
-                // Itens a esconder para Visitante e Vendas Externa
                 ['sidebar-marketing-link'].forEach(id => {
                     const el = document.getElementById(id);
                     if(el) (isVisitor || isExternal) ? el.classList.add('hidden') : el.classList.remove('hidden');
                 });
 
-                // Perfil (escondido apenas para visitante)
                 const perf = document.getElementById('sidebar-perfil-link');
                 if(perf) isVisitor ? perf.classList.add('hidden') : perf.classList.remove('hidden');
 
@@ -432,7 +516,6 @@
                 const isVisitor = STATE.currentUser.role === 'Visitante';
                 const isAdmin = STATE.currentUser.role === 'Administrador';
                 const isExternal = STATE.currentUser.role === 'Vendas externa';
-
                 const html = `
                     <section class="space-y-6">
                         <div class="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] shadow-sm border dark:border-zinc-800">
@@ -634,19 +717,11 @@
             openShareModal: (name, price) => { STATE.currentShareProduct = { name, price }; document.getElementById('share-product-name').textContent = name; UI.setShareMode('vista'); document.getElementById('share-modal').classList.remove('hidden'); },
             confirmShare: () => {
                 const p = STATE.currentShareProduct; const mode = STATE.shareMode;
-                
-                // Trava para Vendedor Externo
                 if (STATE.currentUser.role === 'Vendas externa' && mode === 'vista') {
                     const disc = parseFloat(document.getElementById('share-discount')?.value || 0);
-                    if (disc > 0) {
-                        UI.showError('Para aplicar desconto, entre em contato com a administração.');
-                        return;
-                    }
+                    if (disc > 0) { UI.showError('Para aplicar desconto, entre em contato com a administração.'); return; }
                 }
-
-                let detailsText = "";
-                const reservationVal = p.price * 0.30;
-                const reservationMsg = `\n📉 *Sinal de Reserva (30%):* *${Utils.fmtBRL.format(reservationVal)}* (Abatido no total / Não reembolsável)`;
+                let detailsText = ""; const reservationVal = p.price * 0.30; const reservationMsg = `\n📉 *Sinal de Reserva (30%):* *${Utils.fmtBRL.format(reservationVal)}* (Abatido no total / Não reembolsável)`;
                 if (mode === 'vista') {
                     const discountInput = document.getElementById('share-discount'); let disc = parseFloat(discountInput.value);
                     if (!isNaN(disc) && disc > 0) { if(disc > 10) disc = 10; const finalPrice = p.price * (1 - (disc/100)); detailsText = `\n\n🔥 *Condição à Vista:* ${disc}% OFF\n✅ *VALOR COM DESCONTO:* *${Utils.fmtBRL.format(finalPrice)}*`; }
