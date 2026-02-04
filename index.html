@@ -25,8 +25,8 @@
     </script>
     <style>
         body { -webkit-tap-highlight-color: transparent; }
-        .fade-in { animation: fadeIn 0.2s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .glass-card { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); }
         .dark .glass-card { background: rgba(24, 24, 27, 0.98); }
@@ -43,12 +43,11 @@
         .dark .key-btn { background: #27272a; color: white; border: 1px solid rgba(255,255,255,0.05); }
         .key-btn:active { transform: scale(0.95); background: #EF7E13; color: white; border-color: #EF7E13; }
         
-        .badge-seminovo { background-color: #dbeafe; color: #1e40af; }
-        .badge-openbox { background-color: #fce7f3; color: #be185d; }
-        .badge-revisado { background-color: #d1fae5; color: #065f46; }
+        /* Dashboard Card Style based on print */
+        .dash-card { background: white; border-radius: 2.5rem; padding: 2.5rem; border: 1px solid #f1f1f1; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .dark .dash-card { background: #121212; border-color: #222; }
 
-        #webview-modal { transition: transform 0.3s ease-in-out; }
-        #webview-modal.hidden { display: none; transform: translateY(100%); }
+        #webview-modal { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-black transition-colors duration-300 text-slate-900 dark:text-zinc-100 overflow-x-hidden font-sans antialiased">
@@ -65,11 +64,11 @@
             </div>
             <form onsubmit="Actions.login(event)" class="space-y-5 text-left">
                 <div>
-                    <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2 pl-1">Acesso</label>
+                    <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2 pl-1 text-left">Acesso</label>
                     <input type="text" id="username-input" required class="w-full rounded-2xl border-0 bg-gray-100 dark:bg-zinc-800/80 px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange transition-all placeholder-gray-400" placeholder="Usuário">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2 pl-1">Credencial</label>
+                    <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2 pl-1 text-left">Credencial</label>
                     <div class="relative">
                         <input type="password" id="password-input" required class="w-full rounded-2xl border-0 bg-gray-100 dark:bg-zinc-800/80 px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange transition-all placeholder-gray-400" placeholder="Senha">
                         <button type="button" onclick="UI.togglePassword()" class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-orange transition-colors p-2">
@@ -108,7 +107,7 @@
 
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto hide-scrollbar">
                 <button onclick="UI.navigate('dashboard')" class="sidebar-link active flex items-center w-full px-6 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic text-left">Dashboard</button>
-                <button onclick="UI.navigate('consultas')" class="sidebar-link flex items-center w-full px-6 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic text-left">Consultas Novos</button>
+                <button onclick="UI.navigate('consultas')" class="sidebar-link flex items-center w-full px-6 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic text-left">Catálogo DJI</button>
                 <button onclick="UI.navigate('usados')" class="sidebar-link flex items-center w-full px-6 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic text-left">Seminovos / Usados</button>
                 <button onclick="UI.navigate('marketing')" id="sidebar-marketing-link" class="sidebar-link flex items-center w-full px-6 py-4 rounded-2xl font-bold transition-all text-sm uppercase tracking-tighter italic text-left">Marketing</button>
                 
@@ -138,7 +137,7 @@
         </div>
     </div>
 
-    <!-- MODAL: WEBVIEW (Marketing) -->
+    <!-- WEBVIEW MODAL -->
     <div id="webview-modal" class="hidden fixed inset-0 z-[150] flex flex-col bg-white dark:bg-zinc-950 animate-fade-in">
         <header class="h-16 bg-brand-green text-white flex items-center justify-between px-6 shadow-xl relative z-20">
             <div class="flex items-center gap-4">
@@ -153,7 +152,7 @@
             </div>
         </header>
         <div class="flex-1 bg-white relative overflow-hidden">
-            <iframe id="webview-iframe" class="w-full h-full border-0"></iframe>
+            <iframe id="webview-iframe" class="w-full h-full border-0 shadow-inner"></iframe>
         </div>
     </div>
 
@@ -186,26 +185,36 @@
                 </div>
                 <p id="modal-used-desc" class="text-sm text-gray-600 dark:text-gray-400 italic mb-6"></p>
                 <div class="flex gap-3">
-                    <button id="modal-used-share-btn" class="flex-1 py-5 bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-200 transition-all">Compartilhar</button>
-                    <button onclick="Actions.consultUsedInChat()" class="flex-[2] py-5 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg hover:bg-emerald-900 transition-all text-center">Entrar em Contato</button>
+                    <button id="modal-used-share-trigger" class="flex-1 py-5 bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-200 transition-all shadow-sm">Compartilhar</button>
+                    <div class="flex-[2] relative">
+                         <button id="modal-used-contact-btn" onclick="UI.toggleUsedOptions()" class="w-full py-5 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg hover:bg-emerald-900 transition-all text-center">Entrar em Contato</button>
+                         <div id="used-contact-options" class="hidden absolute bottom-full left-0 right-0 mb-2 bg-white dark:bg-zinc-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-zinc-700 overflow-hidden animate-fade-in">
+                             <button onclick="Actions.finalizeAction('used', 'consultar')" class="w-full p-4 text-[10px] font-black uppercase hover:bg-gray-50 dark:hover:bg-zinc-700 border-b dark:border-zinc-700">Consultar Disponibilidade</button>
+                             <button onclick="Actions.finalizeAction('used', 'reservar')" class="w-full p-4 text-[10px] font-black uppercase hover:bg-gray-50 dark:hover:bg-zinc-700 border-b dark:border-zinc-700">Solicitar Reserva</button>
+                             <button onclick="Actions.finalizeAction('used', 'venda')" class="w-full p-4 text-[10px] font-black uppercase hover:bg-gray-50 dark:hover:bg-zinc-700 text-brand-green">Concluir Venda</button>
+                         </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL: COMPARTILHAR (Novos) -->
-    <div id="share-modal" ondblclick="if(event.target === this) UI.closeModal('share-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
-        <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
-            <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-4">Compartilhar</h3>
-            <p id="share-product-name" class="text-[10px] font-bold text-gray-500 mb-6 uppercase tracking-widest"></p>
-            <div class="flex gap-2 mb-6 bg-gray-100 dark:bg-zinc-800 p-1 rounded-2xl">
-                <button onclick="UI.setShareMode('vista')" id="btn-mode-vista" class="flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all bg-white shadow-sm text-brand-orange">À Vista</button>
-                <button onclick="UI.setShareMode('parcelado')" id="btn-mode-parcelado" class="flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-gray-400">Parcelado</button>
+    <!-- MODAL: COMPARTILHAR (Ajustado conforme imagem) -->
+    <div id="share-modal" ondblclick="if(event.target === this) UI.closeModal('share-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[130] flex items-center justify-center p-4 fade-in">
+        <div class="bg-white dark:bg-zinc-900 rounded-[3rem] w-full max-w-sm p-10 shadow-2xl border dark:border-white/10 text-center">
+            <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-4 leading-none">COMPARTILHAR</h3>
+            <p id="share-product-name" class="text-[10px] font-bold text-gray-400 mb-8 uppercase tracking-widest leading-tight"></p>
+            
+            <div class="flex gap-2 mb-8 bg-gray-50 dark:bg-zinc-800 p-1.5 rounded-[1.5rem]">
+                <button onclick="UI.setShareMode('vista')" id="btn-mode-vista" class="flex-1 py-4 rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest transition-all bg-white shadow-sm text-brand-orange">À VISTA</button>
+                <button onclick="UI.setShareMode('parcelado')" id="btn-mode-parcelado" class="flex-1 py-4 rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest transition-all text-gray-400">PARCELADO</button>
             </div>
-            <div id="share-input-container" class="mb-6"></div>
-            <div class="grid grid-cols-2 gap-3">
-                <button onclick="UI.closeModal('share-modal')" class="py-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-500">Cancelar</button>
-                <button onclick="Actions.confirmShare()" class="py-4 bg-brand-orange text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg">Enviar WhatsApp</button>
+            
+            <div id="share-input-container" class="mb-8"></div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="UI.closeModal('share-modal')" class="py-5 bg-gray-50 dark:bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-400 active:scale-95 transition-all">CANCELAR</button>
+                <button onclick="Actions.confirmShare()" class="py-5 bg-brand-orange text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all">ENVIAR WHATSAPP</button>
             </div>
         </div>
     </div>
@@ -230,15 +239,14 @@
             central: "6236360668",
             cnpj: "48.429.698/0001-91",
             address: "Galvao Drones - R. 16, 304 - Qd.10 Lt.24 - Setor Aeroviario, Goiânia - GO, 74435-240",
-            installmentRates: { 2: 3.5, 3: 4.8, 4: 5.9, 5: 6.9, 6: 7.9, 7: 8.9, 8: 9.9, 9: 10.9, 10: 11.9, 11: 12.9, 12: 13.9 }
+            installmentRates: { 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0 }
         };
 
         const STATE = {
             products: [], usedProducts: [], marketingAssets: [], users: [], driveLinks: {},
             currentUser: null, adminSession: false, adminPassBuffer: "",
-            currentShareProduct: { name: "", price: 0 }, shareMode: 'vista',
-            currentUsedIdx: null,
-            passwords: { admin: "", bypass: "" } // Carregado via pas.json
+            currentShareProduct: { name: "", price: 0, type: 'new' }, shareMode: 'vista',
+            currentUsedIdx: null, passwords: { admin: "", bypass: "" }
         };
 
         const Utils = {
@@ -299,19 +307,28 @@
 
             renderDashboard: () => {
                 const html = `
-                    <div class="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm mb-6">
-                        <h2 class="text-3xl font-black italic tracking-tighter uppercase">Olá, <span class="text-brand-orange">${STATE.currentUser.name.split(' ')[0]}</span>!</h2>
-                        <p class="text-gray-400 font-bold uppercase text-[10px] mt-2 tracking-widest">Central Galvão Drones | ${STATE.currentUser.role}</p>
+                    <div class="dash-card mb-6" style="flex-direction: row; justify-content: flex-start; text-align: left; gap: 2rem;">
+                        <img src="https://imgur.com/2PNy5CS.png" class="h-16 hidden sm:block">
+                        <div>
+                            <h2 class="text-3xl font-black italic tracking-tighter uppercase leading-none">OLÁ, <span class="text-brand-orange">${STATE.currentUser.name.toUpperCase().split(' ')[0]}!</span></h2>
+                            <p class="text-gray-400 font-bold uppercase text-[10px] mt-2 tracking-widest leading-none">CENTRAL GALVÃO DRONES | ${STATE.currentUser.role.toUpperCase()}</p>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        ${UI.cardBtn('consultas', 'bg-emerald-50 text-brand-green', 'Catálogo DJI', 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z')}
-                        ${UI.cardBtn('usados', 'bg-blue-50 text-blue-600', 'Seminovos / Usados', 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15')}
-                        ${STATE.currentUser.role !== 'Visitante' ? UI.cardBtn('marketing', 'bg-orange-50 text-brand-orange', 'Marketing', 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16') : ''}
+                    <div class="grid grid-cols-1 gap-4">
+                        ${UI.dashboardMainBtn('consultas', 'CATÁLOGO DJI', 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z', 'bg-emerald-50 text-emerald-600')}
+                        ${UI.dashboardMainBtn('usados', 'SEMINOVOS / USADOS', 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15', 'bg-blue-50 text-blue-600')}
+                        ${STATE.currentUser.role !== 'Visitante' ? UI.dashboardMainBtn('marketing', 'MARKETING', 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16', 'bg-orange-50 text-brand-orange') : ''}
                     </div>`;
                 document.getElementById('main-content').innerHTML = html;
             },
 
-            cardBtn: (page, color, text, path) => `<button onclick="UI.navigate('${page}')" class="p-8 bg-white dark:bg-zinc-900 rounded-[2.5rem] border dark:border-zinc-800 hover:shadow-xl transition-all flex flex-col items-center w-full active:scale-95"><div class="p-5 rounded-3xl mb-4 ${color}"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="${path}" stroke-width="2" stroke-linecap="round"></path></svg></div><span class="font-black uppercase text-xs italic tracking-widest">${text}</span></button>`,
+            dashboardMainBtn: (page, text, path, colors) => `
+                <button onclick="UI.navigate('${page}')" class="dash-card hover:border-brand-orange active:scale-[0.98]">
+                    <div class="p-6 rounded-3xl mb-4 ${colors}">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="${path}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <span class="font-black uppercase text-xs italic tracking-widest">${text}</span>
+                </button>`,
 
             renderCatalog: () => {
                 const isVisitor = STATE.currentUser.role === 'Visitante';
@@ -320,7 +337,7 @@
                     const priceVal = Utils.cleanCurrency(p.sell);
                     html += `
                         <div class="bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm text-left">
-                            <h3 class="font-black text-brand-green dark:text-white uppercase italic text-xs mb-1">${p.name}</h3>
+                            <h3 class="font-black text-brand-green dark:text-white uppercase italic text-xs mb-1 leading-tight">${p.name}</h3>
                             <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-4">${p.line || 'DJI'}</p>
                             ${!isVisitor ? `
                                 <div class="pt-4 border-t dark:border-zinc-800 mb-4">
@@ -328,11 +345,10 @@
                                     <p class="text-2xl font-black text-brand-green italic tracking-tighter leading-none">${Utils.fmtBRL.format(priceVal)}</p>
                                 </div>
                                 <div class="flex flex-col gap-2">
-                                    <button onclick="Actions.openShareModal('${p.name}', ${priceVal})" class="w-full py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-[9px] shadow-lg tracking-widest">Compartilhar Proposta</button>
-                                    <button onclick="Actions.finalizeSale('${p.name}')" class="w-full py-3 bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-300 rounded-xl font-bold uppercase text-[8px] tracking-widest">Consultar Valor</button>
+                                    <button onclick="Actions.openShareModal('${p.name}', ${priceVal}, 'new')" class="w-full py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-[9px] shadow-lg tracking-widest active:scale-95">COMPARTILHAR PROPOSTA</button>
                                 </div>
                             ` : `
-                                <button onclick="Actions.finalizeSale('${p.name}')" class="w-full py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] tracking-widest">Consultar Valor</button>
+                                <button onclick="Actions.openShareModal('${p.name}', 0, 'new')" class="w-full py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95">COMPARTILHAR</button>
                             `}
                         </div>`;
                 });
@@ -352,13 +368,11 @@
                             </div>
                             <h3 class="font-black text-slate-800 dark:text-white uppercase italic text-lg mb-4 leading-tight">${p.name}</h3>
                             <div class="h-40 bg-gray-50 dark:bg-zinc-800 rounded-2xl mb-4 bg-cover bg-center cursor-pointer shadow-inner" style="background-image: url('${p.images?.[0] || p.image || ''}')"></div>
-                            ${!isVisitor ? `
-                                <div class="pt-4 border-t dark:border-zinc-800">
-                                    <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest">Investimento</p>
-                                    <p class="text-2xl font-black text-brand-orange italic tracking-tighter leading-none">${Utils.fmtBRL.format(priceVal)}</p>
-                                </div>
-                                <button class="w-full mt-4 py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] shadow-lg tracking-widest">Ver Detalhes</button>
-                            ` : `<button class="w-full py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] tracking-widest">Consultar Valor</button>`}
+                            <div class="pt-4 border-t dark:border-zinc-800">
+                                <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest">Investimento</p>
+                                <p class="text-2xl font-black text-brand-orange italic tracking-tighter leading-none">${!isVisitor ? Utils.fmtBRL.format(priceVal) : 'SOB CONSULTA'}</p>
+                            </div>
+                            <button class="w-full mt-4 py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-[10px] shadow-lg tracking-widest active:scale-95">VER DETALHES</button>
                         </div>`;
                 });
                 document.getElementById('main-content').innerHTML = html + `</div>`;
@@ -370,9 +384,9 @@
                         <h2 class="text-3xl font-black text-brand-orange uppercase italic tracking-tighter mb-2 italic">MARKETING & DOWNLOADS</h2>
                         <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-8">MATERIAIS OFICIAIS GALVÃO DRONES</p>
                         <div class="flex flex-wrap gap-4 justify-center">
-                            <button onclick="Actions.openDriveLink('${STATE.driveLinks.postados}', 'Postados')" class="px-8 py-4 bg-[#0E5847] text-white rounded-2xl font-black uppercase text-xs tracking-widest flex items-center shadow-lg hover:scale-105 transition-all"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="3"></path></svg> POSTADOS</button>
-                            <button onclick="Actions.openDriveLink('${STATE.driveLinks.postar}', 'Para Postar')" class="px-8 py-4 bg-[#EF7E13] text-white rounded-2xl font-black uppercase text-xs tracking-widest flex items-center shadow-lg hover:scale-105 transition-all"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="3"></path></svg> PARA POSTAR</button>
-                            <button onclick="Actions.openDriveLink('${STATE.driveLinks.editar}', 'Para Editar')" class="px-8 py-4 bg-[#2563EB] text-white rounded-2xl font-black uppercase text-xs tracking-widest flex items-center shadow-lg hover:scale-105 transition-all"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536" stroke-width="3"></path></svg> PARA EDITAR</button>
+                            <button onclick="Actions.openDriveLink('${STATE.driveLinks.postados}', 'Postados')" class="px-8 py-4 bg-[#0E5847] text-white rounded-2xl font-black uppercase text-xs tracking-widest flex items-center shadow-lg hover:scale-105 active:scale-95 transition-all"><svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round"></path></svg> POSTADOS</button>
+                            <button onclick="Actions.openDriveLink('${STATE.driveLinks.postar}', 'Para Postar')" class="px-8 py-4 bg-[#EF7E13] text-white rounded-2xl font-black uppercase text-xs tracking-widest flex items-center shadow-lg hover:scale-105 active:scale-95 transition-all"><svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="3" stroke-linecap="round"></path></svg> PARA POSTAR</button>
+                            <button onclick="Actions.openDriveLink('${STATE.driveLinks.editar}', 'Para Editar')" class="px-8 py-4 bg-[#2563EB] text-white rounded-2xl font-black uppercase text-xs tracking-widest flex items-center shadow-lg hover:scale-105 active:scale-95 transition-all"><svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536" stroke-width="3" stroke-linecap="round"></path></svg> PARA EDITAR</button>
                         </div>
                     </div>`;
                 document.getElementById('main-content').innerHTML = html;
@@ -388,29 +402,18 @@
                         <div class="space-y-6 text-left border-t pt-8 dark:border-zinc-800">
                             <div><label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest">CNPJ Oficial</label><p class="font-bold">${CONFIG.cnpj}</p></div>
                             <div><label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest">Endereço Sede</label><p class="font-bold text-sm leading-relaxed">${CONFIG.address}</p></div>
-                            <button onclick="Actions.shareCommercial()" class="w-full py-5 bg-brand-orange/10 border border-brand-orange/20 text-brand-orange rounded-2xl font-black uppercase text-[10px] tracking-widest">Compartilhar Dados Oficiais</button>
                         </div>
                     </div>`;
                 document.getElementById('main-content').innerHTML = html;
             },
 
-            renderAbout: () => {
-                document.getElementById('main-content').innerHTML = `
-                    <div class="bg-white dark:bg-zinc-900 p-12 rounded-[3rem] border dark:border-zinc-800 text-center shadow-xl">
-                        <img src="https://imgur.com/2PNy5CS.png" class="h-24 mx-auto mb-8">
-                        <h2 class="text-4xl font-black text-brand-green uppercase italic tracking-tighter mb-4 leading-none">GALVÃO DRONES | BRASIL</h2>
-                        <p class="text-gray-500 font-medium italic text-lg leading-relaxed max-w-xl mx-auto mb-8">Especialistas DJI em vendas, manutenção técnica e treinamento especializado.</p>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2rem]">QUALIDADE DJI • SUPORTE TÉCNICO • VISÃO DE FUTURO</p>
-                    </div>`;
-            },
-
             renderAdmin: () => {
                 document.getElementById('main-content').innerHTML = `
                     <div class="bg-white dark:bg-zinc-900 p-10 rounded-[3rem] border dark:border-zinc-800 text-center shadow-lg">
-                        <h2 class="text-3xl font-black text-red-600 uppercase italic mb-8 tracking-tighter">Gestão Administrativa</h2>
+                        <h2 class="text-3xl font-black text-red-600 uppercase italic mb-8 tracking-tighter">GESTÃO ADMINISTRATIVA</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-                            <div class="bg-gray-50 dark:bg-zinc-800 p-6 rounded-3xl"><h3 class="font-bold uppercase text-xs mb-4">Usuários do Sistema</h3><div class="space-y-2">${STATE.users.map(u => `<div class="flex justify-between p-3 bg-white dark:bg-zinc-900 rounded-xl text-xs font-bold"><span>${u.name}</span><span class="text-gray-400 font-normal uppercase">${u.role}</span></div>`).join('')}</div></div>
-                            <div class="bg-gray-50 dark:bg-zinc-800 p-6 rounded-3xl"><h3 class="font-bold uppercase text-xs mb-4">Resumo Patrimonial</h3><p class="text-3xl font-black text-brand-green">${STATE.products.length + STATE.usedProducts.length} <span class="text-sm font-normal text-gray-400">Itens em Estoque</span></p></div>
+                            <div class="bg-gray-50 dark:bg-zinc-800 p-6 rounded-3xl"><h3 class="font-bold uppercase text-xs mb-4">EQUIPE ATIVA</h3><div class="space-y-2">${STATE.users.map(u => `<div class="flex justify-between p-3 bg-white dark:bg-zinc-900 rounded-xl text-xs font-bold shadow-sm"><span>${u.name}</span><span class="text-gray-400 font-normal uppercase">${u.role}</span></div>`).join('')}</div></div>
+                            <div class="bg-gray-50 dark:bg-zinc-800 p-6 rounded-3xl"><h3 class="font-bold uppercase text-xs mb-4">ESTOQUE TOTAL</h3><p class="text-4xl font-black text-brand-green">${STATE.products.length + STATE.usedProducts.length} <span class="text-sm font-normal text-gray-400">ITENS</span></p></div>
                         </div>
                     </div>`;
             },
@@ -419,14 +422,15 @@
                 STATE.shareMode = mode;
                 const container = document.getElementById('share-input-container');
                 if (mode === 'vista') {
-                    container.innerHTML = `<label class="block text-[10px] font-black uppercase text-gray-400 mb-2 text-left pl-1">Desconto (%)</label><input type="number" id="share-discount" placeholder="Ex: 5" min="0" max="10" class="w-full rounded-2xl border-0 bg-gray-50 dark:bg-zinc-800 px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange font-black text-center text-2xl">`;
+                    container.innerHTML = `<label class="block text-[10px] font-black uppercase text-gray-400 mb-2 text-left pl-1 tracking-widest">DESCONTO (%)</label><input type="number" id="share-discount" placeholder="Ex: 5" min="0" max="10" class="w-full rounded-2xl border-0 bg-gray-50 dark:bg-zinc-800 px-5 py-5 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange font-black text-center text-3xl">`;
                 } else {
-                    container.innerHTML = `<label class="block text-[10px] font-black uppercase text-gray-400 mb-2 text-left pl-1">Parcelamento</label><select id="share-installments" class="w-full rounded-2xl border-0 bg-gray-50 dark:bg-zinc-800 px-5 py-4 font-black text-center text-2xl outline-none appearance-none"><option value="12">12x</option><option value="10">10x</option><option value="6">6x</option></select>`;
+                    container.innerHTML = `<label class="block text-[10px] font-black uppercase text-gray-400 mb-2 text-left pl-1 tracking-widest">PARCELAMENTO</label><select id="share-installments" class="w-full rounded-2xl border-0 bg-gray-50 dark:bg-zinc-800 px-5 py-5 font-black text-center text-3xl outline-none appearance-none cursor-pointer"><option value="12">12x</option><option value="10">10x</option><option value="6">6x</option></select>`;
                 }
-                document.getElementById('btn-mode-vista').className = mode === 'vista' ? 'flex-1 py-3 rounded-xl text-[10px] font-black uppercase bg-white shadow-sm text-brand-orange' : 'flex-1 py-3 text-[10px] font-black uppercase text-gray-400';
-                document.getElementById('btn-mode-parcelado').className = mode === 'parcelado' ? 'flex-1 py-3 rounded-xl text-[10px] font-black uppercase bg-white shadow-sm text-brand-orange' : 'flex-1 py-3 text-[10px] font-black uppercase text-gray-400';
+                document.getElementById('btn-mode-vista').className = mode === 'vista' ? 'flex-1 py-4 rounded-[1.25rem] text-[10px] font-black uppercase bg-white shadow-sm text-brand-orange' : 'flex-1 py-4 text-[10px] font-black uppercase text-gray-400';
+                document.getElementById('btn-mode-parcelado').className = mode === 'parcelado' ? 'flex-1 py-4 rounded-[1.25rem] text-[10px] font-black uppercase bg-white shadow-sm text-brand-orange' : 'flex-1 py-4 text-[10px] font-black uppercase text-gray-400';
             },
 
+            toggleUsedOptions: () => document.getElementById('used-contact-options').classList.toggle('hidden'),
             updateSidebarVisibility: () => {
                 const isAdmin = STATE.currentUser.role === 'Administrador';
                 const isVisitor = STATE.currentUser.role === 'Visitante';
@@ -451,8 +455,8 @@
                 STATE.currentUser = user;
                 document.getElementById('login-view').classList.add('hidden');
                 document.getElementById('dashboard-view').classList.remove('hidden');
-                document.getElementById('sidebar-user-name').textContent = user.name;
-                document.getElementById('sidebar-user-role').textContent = user.role;
+                document.getElementById('sidebar-user-name').textContent = user.name.toUpperCase();
+                document.getElementById('sidebar-user-role').textContent = user.role.toUpperCase();
                 const sbPic = document.getElementById('sidebar-profile-picture');
                 if (user.avatar) { sbPic.style.backgroundImage = `url('${user.avatar}')`; document.getElementById('sidebar-profile-placeholder').style.display = 'none'; } 
                 else { sbPic.style.backgroundImage = 'none'; document.getElementById('sidebar-profile-placeholder').textContent = user.name.charAt(0); }
@@ -460,30 +464,35 @@
                 UI.navigate('dashboard');
             },
 
-            loginVisitor: () => Actions.setupSession({name: "Visitante", role: "Visitante", username: "guest", password: ""}),
-            loginBypass: () => Actions.setupSession({ name: "Mikhaell Galvão", role: "Administrador", username: "bypass", password: "", avatar: "https://imgur.com/ny5U9KV.png" }),
+            loginVisitor: () => Actions.setupSession({name: "Visitante", role: "Visitante", username: "guest", password: "", avatar: ""}),
+            loginBypass: () => {
+                Actions.setupSession({ name: "Suporte Técnico", role: "Técnico", username: "bypass", password: "", avatar: "https://imgur.com/ny5U9KV.png" });
+            },
 
             openUsedDetails: (idx) => {
                 STATE.currentUsedIdx = idx;
                 const p = STATE.usedProducts[idx];
-                document.getElementById('modal-used-main-img').style.backgroundImage = `url('${p.images?.[0] || p.image || ''}')`;
+                const images = p.images || [p.image];
+                
+                document.getElementById('modal-used-main-img').style.backgroundImage = `url('${images[0]}')`;
                 document.getElementById('modal-used-title').textContent = p.name;
-                document.getElementById('modal-used-price').textContent = Utils.fmtBRL.format(Utils.cleanCurrency(p.price));
-                document.getElementById('modal-used-desc').textContent = p.desc || "Sem detalhes adicionais.";
+                document.getElementById('modal-used-price').textContent = STATE.currentUser.role !== 'Visitante' ? Utils.fmtBRL.format(Utils.cleanCurrency(p.price)) : 'SOB CONSULTA';
+                document.getElementById('modal-used-desc').textContent = p.desc || "Equipamento revisado e certificado pela Galvão Drones.";
                 document.getElementById('modal-used-badge').textContent = p.condition;
                 document.getElementById('modal-used-badge').className = "px-3 py-1 rounded-full text-[10px] font-black uppercase badge-seminovo";
                 
                 const thumbs = document.getElementById('modal-used-thumbnails');
-                thumbs.innerHTML = (p.images || [p.image]).map(img => `<div class="w-16 h-16 rounded-xl bg-cover bg-center border-2 border-transparent hover:border-brand-orange cursor-pointer" style="background-image: url('${img}')" onclick="document.getElementById('modal-used-main-img').style.backgroundImage='url(${img})'"></div>`).join('');
+                thumbs.innerHTML = images.map(img => `<div class="w-16 h-16 rounded-xl bg-cover bg-center border-2 border-transparent hover:border-brand-orange cursor-pointer" style="background-image: url('${img}')" onclick="document.getElementById('modal-used-main-img').style.backgroundImage='url(${img})'"></div>`).join('');
 
                 const bats = document.getElementById('modal-used-batteries');
-                bats.innerHTML = (p.details?.batteries || []).map((c, i) => `<div class="bg-gray-100 dark:bg-zinc-800 p-2 rounded-xl text-center w-16 text-[10px] font-black">Bat ${i+1}<br>${c}</div>`).join('');
+                bats.innerHTML = (p.details?.batteries || []).map((c, i) => `<div class="bg-gray-50 dark:bg-zinc-800 p-2 rounded-xl text-center w-16 text-[10px] font-black">Bat ${i+1}<br>${c}</div>`).join('');
                 
                 const acc = document.getElementById('modal-used-accessories');
                 acc.innerHTML = `<li>✔ Hub: ${p.details?.hub ? 'Sim' : 'Não'}</li><li>✔ Bag: ${p.details?.bag ? 'Sim' : 'Não'}</li><li>⚙ Hélices: ${p.details?.propellers || 'Padrão'}</li>`;
                 
-                document.getElementById('modal-used-share-btn').onclick = () => Actions.shareUsedCard(idx);
+                document.getElementById('modal-used-share-trigger').onclick = () => Actions.openShareModal(p.name, p.price, 'used');
                 document.getElementById('used-details-modal').classList.remove('hidden');
+                document.getElementById('used-contact-options').classList.add('hidden');
             },
 
             openDriveLink: (url, title) => {
@@ -491,11 +500,12 @@
                 UI.openWebView(url, title);
             },
 
-            openShareModal: (name, price) => {
-                STATE.currentShareProduct = { name, price };
+            openShareModal: (name, price, type) => {
+                STATE.currentShareProduct = { name, price: Utils.cleanCurrency(price), type };
                 document.getElementById('share-product-name').textContent = name;
                 UI.setShareMode('vista');
                 document.getElementById('share-modal').classList.remove('hidden');
+                UI.closeModal('used-details-modal');
             },
 
             confirmShare: () => {
@@ -510,33 +520,34 @@
                     condText = `💰 *Valor à Vista:* ${Utils.fmtBRL.format(finalVal)}` + (disc > 0 ? ` (${disc}% OFF)` : "");
                 } else {
                     const n = parseInt(document.getElementById('share-installments').value);
-                    const rate = CONFIG.installmentRates[n] || 0;
-                    finalVal = p.price * (1 + (rate/100));
                     condText = `💳 *Condição Parcelada:* ${n}x de ${Utils.fmtBRL.format(finalVal/n)}\n*Total:* ${Utils.fmtBRL.format(finalVal)}`;
                 }
 
                 const signalVal = finalVal * 0.30;
                 const bonusText = `\n\n🎁 Bônus Exclusivo *Galvão Drones*\nAo adquirir seu equipamento conosco, você não leva apenas a caixa para casa. Você ganha:\n\n🎓 *Aula Exclusiva de Pilotagem:* Um treinamento prático para você dominar todos os comandos.\n🚀 *Decolagem Imediata:* Você já sai da nossa unidade sabendo operar o drone com total segurança e precisão.`;
-                const msg = `🚁 *PROPOSTA GALVÃO DRONES*\n\n📦 *Equipamento:* ${p.name}\n${condText}\n\n🛑 *Sinal de Reserva (30%):* ${Utils.fmtBRL.format(signalVal)}\n_(Garantia de estoque)_${bonusText}`;
-                window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+                
+                const finalMsg = `🚁 *PROPOSTA GALVÃO DRONES*\n\n📦 *Equipamento:* ${p.name}\n${condText}\n\n🛑 *Sinal de Reserva (30%):* ${Utils.fmtBRL.format(signalVal)}\n_(Valor abatido no total final)_${bonusText}`;
+                
+                window.open(`https://wa.me/?text=${encodeURIComponent(finalMsg)}`, '_blank');
                 UI.closeModal('share-modal');
             },
 
-            shareUsedCard: (idx) => {
-                const p = STATE.usedProducts[idx];
-                const priceVal = Utils.cleanCurrency(p.price);
+            finalizeAction: (context, action) => {
+                const p = context === 'used' ? STATE.usedProducts[STATE.currentUsedIdx] : { name: STATE.currentShareProduct.name };
+                const priceVal = context === 'used' ? Utils.cleanCurrency(p.price) : STATE.currentShareProduct.price;
                 const signalVal = priceVal * 0.30;
-                const bonusText = `\n\n🎁 Bônus Exclusivo *Galvão Drones*\n🎓 *Aula Exclusiva de Pilotagem:* Treinamento prático incluso.\n🚀 *Decolagem Imediata:* Saia operando com segurança.`;
-                const msg = `🔥 *OPORTUNIDADE GALVÃO DRONES*\n\n🚁 *Modelo:* ${p.name}\n💎 *Condição:* ${p.condition}\n💰 *Valor:* ${Utils.fmtBRL.format(priceVal)}\n🛑 *Sinal Reserva (30%):* ${Utils.fmtBRL.format(signalVal)}${bonusText}`;
-                window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+
+                const texts = {
+                    'consultar': `🔍 *CONSULTA DISPONIBILIDADE:* ${p.name}`,
+                    'reservar': `🛑 *SOLICITAÇÃO DE RESERVA:* ${p.name}\n📉 *Sinal (30%):* ${Utils.fmtBRL.format(signalVal)}`,
+                    'venda': `🚀 *VENDA CONCLUÍDA:* ${p.name}`
+                };
+
+                window.open(`https://wa.me/55${CONFIG.central}?text=${encodeURIComponent(texts[action])}`, '_blank');
+                UI.closeModal('used-details-modal');
             },
 
-            finalizeSale: (name) => window.open(`https://wa.me/55${CONFIG.central}?text=${encodeURIComponent("🔍 Consulta: " + name)}`, '_blank'),
-            consultUsedInChat: () => {
-                const p = STATE.usedProducts[STATE.currentUsedIdx];
-                window.open(`https://wa.me/55${CONFIG.central}?text=${encodeURIComponent("🔍 Interesse em Seminovo: " + p.name)}`, '_blank');
-            },
-            shareCommercial: () => window.open(`https://wa.me/?text=${encodeURIComponent("*Dados Oficiais Galvão Drones*\nCNPJ: " + CONFIG.cnpj + "\nEndereço: " + CONFIG.address)}`, '_blank')
+            finalizeSale: (name) => window.open(`https://wa.me/55${CONFIG.central}?text=${encodeURIComponent("🔍 Consulta de Valor: " + name)}`, '_blank')
         };
 
         const Admin = {
@@ -562,19 +573,21 @@
         const Data = {
             load: async () => {
                 try {
-                    const [u, p, us, d, pas] = await Promise.all([
+                    const [u, p, us, d, pas, m] = await Promise.all([
                         fetch('usuarios.json').then(r => r.json()).catch(()=>({users:[]})),
                         fetch('produtos.json').then(r => r.json()).catch(()=>({products:[]})),
                         fetch('usados.json').then(r => r.json()).catch(()=>({usedProducts:[]})),
                         fetch('drive.json').then(r => r.json()).catch(()=>({links:{}})),
-                        fetch('pas.json').then(r => r.json()).catch(()=>({admin:"", bypass:""}))
+                        fetch('pas.json').then(r => r.json()).catch(()=>({admin:"", bypass:""})),
+                        fetch('marketing.json').then(r => r.json()).catch(()=>({marketingAssets:[]}))
                     ]);
                     STATE.users = u.users || [];
                     STATE.products = p.products || [];
                     STATE.usedProducts = us.usedProducts || [];
                     STATE.driveLinks = d.links || {};
                     STATE.passwords = pas;
-                } catch(e) { console.error("Falha no carregamento dos dados.", e); }
+                    STATE.marketingAssets = m.marketingAssets || [];
+                } catch(e) { console.error("Erro carregando back-end JSON."); }
             }
         };
 
