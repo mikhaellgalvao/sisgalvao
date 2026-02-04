@@ -56,11 +56,6 @@
         input:checked + .slider:before { transform: translateX(20px); }
         .dark .slider { background-color: #3f3f46; }
 
-        /* Badge Styles */
-        .badge-seminovo { background-color: #dbeafe; color: #1e40af; }
-        .badge-openbox { background-color: #fce7f3; color: #be185d; }
-        .badge-revisado { background-color: #d1fae5; color: #065f46; }
-
         .card-image-transition { transition: background-image 0.5s ease-in-out; }
 
         /* Custom Checkbox for Marketing */
@@ -165,6 +160,34 @@
 
     <!-- MODAIS E POPUPS -->
 
+    <!-- Webview Modal (DRIVE) -->
+    <div id="drive-webview-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-xl z-[200] flex flex-col fade-in">
+        <header class="h-20 bg-zinc-900 border-b border-white/10 px-6 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <button onclick="UI.closeModal('drive-webview-modal')" class="p-2 text-white hover:text-brand-orange transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <div>
+                    <h3 id="drive-modal-title" class="text-white font-black uppercase italic tracking-tighter leading-none">Pasta Drive</h3>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Navegação Interna</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <a id="drive-external-link" href="#" target="_blank" class="px-6 py-2.5 bg-brand-orange text-white font-black rounded-xl text-[10px] uppercase tracking-widest shadow-lg hover:bg-orange-600 transition-all flex items-center gap-2 italic">
+                    Acessar Site
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                </a>
+            </div>
+        </header>
+        <div class="flex-1 bg-white relative">
+            <!-- Loading Spinner -->
+            <div id="drive-loader" class="absolute inset-0 flex items-center justify-center bg-zinc-900 z-10">
+                <div class="w-12 h-12 border-4 border-brand-orange border-t-transparent rounded-full animate-spin"></div>
+            </div>
+            <iframe id="drive-iframe" class="w-full h-full border-0" src="" onload="document.getElementById('drive-loader').classList.add('hidden')"></iframe>
+        </div>
+    </div>
+
     <!-- Marketing Variations Modal -->
     <div id="marketing-modal" ondblclick="if(event.target === this) UI.closeModal('marketing-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-lg p-8 shadow-2xl border dark:border-white/10 text-center flex flex-col max-h-[85vh]">
@@ -234,7 +257,7 @@
         </div>
     </div>
     
-    <!-- Share Options Modal (NEW PRODUCTS) -->
+    <!-- Share Options Modal -->
     <div id="share-modal" ondblclick="if(event.target === this) UI.closeModal('share-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
             <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-4">Compartilhar</h3>
@@ -380,7 +403,11 @@
             isLocked: false,
             lockoutTimer: null,
             deleteTarget: null,
-            driveLinks: {}
+            driveLinks: {
+                "postados": "https://drive.google.com/drive/folders/1M_Dlzje4DVjbzD9p0awi-vIvwP6OXvF1",
+                "postar": "https://drive.google.com/drive/folders/1m3ECb1lAIB4P1d1jZ8QdrtyE6CUO4M6T",
+                "editar": "https://drive.google.com/drive/folders/195aWrPx89P9EIUK7PEL4Vj-6BMXVeVnY"
+            }
         };
 
         const Bypass = {
@@ -880,12 +907,9 @@
                 const isCentral = document.getElementById('qr-central-check').checked;
                 const phone = isCentral ? CONFIG.central : (STATE.currentUser?.phone || CONFIG.central);
                 const qrImg = document.getElementById('profile-qrcode');
-                
                 if (!qrImg) return;
-                
                 const waLink = `https://wa.me/55${phone.replace(/\D/g, '')}`;
-                const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(waLink)}&bgcolor=ffffff&color=0E5847&margin=10`;
-                
+                const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(waLink)}&bgcolor=ffffff&color=0E5847&margin=10&format=png`;
                 qrImg.classList.add('opacity-0');
                 qrImg.src = apiUrl;
                 qrImg.onload = () => qrImg.classList.remove('opacity-0');
@@ -901,13 +925,23 @@
             consultUsed: (details) => window.open(`https://wa.me/55${CONFIG.central}?text=${encodeURIComponent("🔍 Interesse em Seminovo: " + details)}`, '_blank'),
             
             openDriveLink: (key) => {
-                const url = STATE.driveLinks?.[key];
+                const url = STATE.driveLinks[key];
                 if(url) {
-                    if(confirm("Você será redirecionado para a pasta no Google Drive. Deseja continuar?")) {
-                        window.open(url, '_blank');
-                    }
+                    const modal = document.getElementById('drive-webview-modal');
+                    const iframe = document.getElementById('drive-iframe');
+                    const loader = document.getElementById('drive-loader');
+                    const external = document.getElementById('drive-external-link');
+                    const title = document.getElementById('drive-modal-title');
+                    
+                    const labels = { postados: 'Conteúdos Postados', postar: 'Materiais para Postar', editar: 'Arquivos para Editar' };
+                    title.textContent = labels[key] || 'Pasta Galvão';
+                    
+                    loader.classList.remove('hidden');
+                    iframe.src = url;
+                    external.href = url;
+                    modal.classList.remove('hidden');
                 } else {
-                    alert("Link do Drive não configurado no sistema (drive.json).");
+                    alert("Link não configurado.");
                 }
             },
 
@@ -934,15 +968,8 @@
 
             downloadSelectedMarketing: () => {
                 const checked = document.querySelectorAll('.mkt-checkbox-input:checked');
-                if(checked.length === 0) {
-                    alert("Selecione pelo menos uma opção para baixar.");
-                    return;
-                }
-                checked.forEach((cb, i) => {
-                    setTimeout(() => {
-                        window.open(cb.value, '_blank');
-                    }, i * 1000); 
-                });
+                if(checked.length === 0) { alert("Selecione pelo menos uma opção para baixar."); return; }
+                checked.forEach((cb, i) => { setTimeout(() => { window.open(cb.value, '_blank'); }, i * 1000); });
                 UI.closeModal('marketing-modal');
             },
 
@@ -957,7 +984,6 @@
                 const p = STATE.currentShareProduct; 
                 const mode = STATE.shareMode;
                 let detailsText = "";
-                
                 const reservationVal = p.price * 0.30;
                 const reservationMsg = `\n📉 *Sinal de Reserva (30%):* *${Utils.fmtBRL.format(reservationVal)}* (Abatido no total / Não reembolsável)`;
 
@@ -979,13 +1005,7 @@
                     }
                 }
 
-                let finalMessage = `🚀 *PROPOSTA GALVÃO DRONES*\n\n`;
-                finalMessage += `*Produto:* ${p.name}\n`;
-                finalMessage += `*Valor Base:* ${Utils.fmtBRL.format(p.price)}`;
-                finalMessage += detailsText;
-                finalMessage += `\n${reservationMsg}\n\n`;
-                finalMessage += `🎁 *Bônus Especial:*\nAo investir conosco, você ganha uma *AULA DE PILOTAGEM* prática presencial. Aprenda a dominar seu DJI com quem é especialista! 🚁`;
-                
+                let finalMessage = `🚀 *PROPOSTA GALVÃO DRONES*\n\n*Produto:* ${p.name}\n*Valor Base:* ${Utils.fmtBRL.format(p.price)}${detailsText}\n${reservationMsg}\n\n🎁 *Bônus Especial:*\nAo investir conosco, você ganha uma *AULA DE PILOTAGEM* prática presencial. Aprenda a dominar seu DJI com quem é especialista! 🚁`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
                 UI.closeModal('share-modal');
             },
@@ -995,49 +1015,24 @@
                 const isVisitor = STATE.currentUser.role === 'Visitante';
                 const priceVal = Utils.cleanCurrency(p.price);
                 const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(priceVal);
-                
                 let signalMsg = "";
                 if (!isVisitor) {
                     const signalVal = priceVal * 0.30;
                     const signalFormatted = Utils.fmtBRL.format(signalVal);
                     signalMsg = `📝 *Sinal de Reserva (30%):* ${signalFormatted} (Não reembolsável)\n`;
                 }
-
                 const details = p.details || {};
                 const check = "✅"; const uncheck = "❌";
                 const images = Array.isArray(p.images) ? p.images : [p.image];
                 const includePhoto = confirm("Incluir link das fotos na mensagem?");
-                
-                let msg = `🔥 *OPORTUNIDADE GALVÃO DRONES*\n\n`;
-                msg += `🚁 *Modelo:* ${p.name}\n`;
-                msg += `💎 *Condição:* ${p.condition}\n`;
-                msg += `💰 *Investimento:* ${priceFormatted}\n`;
-                if(signalMsg) msg += signalMsg;
-                msg += `\n`;
-                
-                msg += `🔋 *Status Baterias (Ciclos):*\n`;
-                if(details.batteries && details.batteries.length) {
-                    msg += details.batteries.map((c, i) => `- Bat ${i+1}: ${c}`).join('\n') + `\n\n`;
-                } else { msg += `- Não informado\n\n`; }
-                
-                msg += `📦 *Incluso:*\n`;
-                msg += `${details.hub ? check : uncheck} Hub de Carregamento\n`;
-                msg += `${details.cables ? check : uncheck} Cabos / Conectores\n`;
-                msg += `${details.bag ? check : uncheck} Bolsa / Case\n`;
-                msg += `⚙ Hélices: ${details.propellers || 'Padrão'}\n\n`;
-                
+                let msg = `🔥 *OPORTUNIDADE GALVÃO DRONES*\n\n🚁 *Modelo:* ${p.name}\n💎 *Condição:* ${p.condition}\n💰 *Investimento:* ${priceFormatted}\n${signalMsg}\n🔋 *Status Baterias (Ciclos):*\n`;
+                if(details.batteries && details.batteries.length) { msg += details.batteries.map((c, i) => `- Bat ${i+1}: ${c}`).join('\n') + `\n\n`; } 
+                else { msg += `- Não informado\n\n`; }
+                msg += `📦 *Incluso:*\n${details.hub ? check : uncheck} Hub de Carregamento\n${details.cables ? check : uncheck} Cabos / Conectores\n${details.bag ? check : uncheck} Bolsa / Case\n⚙ Hélices: ${details.propellers || 'Padrão'}\n\n`;
                 if(p.desc) msg += `📝 *Detalhes:* ${p.desc}\n\n`;
-                
-                if(includePhoto && images.length > 0) {
-                    msg += `📸 *Fotos:*\n`;
-                    images.forEach((img, i) => { msg += `${i+1}. ${img}\n`; });
-                }
-
-                if (navigator.share) {
-                    navigator.share({ title: `Galvão Drones - ${p.name}`, text: msg }).catch(console.error);
-                } else {
-                    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-                }
+                if(includePhoto && images.length > 0) { msg += `📸 *Fotos:*\n`; images.forEach((img, i) => { msg += `${i+1}. ${img}\n`; }); }
+                if (navigator.share) { navigator.share({ title: `Galvão Drones - ${p.name}`, text: msg }).catch(console.error); } 
+                else { window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank'); }
             },
 
             proceedContact: () => {
@@ -1046,7 +1041,6 @@
                 const isVisitor = STATE.currentUser.role === 'Visitante';
                 const priceVal = Utils.cleanCurrency(p.price);
                 const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(priceVal);
-                
                 let msg = "";
                 if(STATE.contactOption === 'reserve') {
                     const cName = document.getElementById('res-name-used').value.trim();
@@ -1066,41 +1060,30 @@
                 document.getElementById('modal-product-name').textContent = name;
                 const sellers = ['central', 'mikhaell', 'maikhon', 'ryan'];
                 document.getElementById('modal-sellers-list').innerHTML = sellers.map(k => {
-                    let displayName = k.toUpperCase();
-                    let subInfo = 'ENTERPRISE/AGRAS';
+                    let displayName = k.toUpperCase(); let subInfo = 'ENTERPRISE/AGRAS';
                     if(k === 'central') { displayName = 'CENTRAL GALVÃO DRONES'; subInfo = 'ATENDIMENTO GERAL'; } 
                     else if (k === 'ryan') { subInfo = 'VENDAS GERAL'; }
                     return `<label class="vendedor-option block cursor-pointer group"><input type="checkbox" name="vend_chk" value="${k}" class="hidden"><div class="p-4 border-2 border-gray-100 dark:border-zinc-800 rounded-2xl flex justify-between transition-all"><div class="text-left"><span class="block font-black text-sm dark:text-white uppercase">${displayName}</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest">${subInfo}</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full"></div></div></label>`;
                 }).join('');
                 UI.selectNewContactOption('availability');
-                document.getElementById('res-name-new').value = '';
-                document.getElementById('res-phone-new').value = '';
+                document.getElementById('res-name-new').value = ''; document.getElementById('res-phone-new').value = '';
                 document.getElementById('availability-modal').classList.remove('hidden');
             },
 
             sendAvailabilityRequest: () => {
                 const selectedSellers = Array.from(document.querySelectorAll('input[name="vend_chk"]:checked')).map(cb => cb.value);
                 if(selectedSellers.length === 0) { alert('Selecione pelo menos um vendedor.'); return; }
-
-                let msgPrefix = "";
-                let clientDetails = "";
-
-                if(STATE.newContactOption === 'sale') {
-                    msgPrefix = "🚀 *VENDA CONCLUÍDA*";
-                } else if (STATE.newContactOption === 'reserve') {
+                let msgPrefix = ""; let clientDetails = "";
+                if(STATE.newContactOption === 'sale') { msgPrefix = "🚀 *VENDA CONCLUÍDA*"; } 
+                else if (STATE.newContactOption === 'reserve') {
                     const cName = document.getElementById('res-name-new').value.trim();
                     const cPhone = document.getElementById('res-phone-new').value.trim();
                     if(!cName || !cPhone) { alert('Por favor, preencha o Nome e Telefone do cliente para a reserva.'); return; }
                     msgPrefix = "🛑 *SOLICITAÇÃO DE RESERVA (30%)*";
                     clientDetails = `\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}\n⚠ *Condição:* Sinal sem devolução confirmado.`;
-                } else {
-                    msgPrefix = "🔍 *CONSULTA DE ESTOQUE*";
-                }
-
+                } else { msgPrefix = "🔍 *CONSULTA DE ESTOQUE*"; }
                 const finalMsg = `${msgPrefix}: ${STATE.currentProduct}${clientDetails}`;
-                selectedSellers.forEach((seller, i) => {
-                    setTimeout(() => window.open(`https://wa.me/55${CONFIG.contacts[seller]}?text=${encodeURIComponent(finalMsg)}`, '_blank'), i*800);
-                });
+                selectedSellers.forEach((seller, i) => { setTimeout(() => window.open(`https://wa.me/55${CONFIG.contacts[seller]}?text=${encodeURIComponent(finalMsg)}`, '_blank'), i*800); });
                 UI.closeModal('availability-modal');
             },
 
@@ -1109,83 +1092,33 @@
                 STATE.usedProducts.forEach((p, idx) => {
                     const images = Array.isArray(p.images) ? p.images : [p.image];
                     if(images.length > 1) {
-                        let current = 0;
-                        const el = document.getElementById(`card-img-${idx}`);
-                        if(!el) return;
-                        const interval = setInterval(() => {
-                            current = (current + 1) % images.length;
-                            el.style.backgroundImage = `url('${images[current]}')`;
-                        }, 3000);
+                        let current = 0; const el = document.getElementById(`card-img-${idx}`); if(!el) return;
+                        const interval = setInterval(() => { current = (current + 1) % images.length; el.style.backgroundImage = `url('${images[current]}')`; }, 3000);
                         STATE.intervals.push(interval);
                     }
                 });
             },
 
             openUsedDetails: (idx) => {
-                STATE.currentUsedIdx = idx;
-                const p = STATE.usedProducts[idx];
-                const images = Array.isArray(p.images) ? p.images : [p.image];
-                const details = p.details || {};
-                const isVisitor = STATE.currentUser.role === 'Visitante';
-
-                const mainImg = document.getElementById('modal-used-main-img');
-                mainImg.style.backgroundImage = `url('${images[0]}')`;
-                
+                STATE.currentUsedIdx = idx; const p = STATE.usedProducts[idx]; const images = Array.isArray(p.images) ? p.images : [p.image]; const details = p.details || {}; const isVisitor = STATE.currentUser.role === 'Visitante';
+                const mainImg = document.getElementById('modal-used-main-img'); mainImg.style.backgroundImage = `url('${images[0]}')`;
                 const thumbsContainer = document.getElementById('modal-used-thumbnails');
-                thumbsContainer.innerHTML = images.map(img => `
-                    <div class="w-20 h-20 flex-shrink-0 bg-gray-100 dark:bg-zinc-800 rounded-xl bg-cover bg-center border-2 border-transparent hover:border-brand-orange cursor-pointer transition-all" 
-                         style="background-image: url('${img}')"
-                         onclick="document.getElementById('modal-used-main-img').style.backgroundImage = 'url(\\'${img}\\')'">
-                    </div>
-                `).join('');
-
+                thumbsContainer.innerHTML = images.map(img => `<div class="w-20 h-20 flex-shrink-0 bg-gray-100 dark:bg-zinc-800 rounded-xl bg-cover bg-center border-2 border-transparent hover:border-brand-orange cursor-pointer transition-all" style="background-image: url('${img}')" onclick="document.getElementById('modal-used-main-img').style.backgroundImage = 'url(\\'${img}\\')'"></div>`).join('');
                 document.getElementById('modal-used-title').textContent = p.name;
                 const priceEl = document.getElementById('modal-used-price');
-                if (isVisitor) {
-                    priceEl.textContent = "CONSULTE";
-                    priceEl.classList.remove('text-3xl', 'text-brand-orange');
-                    priceEl.classList.add('text-2xl', 'text-gray-400');
-                } else {
-                    priceEl.textContent = Utils.fmtBRL.format(Utils.cleanCurrency(p.price));
-                    priceEl.classList.add('text-3xl', 'text-brand-orange');
-                    priceEl.classList.remove('text-2xl', 'text-gray-400');
-                }
-
+                if (isVisitor) { priceEl.textContent = "CONSULTE"; priceEl.classList.remove('text-3xl', 'text-brand-orange'); priceEl.classList.add('text-2xl', 'text-gray-400'); } 
+                else { priceEl.textContent = Utils.fmtBRL.format(Utils.cleanCurrency(p.price)); priceEl.classList.add('text-3xl', 'text-brand-orange'); priceEl.classList.remove('text-2xl', 'text-gray-400'); }
                 document.getElementById('modal-used-desc').textContent = p.desc;
-                const badge = document.getElementById('modal-used-badge');
-                badge.className = 'px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest';
-                if(p.condition.includes('Seminovo')) badge.classList.add('badge-seminovo');
-                else if(p.condition.includes('Open Box')) badge.classList.add('badge-openbox');
-                else badge.classList.add('badge-revisado');
+                const badge = document.getElementById('modal-used-badge'); badge.className = 'px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest';
+                if(p.condition.includes('Seminovo')) badge.classList.add('badge-seminovo'); else if(p.condition.includes('Open Box')) badge.classList.add('badge-openbox'); else badge.classList.add('badge-revisado');
                 badge.textContent = p.condition;
-
-                const batsContainer = document.getElementById('modal-used-batteries');
-                const bats = details.batteries || [];
+                const batsContainer = document.getElementById('modal-used-batteries'); const bats = details.batteries || [];
                 if(bats.length === 0) { batsContainer.innerHTML = '<span class="text-xs text-gray-400 italic">Sem informação de bateria</span>'; } 
-                else {
-                    batsContainer.innerHTML = bats.map((cycle, i) => `
-                        <div class="flex flex-col items-center p-3 bg-white dark:bg-zinc-900 rounded-xl border dark:border-zinc-700 w-20">
-                            <svg class="w-6 h-6 text-green-500 mb-1" fill="currentColor" viewBox="0 0 20 20"><path d="M16 6H4a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 00-2-2zM4 8h12v6H4V8zm14 2h.5a1.5 1.5 0 110 3H18v-3z"></path></svg>
-                            <span class="text-[10px] font-black text-gray-500 uppercase">Bat ${i+1}</span>
-                            <span class="text-sm font-bold dark:text-white">${cycle}</span>
-                        </div>
-                    `).join('');
-                }
-
-                const accContainer = document.getElementById('modal-used-accessories');
-                const checkIcon = '<span class="text-green-500 mr-2">✔</span>';
-                const xIcon = '<span class="text-red-400 mr-2">✖</span>';
-                accContainer.innerHTML = `
-                    <li class="flex items-center">${details.hub ? checkIcon : xIcon} Hub de Carregamento</li>
-                    <li class="flex items-center">${details.cables ? checkIcon : xIcon} Cabos / Conectores</li>
-                    <li class="flex items-center">${details.bag ? checkIcon : xIcon} Bolsa / Case</li>
-                    <li class="flex items-center"><span class="text-brand-orange mr-2">⚙</span> Hélices: ${details.propellers || 'Padrão'}</li>
-                `;
-
-                document.getElementById('modal-used-init-contact').classList.remove('hidden');
-                document.getElementById('modal-used-options').classList.add('hidden');
-                document.getElementById('modal-used-share').onclick = () => Actions.shareUsedCard(idx);
-                document.getElementById('used-details-modal').classList.remove('hidden');
+                else { batsContainer.innerHTML = bats.map((cycle, i) => `<div class="flex flex-col items-center p-3 bg-white dark:bg-zinc-900 rounded-xl border dark:border-zinc-700 w-20"><svg class="w-6 h-6 text-green-500 mb-1" fill="currentColor" viewBox="0 0 20 20"><path d="M16 6H4a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 00-2-2zM4 8h12v6H4V8zm14 2h.5a1.5 1.5 0 110 3H18v-3z"></path></svg><span class="text-[10px] font-black text-gray-500 uppercase">Bat ${i+1}</span><span class="text-sm font-bold dark:text-white">${cycle}</span></div>`).join(''); }
+                const accContainer = document.getElementById('modal-used-accessories'); const checkIcon = '<span class="text-green-500 mr-2">✔</span>'; const xIcon = '<span class="text-red-400 mr-2">✖</span>';
+                accContainer.innerHTML = `<li class="flex items-center">${details.hub ? checkIcon : xIcon} Hub de Carregamento</li><li class="flex items-center">${details.cables ? checkIcon : xIcon} Cabos / Conectores</li><li class="flex items-center">${details.bag ? checkIcon : xIcon} Bolsa / Case</li><li class="flex items-center"><span class="text-brand-orange mr-2">⚙</span> Hélices: ${details.propellers || 'Padrão'}</li>`;
+                document.getElementById('modal-used-init-contact').classList.remove('hidden'); document.getElementById('modal-used-options').classList.add('hidden');
+                document.getElementById('modal-used-share').onclick = () => Actions.shareUsedCard(idx); document.getElementById('used-details-modal').classList.remove('hidden');
             }
         };
 
@@ -1204,128 +1137,45 @@
                 else if(STATE.adminPassBuffer.length === 4) { setTimeout(() => { STATE.adminPassBuffer = ""; document.getElementById('keypad-display').textContent = ""; }, 300); }
             },
             clearPass: () => { STATE.adminPassBuffer = ""; document.getElementById('keypad-display').textContent = ""; },
-
             openForm: (type, index = null) => {
-                STATE.adminEdit = { type, index };
-                document.getElementById('admin-modal-title').textContent = (index !== null ? `Editar ${type}` : `Novo ${type}`).toUpperCase();
+                STATE.adminEdit = { type, index }; document.getElementById('admin-modal-title').textContent = (index !== null ? `Editar ${type}` : `Novo ${type}`).toUpperCase();
                 let html = "";
-                
-                if(type === 'user') {
-                    const d = index!==null ? STATE.users[index] : {name:'',username:'',password:'',avatar:'',role:'Vendedor'};
-                    html = `<input id="af-name" value="${d.name}" placeholder="Nome" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-user" value="${d.username}" placeholder="User" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-pass" value="${d.password}" placeholder="Pass" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-avatar" value="${d.avatar||''}" placeholder="Img URL" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">`;
-                } else if (type === 'product') {
-                    const d = index!==null ? STATE.products[index] : {name:'',sell:'',line:'Consumer'};
-                    html = `<input id="af-name" value="${d.name}" placeholder="Nome do Drone" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-sell" value="${d.sell}" placeholder="Venda (R$)" class="w-full p-4 mb-3 border rounded-xl dark:bg-zinc-800 text-sm"><select id="af-line" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3 bg-white dark:bg-zinc-900"><option value="Consumer" ${d.line === 'Consumer' ? 'selected' : ''}>Consumer</option><option value="Enterprise" ${d.line === 'Enterprise' ? 'selected' : ''}>Enterprise</option><option value="Agriculture" ${d.line === 'Agriculture' ? 'selected' : ''}>Agriculture</option></select>`;
-                } else if (type === 'used') {
-                    const d = index!==null ? STATE.usedProducts[index] : {name:'',price:'',condition:'Seminovo', images:[], details:{batteries:[], hub:false, cables:false, propellers:'', bag:false}, desc:''};
-                    const imgs = Array.isArray(d.images) ? d.images.join(', ') : d.image || '';
-                    const bats = d.details.batteries ? d.details.batteries.join(', ') : '';
-                    html = `
-                        <input id="af-name" value="${d.name}" placeholder="Modelo" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
-                        <div class="grid grid-cols-2 gap-3 mb-3">
-                            <input id="af-price" value="${d.price}" placeholder="Preço (R$)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm">
-                            <select id="af-condition" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm bg-white dark:bg-zinc-900">
-                                <option value="Seminovo" ${d.condition === 'Seminovo' ? 'selected' : ''}>Seminovo</option>
-                                <option value="Open Box" ${d.condition === 'Open Box' ? 'selected' : ''}>Open Box</option>
-                                <option value="Revisado" ${d.condition === 'Revisado' ? 'selected' : ''}>Revisado</option>
-                            </select>
-                        </div>
-                        <input id="af-images" value="${imgs}" placeholder="URLs das Imagens (separadas por vírgula)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
-                        <div class="bg-gray-50 dark:bg-zinc-800/50 p-3 rounded-xl mb-3">
-                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Detalhes Técnicos</label>
-                            <input id="af-bats" value="${bats}" placeholder="Ciclos Baterias (ex: 12, 15, 10)" class="w-full p-3 rounded-lg border dark:bg-zinc-800 text-sm mb-2">
-                            <input id="af-props" value="${d.details.propellers||''}" placeholder="Hélices (ex: 3 pares)" class="w-full p-3 rounded-lg border dark:bg-zinc-800 text-sm mb-2">
-                            <div class="flex gap-4">
-                                <label class="flex items-center text-xs"><input type="checkbox" id="af-hub" ${d.details.hub?'checked':''} class="mr-2"> Hub</label>
-                                <label class="flex items-center text-xs"><input type="checkbox" id="af-cables" ${d.details.cables?'checked':''} class="mr-2"> Cabos</label>
-                                <label class="flex items-center text-xs"><input type="checkbox" id="af-bag" ${d.details.bag?'checked':''} class="mr-2"> Bag</label>
-                            </div>
-                        </div>
-                        <textarea id="af-desc" placeholder="Descrição Geral" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${d.desc}</textarea>
-                    `;
-                } else if (type === 'marketing') {
-                    const d = index!==null ? STATE.marketingAssets[index] : {title:'',type:'Logo',preview:'',variations:[]};
-                    const varStr = d.variations ? d.variations.map(v => `${v.name}|${v.url}`).join('\n') : '';
-                    html = `
-                        <input id="af-title" value="${d.title}" placeholder="Título" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
-                        <select id="af-type" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3 bg-white dark:bg-zinc-900">
-                            <option value="Logo" ${d.type === 'Logo' ? 'selected' : ''}>Logo</option>
-                            <option value="Campanha" ${d.type === 'Campanha' ? 'selected' : ''}>Campanha</option>
-                            <option value="Institucional" ${d.type === 'Institucional' ? 'selected' : ''}>Institucional</option>
-                        </select>
-                        <input id="af-preview" value="${d.preview}" placeholder="URL Preview" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
-                        <textarea id="af-variations" placeholder="Variações (Nome|URL por linha)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${varStr}</textarea>
-                    `;
-                }
-                document.getElementById('admin-dynamic-form').innerHTML = html;
-                document.getElementById('admin-form-modal').classList.remove('hidden');
+                if(type === 'user') { const d = index!==null ? STATE.users[index] : {name:'',username:'',password:'',avatar:'',role:'Vendedor'}; html = `<input id="af-name" value="${d.name}" placeholder="Nome" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-user" value="${d.username}" placeholder="User" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-pass" value="${d.password}" placeholder="Pass" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-avatar" value="${d.avatar||''}" placeholder="Img URL" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm">`; } 
+                else if (type === 'product') { const d = index!==null ? STATE.products[index] : {name:'',sell:'',line:'Consumer'}; html = `<input id="af-name" value="${d.name}" placeholder="Nome do Drone" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-sell" value="${d.sell}" placeholder="Venda (R$)" class="w-full p-4 mb-3 border rounded-xl dark:bg-zinc-800 text-sm"><select id="af-line" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3 bg-white dark:bg-zinc-900"><option value="Consumer" ${d.line === 'Consumer' ? 'selected' : ''}>Consumer</option><option value="Enterprise" ${d.line === 'Enterprise' ? 'selected' : ''}>Enterprise</option><option value="Agriculture" ${d.line === 'Agriculture' ? 'selected' : ''}>Agriculture</option></select>`; } 
+                else if (type === 'used') { const d = index!==null ? STATE.usedProducts[index] : {name:'',price:'',condition:'Seminovo', images:[], details:{batteries:[], hub:false, cables:false, propellers:'', bag:false}, desc:''}; const imgs = Array.isArray(d.images) ? d.images.join(', ') : d.image || ''; const bats = d.details.batteries ? d.details.batteries.join(', ') : ''; html = `<input id="af-name" value="${d.name}" placeholder="Modelo" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><div class="grid grid-cols-2 gap-3 mb-3"><input id="af-price" value="${d.price}" placeholder="Preço (R$)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm"><select id="af-condition" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm bg-white dark:bg-zinc-900"><option value="Seminovo" ${d.condition === 'Seminovo' ? 'selected' : ''}>Seminovo</option><option value="Open Box" ${d.condition === 'Open Box' ? 'selected' : ''}>Open Box</option><option value="Revisado" ${d.condition === 'Revisado' ? 'selected' : ''}>Revisado</option></select></div><input id="af-images" value="${imgs}" placeholder="URLs das Imagens" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><div class="bg-gray-50 dark:bg-zinc-800/50 p-3 rounded-xl mb-3"><label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Detalhes Técnicos</label><input id="af-bats" value="${bats}" placeholder="Ciclos Baterias" class="w-full p-3 rounded-lg border dark:bg-zinc-800 text-sm mb-2"><input id="af-props" value="${d.details.propellers||''}" placeholder="Hélices" class="w-full p-3 rounded-lg border dark:bg-zinc-800 text-sm mb-2"><div class="flex gap-4"><label class="flex items-center text-xs"><input type="checkbox" id="af-hub" ${d.details.hub?'checked':''} class="mr-2"> Hub</label><label class="flex items-center text-xs"><input type="checkbox" id="af-cables" ${d.details.cables?'checked':''} class="mr-2"> Cabos</label><label class="flex items-center text-xs"><input type="checkbox" id="af-bag" ${d.details.bag?'checked':''} class="mr-2"> Bag</label></div></div><textarea id="af-desc" placeholder="Descrição Geral" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${d.desc}</textarea>`; } 
+                else if (type === 'marketing') { const d = index!==null ? STATE.marketingAssets[index] : {title:'',type:'Logo',preview:'',variations:[]}; const varStr = d.variations ? d.variations.map(v => `${v.name}|${v.url}`).join('\n') : ''; html = `<input id="af-title" value="${d.title}" placeholder="Título" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><select id="af-type" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3 bg-white dark:bg-zinc-900"><option value="Logo" ${d.type === 'Logo' ? 'selected' : ''}>Logo</option><option value="Campanha" ${d.type === 'Campanha' ? 'selected' : ''}>Campanha</option><option value="Institucional" ${d.type === 'Institucional' ? 'selected' : ''}>Institucional</option></select><input id="af-preview" value="${d.preview}" placeholder="URL Preview" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><textarea id="af-variations" placeholder="Variações" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${varStr}</textarea>`; }
+                document.getElementById('admin-dynamic-form').innerHTML = html; document.getElementById('admin-form-modal').classList.remove('hidden');
             },
-
             saveItem: () => {
-                const t = STATE.adminEdit.type; const i = STATE.adminEdit.index;
-                let newItem = {};
+                const t = STATE.adminEdit.type; const i = STATE.adminEdit.index; let newItem = {};
                 if (t==='user') { newItem = { name: document.getElementById('af-name').value, username: document.getElementById('af-user').value, password: document.getElementById('af-pass').value, avatar: document.getElementById('af-avatar').value, role: "Vendedor" }; } 
                 else if (t==='product') { newItem = { name: document.getElementById('af-name').value, sell: document.getElementById('af-sell').value, line: document.getElementById('af-line').value }; } 
-                else if (t==='used') {
-                    const imgStr = document.getElementById('af-images').value; const batStr = document.getElementById('af-bats').value;
-                    newItem = { name: document.getElementById('af-name').value, price: document.getElementById('af-price').value, condition: document.getElementById('af-condition').value, images: imgStr.split(',').map(s=>s.trim()).filter(s=>s), details: { batteries: batStr.split(',').map(s=>s.trim()).filter(s=>s), propellers: document.getElementById('af-props').value, hub: document.getElementById('af-hub').checked, cables: document.getElementById('af-cables').checked, bag: document.getElementById('af-bag').checked }, desc: document.getElementById('af-desc').value };
-                } else if (t==='marketing') {
-                    const varStr = document.getElementById('af-variations').value;
-                    const variations = varStr.split('\n').map(line => { const [name, url] = line.split('|'); return name && url ? { name: name.trim(), url: url.trim() } : null; }).filter(v => v);
-                    newItem = { title: document.getElementById('af-title').value, type: document.getElementById('af-type').value, preview: document.getElementById('af-preview').value, variations: variations };
-                }
+                else if (t==='used') { const imgStr = document.getElementById('af-images').value; const batStr = document.getElementById('af-bats').value; newItem = { name: document.getElementById('af-name').value, price: document.getElementById('af-price').value, condition: document.getElementById('af-condition').value, images: imgStr.split(',').map(s=>s.trim()).filter(s=>s), details: { batteries: batStr.split(',').map(s=>s.trim()).filter(s=>s), propellers: document.getElementById('af-props').value, hub: document.getElementById('af-hub').checked, cables: document.getElementById('af-cables').checked, bag: document.getElementById('af-bag').checked }, desc: document.getElementById('af-desc').value }; } 
+                else if (t==='marketing') { const varStr = document.getElementById('af-variations').value; const variations = varStr.split('\n').map(line => { const [name, url] = line.split('|'); return name && url ? { name: name.trim(), url: url.trim() } : null; }).filter(v => v); newItem = { title: document.getElementById('af-title').value, type: document.getElementById('af-type').value, preview: document.getElementById('af-preview').value, variations: variations }; }
                 const targetArr = t==='user' ? STATE.users : t==='product' ? STATE.products : t==='used' ? STATE.usedProducts : STATE.marketingAssets;
                 if(i !== null) targetArr[i] = newItem; else targetArr.push(newItem);
                 UI.closeModal('admin-form-modal'); UI.renderAdmin();
             },
-
             askDelete: (type, index) => { STATE.deleteTarget = { type, index }; document.getElementById('delete-confirm-modal').classList.remove('hidden'); },
-            confirmDelete: () => {
-                const { type, index } = STATE.deleteTarget;
-                const targetArr = type==='user' ? STATE.users : type==='product' ? STATE.products : type==='used' ? STATE.usedProducts : STATE.marketingAssets;
-                targetArr.splice(index, 1);
-                UI.closeModal('delete-confirm-modal'); UI.renderAdmin();
-            }
+            confirmDelete: () => { const { type, index } = STATE.deleteTarget; const targetArr = type==='user' ? STATE.users : type==='product' ? STATE.products : type==='used' ? STATE.usedProducts : STATE.marketingAssets; targetArr.splice(index, 1); UI.closeModal('delete-confirm-modal'); UI.renderAdmin(); }
         };
 
         const Data = {
             load: async () => {
                 try {
-                    const [u, p, us, m, pass, d] = await Promise.all([
-                        fetch('usuarios.json').then(r => r.ok?r.json():null),
-                        fetch('produtos.json').then(r => r.ok?r.json():null),
-                        fetch('usados.json').then(r => r.ok?r.json():null),
-                        fetch('marketing.json').then(r => r.ok?r.json():null),
-                        fetch('pas.json').then(r => r.ok?r.json():null),
-                        fetch('drive.json').then(r => r.ok?r.json():null)
-                    ]);
-                    if(u?.users) STATE.users = u.users;
-                    if(p?.products) STATE.products = p.products;
-                    if(us?.usedProducts) STATE.usedProducts = us.usedProducts; else STATE.usedProducts = [];
-                    if(m?.marketingAssets) {
-                        STATE.marketingAssets = m.marketingAssets.map(asset => { if(!asset.variations && asset.downloadUrl) { return { ...asset, variations: [{name: 'Padrão', url: asset.downloadUrl}] }; } return asset; });
-                    }
-                    if(pass) STATE.passwords = pass;
-                    if(d?.links) STATE.driveLinks = d.links;
+                    const [u, p, us, m, pass, d] = await Promise.all([ fetch('usuarios.json').then(r => r.ok?r.json():null), fetch('produtos.json').then(r => r.ok?r.json():null), fetch('usados.json').then(r => r.ok?r.json():null), fetch('marketing.json').then(r => r.ok?r.json():null), fetch('pas.json').then(r => r.ok?r.json():null), fetch('drive.json').then(r => r.ok?r.json():null) ]);
+                    if(u?.users) STATE.users = u.users; if(p?.products) STATE.products = p.products; if(us?.usedProducts) STATE.usedProducts = us.usedProducts;
+                    if(m?.marketingAssets) { STATE.marketingAssets = m.marketingAssets.map(asset => { if(!asset.variations && asset.downloadUrl) { return { ...asset, variations: [{name: 'Padrão', url: asset.downloadUrl}] }; } return asset; }); }
+                    if(pass) STATE.passwords = pass; if(d?.links) STATE.driveLinks = d.links;
                 } catch(e) { console.log("Dados base vazios."); }
             },
             loadPasswords: async () => { try { const res = await fetch('pas.json'); if(res.ok) { STATE.passwords = await res.json(); } } catch(e) {} }
         };
 
         document.addEventListener('DOMContentLoaded', () => {
-            UI.init();
-            if(localStorage.getItem('gd_user')) { document.getElementById('username-input').value = localStorage.getItem('gd_user'); document.getElementById('password-input').value = localStorage.getItem('gd_pass'); document.getElementById('remember-me').checked = true; }
+            UI.init(); if(localStorage.getItem('gd_user')) { document.getElementById('username-input').value = localStorage.getItem('gd_user'); document.getElementById('password-input').value = localStorage.getItem('gd_pass'); document.getElementById('remember-me').checked = true; }
             document.getElementById('admin-save-btn').onclick = Admin.saveItem;
-            const saleInput = document.getElementById('popup-sale-value');
-            if(saleInput) saleInput.oninput = () => {
-                const val = parseFloat(saleInput.value) || 0; const inst = parseInt(document.getElementById('popup-installments').value) || 0;
-                if (val > 0 && inst > 0) {
-                    const total = val * (1 + (CONFIG.installmentRates[inst] || 0)/100);
-                    document.getElementById('popup-total-value').textContent = Utils.fmtBRL.format(total);
-                    document.getElementById('popup-installment-value').textContent = `${inst}x de ${Utils.fmtBRL.format(total/inst)}`;
-                    document.getElementById('popup-calculator-results').classList.remove('hidden');
-                }
-            };
+            const saleInput = document.getElementById('popup-sale-value'); if(saleInput) saleInput.oninput = () => { const val = parseFloat(saleInput.value) || 0; const inst = parseInt(document.getElementById('popup-installments').value) || 0; if (val > 0 && inst > 0) { const total = val * (1 + (CONFIG.installmentRates[inst] || 0)/100); document.getElementById('popup-total-value').textContent = Utils.fmtBRL.format(total); document.getElementById('popup-installment-value').textContent = `${inst}x de ${Utils.fmtBRL.format(total/inst)}`; document.getElementById('popup-calculator-results').classList.remove('hidden'); } };
         });
 
         window.UI = UI; window.Actions = Actions; window.Admin = Admin; window.Utils = Utils; window.Bypass = Bypass;
