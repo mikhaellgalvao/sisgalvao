@@ -47,7 +47,7 @@
             "username": "consultas",
             "password": "",
             "role": "Visitante",
-            "phone": "",
+            "phone": "6236360668",
             "avatar": ""
         },
         {
@@ -55,12 +55,13 @@
     "username": "robert",
     "password": "5856",
     "role": "Vendedor Externo",
-    "phone": "",
+    "phone": "94981530223",
     "avatar": ""
 }
         
     ]
 }
+
 
 
 
