@@ -49,9 +49,19 @@
             "role": "Visitante",
             "phone": "",
             "avatar": ""
-        }
+        },
+        {
+    "name": "Robert Maia",
+    "username": "robert",
+    "password": "5856",
+    "role": "Vendedor Externo",
+    "phone": "",
+    "avatar": ""
+}
+        
     ]
 }
+
 
 
 
