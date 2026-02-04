@@ -47,6 +47,15 @@
         .dark .key-btn { background: #27272a; color: white; border: 1px solid rgba(255,255,255,0.05); }
         .key-btn:active { transform: scale(0.95); background: #EF7E13; color: white; border-color: #EF7E13; }
         
+        /* iOS Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: #EF7E13; }
+        input:checked + .slider:before { transform: translateX(20px); }
+        .dark .slider { background-color: #3f3f46; }
+
         /* Badge Styles */
         .badge-seminovo { background-color: #dbeafe; color: #1e40af; }
         .badge-openbox { background-color: #fce7f3; color: #be185d; }
@@ -627,10 +636,27 @@
                 const bgClass = u.role === 'Técnico' ? 'bg-white' : 'bg-gray-100 dark:bg-zinc-800';
                 const html = `
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div class="lg:col-span-1 bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 text-center shadow-sm">
+                        <div class="lg:col-span-1 bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 text-center shadow-sm flex flex-col items-center">
                             <div class="relative w-32 h-32 mx-auto rounded-full ${bgClass} border-4 border-brand-orange shadow-2xl flex items-center justify-center bg-cover bg-center overflow-hidden profile-avatar-div" style="background-image: url('${u.avatar||''}');">${!u.avatar ? `<span class="text-gray-400 font-bold uppercase text-[10px]">Técnico</span>` : ''}</div>
-                            <div class="mt-6 flex flex-col items-center"><img id="profile-qrcode" class="w-32 h-32 rounded-xl border-2 border-brand-green p-1 bg-white"><div class="mt-2 flex items-center gap-2"><input type="checkbox" id="qr-central-check" onchange="Actions.genQRCode()" class="w-4 h-4 text-brand-orange rounded border-gray-300 focus:ring-brand-orange cursor-pointer"><label for="qr-central-check" class="text-[10px] font-bold text-gray-500 uppercase cursor-pointer">Usar Contato Central</label></div></div>
-                            <div class="mt-4"><h3 class="text-2xl font-black dark:text-white uppercase italic">${u.name}</h3><p class="text-brand-orange font-bold uppercase text-[10px] tracking-widest">${u.role}</p></div>
+                            
+                            <div class="mt-8 mb-4">
+                                <div class="w-40 h-40 rounded-3xl border-4 border-brand-green/30 p-2 bg-white flex items-center justify-center shadow-inner overflow-hidden">
+                                    <img id="profile-qrcode" class="w-full h-full opacity-0 transition-opacity duration-500" alt="QR Code Contato">
+                                </div>
+                            </div>
+
+                            <div class="mt-4 flex flex-col items-center gap-2">
+                                <label class="switch">
+                                    <input type="checkbox" id="qr-central-check" onchange="Actions.genQRCode()">
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Usar Contato Central</span>
+                            </div>
+
+                            <div class="mt-6">
+                                <h3 class="text-2xl font-black dark:text-white uppercase italic tracking-tighter">${u.name}</h3>
+                                <p class="text-brand-orange font-bold uppercase text-[10px] tracking-widest">${u.role}</p>
+                            </div>
                         </div>
                         <div class="lg:col-span-2 bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm space-y-6 text-left">
                              <div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Nome Completo</label><input value="${u.name}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl font-bold text-sm dark:text-white" readonly></div>
@@ -638,7 +664,7 @@
                              <div class="pt-4 border-t dark:border-zinc-800">
                                 <h4 class="text-lg font-black text-brand-green uppercase italic mb-4">Informações Comerciais</h4>
                                 <div class="grid grid-cols-2 gap-4"><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">CNPJ</label><input value="48.429.698/0001-91" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Sede</label><input value="Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div></div>
-                                <div class="mt-4"><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Endereço</label><input value="R. 16, 304 - Qd.10 Lt.24 - Setor Aeroviario, Goiânia - GO, 74435-240Setor Aeroviário, Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div>
+                                <div class="mt-4"><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Endereço</label><input value="Setor Aeroviário, Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div>
                                 <button onclick="Actions.shareCommercial()" class="w-full mt-4 bg-brand-orange/10 text-brand-orange py-4 rounded-2xl font-black uppercase text-[10px] border border-brand-orange/20 hover:bg-brand-orange hover:text-white transition-all">Compartilhar Dados Comerciais</button>
                              </div>
                         </div>
@@ -850,6 +876,21 @@
             loginVisitor: () => { Actions.setupSession({name: "Visitante", role: "Visitante", username: "consultas", password: ""}); },
             loginBypass: () => { UI.closeModal('bypass-login-modal'); Actions.setupSession({ name: "Técnico Galvão", role: "Técnico", username: "tecnico_bypass", password: "", avatar: "https://imgur.com/ny5U9KV.png", phone: "6236360668" }); },
 
+            genQRCode: () => {
+                const isCentral = document.getElementById('qr-central-check').checked;
+                const phone = isCentral ? CONFIG.central : (STATE.currentUser?.phone || CONFIG.central);
+                const qrImg = document.getElementById('profile-qrcode');
+                
+                if (!qrImg) return;
+                
+                const waLink = `https://wa.me/55${phone.replace(/\D/g, '')}`;
+                const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(waLink)}&bgcolor=ffffff&color=0E5847&margin=10`;
+                
+                qrImg.classList.add('opacity-0');
+                qrImg.src = apiUrl;
+                qrImg.onload = () => qrImg.classList.remove('opacity-0');
+            },
+
             shareCalc: () => {
                 const total = document.getElementById('popup-total-value').textContent;
                 window.open(`https://wa.me/?text=${encodeURIComponent("*Simulação Galvão Drones*\nTotal: "+total)}`, '_blank');
@@ -917,7 +958,6 @@
                 const mode = STATE.shareMode;
                 let detailsText = "";
                 
-                // Cálculo do Sinal de Reserva (30%) - SEMPRE incluído na proposta de novos
                 const reservationVal = p.price * 0.30;
                 const reservationMsg = `\n📉 *Sinal de Reserva (30%):* *${Utils.fmtBRL.format(reservationVal)}* (Abatido no total / Não reembolsável)`;
 
