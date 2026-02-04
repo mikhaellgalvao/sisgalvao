@@ -29,22 +29,32 @@
         body { -webkit-tap-highlight-color: transparent; }
         .fade-in { animation: fadeIn 0.2s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
         .glass-card { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); }
         .dark .glass-card { background: rgba(24, 24, 27, 0.98); }
+        
         .profile-avatar-div { background-size: cover !important; background-position: center !important; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
         #sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 35; backdrop-filter: blur(2px); }
         .sidebar-link.active { background-color: #EF7E13; color: white !important; box-shadow: 0 4px 15px rgba(239, 126, 19, 0.25); }
         .vendedor-option input:checked + div { border-color: #EF7E13; background-color: rgba(239, 126, 19, 0.08); }
+        
+        /* Keypad Styles */
         .keypad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         .key-btn { height: 64px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; border-radius: 1.25rem; background: #f3f4f6; transition: all 0.15s; color: #1f2937; user-select: none; box-shadow: 0 2px 0 rgba(0,0,0,0.05); touch-action: manipulation; }
         .dark .key-btn { background: #27272a; color: white; border: 1px solid rgba(255,255,255,0.05); }
         .key-btn:active { transform: scale(0.95); background: #EF7E13; color: white; border-color: #EF7E13; }
+        
+        /* Badge Styles */
         .badge-seminovo { background-color: #dbeafe; color: #1e40af; }
         .badge-openbox { background-color: #fce7f3; color: #be185d; }
         .badge-revisado { background-color: #d1fae5; color: #065f46; }
+
         .card-image-transition { transition: background-image 0.5s ease-in-out; }
+
+        /* Custom Checkbox for Marketing */
         .mkt-checkbox-input:checked ~ div.peer-checked\:border-brand-orange { border-color: #EF7E13; background-color: rgba(239, 126, 19, 0.05); }
         .mkt-checkbox-input:checked ~ div .check-icon { display: block; }
     </style>
@@ -350,7 +360,6 @@
             currentUser: null, adminSession: false,
             adminPassBuffer: "", currentProduct: "", 
             currentShareProduct: { name: "", price: 0 },
-            currentProductPrice: 0, // NEW: Store price for reservation calc
             shareMode: 'vista',
             adminEdit: { type: null, index: null },
             passwords: { admin: "", download: "" },
@@ -365,7 +374,6 @@
             driveLinks: {}
         };
 
-        // BYPASS LOGIC
         const Bypass = {
             clicks: 0, timer: null, buffer: "", targetCode: "0639",
             init: () => {
@@ -519,10 +527,9 @@
                             actions = `<button onclick="Actions.finalizeSale('${p.name}')" class="w-full mt-4 bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg active:scale-95 transition-all tracking-widest italic">Consultar Disponibilidade</button>`;
                         } else {
                             priceDisplay = `<div class="mt-4 pt-4 border-t dark:border-zinc-800"><p class="text-[8px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Valor DJI</p><p class="text-2xl font-black text-brand-green dark:text-white italic tracking-tighter leading-none">${Utils.fmtBRL.format(priceVal)}</p></div>`;
-                            // Pass price to openAvailability
                             actions = `
                                 <div class="mt-4 flex flex-col gap-2">
-                                    <button onclick="Actions.openAvailability('${p.name}', ${priceVal})" class="w-full bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[9px] shadow-sm active:bg-emerald-900 tracking-widest">Entrar em Contato</button>
+                                    <button onclick="Actions.openAvailability('${p.name}')" class="w-full bg-brand-green text-white py-4 rounded-2xl font-black uppercase text-[9px] shadow-sm active:bg-emerald-900 tracking-widest">Entrar em Contato</button>
                                     <div class="flex gap-2">
                                         <button onclick="Actions.openShareModal('${p.name}', ${priceVal})" class="w-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-white py-3 rounded-2xl font-bold uppercase text-[9px] hover:text-brand-green active:scale-95 transition-all" title="Compartilhar">Compartilhar Card</button>
                                     </div>
@@ -562,6 +569,7 @@
                         let firstCycle = 'N/A';
                         if(p.details && p.details.batteries && p.details.batteries.length > 0) { firstCycle = p.details.batteries[0]; } else if (p.cycles) { firstCycle = p.cycles; }
 
+                        // Lógica de Preço Condicional (Novo)
                         let priceHtml = '';
                         if (isVisitor) {
                              priceHtml = `<div class="pt-4 border-t dark:border-zinc-800"><p class="text-[8px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Investimento</p><p class="text-xl font-black text-gray-400 italic tracking-tighter leading-none">CONSULTE</p></div>`;
@@ -921,25 +929,27 @@
 
             confirmShare: () => {
                 const p = STATE.currentShareProduct; const mode = STATE.shareMode;
-                let detailsText = "";
+                let hasCondition = false; let detailsText = "";
 
                 if (mode === 'vista') {
                     const discountInput = document.getElementById('share-discount'); let disc = parseFloat(discountInput.value);
                     if (!isNaN(disc) && disc > 0) {
-                        if(disc > 10) disc = 10;
+                        hasCondition = true; if(disc > 10) disc = 10;
                         const finalPrice = p.price * (1 - (disc/100));
-                        detailsText = `\n\n🔥 *Condição à Vista:* ${disc}% OFF\n✅ *VALOR COM DESCONTO:* *${Utils.fmtBRL.format(finalPrice)}*`;
+                        detailsText = `\n\n🔥 *Condição à Vista:* ${disc}% OFF\n*Valor Final:* ${Utils.fmtBRL.format(finalPrice)}`;
                     }
                 } else {
                     const n = parseInt(document.getElementById('share-installments').value);
                     if (n) {
+                        hasCondition = true;
                         const rate = CONFIG.installmentRates[n] || 0; const totalWithRate = p.price * (1 + (rate/100)); const parcelVal = totalWithRate / n;
                         detailsText = `\n\n💳 *Condição Parcelada:* ${n}x\n*Parcela:* ${Utils.fmtBRL.format(parcelVal)}\n*Total:* ${Utils.fmtBRL.format(totalWithRate)}`;
                     }
                 }
 
-                // Mensagem do brinde sempre incluída
-                let finalMessage = `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor:* ${Utils.fmtBRL.format(p.price)}${detailsText}\n\n🎁 *Bônus Especial:*\nLembrando, ao comprar um Drone, você ganha uma *Aula de Pilotagem* de brinde e já sai sabendo pilotar seu drone! 🚀`;
+                let finalMessage = hasCondition 
+                    ? `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor Base:* ${Utils.fmtBRL.format(p.price)}${detailsText}\n\n🎁 *Bônus Especial:*\nLembrando, ao comprar um Drone, você ganha uma *Aula de Pilotagem* de brinde e já sai sabendo pilotar seu drone! 🚀`
+                    : `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor:* ${Utils.fmtBRL.format(p.price)}`;
                 
                 window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
                 UI.closeModal('share-modal');
@@ -1027,9 +1037,8 @@
                 window.open(`https://wa.me/55${CONFIG.central}?text=${encodeURIComponent(msg)}`, '_blank');
             },
 
-            openAvailability: (name, price = 0) => {
+            openAvailability: (name) => {
                 STATE.currentProduct = name;
-                STATE.currentProductPrice = price; // Store price for reservation calc
                 document.getElementById('modal-product-name').textContent = name;
                 
                 const sellers = ['central', 'mikhaell', 'maikhon', 'ryan'];
@@ -1075,12 +1084,8 @@
                     
                     if(!cName || !cPhone) { alert('Por favor, preencha o Nome e Telefone do cliente para a reserva.'); return; }
                     
-                    // Calculate Signal
-                    const signalVal = STATE.currentProductPrice * 0.30;
-                    const signalFormatted = Utils.fmtBRL.format(signalVal);
-                    
                     msgPrefix = "🛑 *SOLICITAÇÃO DE RESERVA (30%)*";
-                    clientDetails = `\n\n💰 *Valor Total:* ${Utils.fmtBRL.format(STATE.currentProductPrice)}\n📉 *Sinal (30%):* ${signalFormatted}\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}\n⚠ *Condição:* Sinal sem devolução confirmado.`;
+                    clientDetails = `\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}\n⚠ *Condição:* Sinal sem devolução confirmado.`;
                 } else {
                     msgPrefix = "🔍 *CONSULTA DE ESTOQUE*";
                 }
@@ -1091,28 +1096,6 @@
                     setTimeout(() => window.open(`https://wa.me/55${CONFIG.contacts[seller]}?text=${encodeURIComponent(finalMsg)}`, '_blank'), i*800);
                 });
                 UI.closeModal('availability-modal');
-            },
-
-            shareCommercial: () => window.open(`https://wa.me/?text=${encodeURIComponent("*Galvão Drones*\nCNPJ: 48.429.698/0001-91\nEndereço: Setor Aeroviário, Goiânia - GO\nTel: (62) 3636-0668")}`, '_blank'),
-
-            genQRCode: () => {
-                const u = STATE.currentUser; const useCentral = document.getElementById('qr-central-check')?.checked;
-                const vCard = `BEGIN:VCARD\nFN:${u.name}\nTEL:${useCentral ? CONFIG.central : u.phone}\nORG:Galvão Drones\nEND:VCARD`;
-                document.getElementById('profile-qrcode').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(vCard)}`;
-            },
-
-            exportItem: (type) => {
-                const pass = prompt("Senha de Exportação:");
-                if(pass === STATE.passwords.download) {
-                    let d;
-                    if (type === 'user') d = { users: STATE.users };
-                    else if (type === 'product') d = { products: STATE.products };
-                    else if (type === 'used') d = { usedProducts: STATE.usedProducts }; 
-                    else if (type === 'marketing') d = { marketingAssets: STATE.marketingAssets }; 
-                    
-                    const blob = new Blob([JSON.stringify(d, null, 4)], {type: "application/json"});
-                    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `${type}_galvao.json`; a.click();
-                }
             },
 
             startCarousels: () => {
@@ -1392,4 +1375,24 @@
             if(localStorage.getItem('gd_user')) { document.getElementById('username-input').value = localStorage.getItem('gd_user'); document.getElementById('password-input').value = localStorage.getItem('gd_pass'); document.getElementById('remember-me').checked = true; }
             document.getElementById('admin-save-btn').onclick = Admin.saveItem;
             
-            const saleInput = document.getElementById('
+            const saleInput = document.getElementById('popup-sale-value');
+            if(saleInput) saleInput.oninput = () => {
+                const val = parseFloat(saleInput.value) || 0; const inst = parseInt(document.getElementById('popup-installments').value) || 0;
+                if (val > 0 && inst > 0) {
+                    const total = val * (1 + (CONFIG.installmentRates[inst] || 0)/100);
+                    document.getElementById('popup-total-value').textContent = Utils.fmtBRL.format(total);
+                    document.getElementById('popup-installment-value').textContent = `${inst}x de ${Utils.fmtBRL.format(total/inst)}`;
+                    document.getElementById('popup-calculator-results').classList.remove('hidden');
+                }
+            };
+        });
+
+        // Make functions globally available for inline handlers
+        window.UI = UI;
+        window.Actions = Actions;
+        window.Admin = Admin;
+        window.Utils = Utils;
+        window.Bypass = Bypass;
+    </script>
+</body>
+</html>
