@@ -225,7 +225,7 @@
         </div>
     </div>
     
-    <!-- Share Options Modal -->
+    <!-- Share Options Modal (NEW PRODUCTS) -->
     <div id="share-modal" ondblclick="if(event.target === this) UI.closeModal('share-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
             <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-4">Compartilhar</h3>
@@ -314,7 +314,7 @@
         </div>
     </div>
     
-    <!-- Admin Form Modal (Preserved) -->
+    <!-- Admin Form Modal -->
     <div id="admin-form-modal" ondblclick="if(event.target === this) UI.closeModal('admin-form-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-lg p-8 shadow-2xl border dark:border-white/10 text-left">
             <div class="flex justify-between items-center mb-6">
@@ -329,7 +329,7 @@
         </div>
     </div>
     
-    <!-- Bypass Login Modal (Preserved) -->
+    <!-- Bypass Login Modal -->
     <div id="bypass-login-modal" ondblclick="if(event.target === this) UI.closeModal('bypass-login-modal')" class="hidden fixed inset-0 bg-black/95 backdrop-blur-xl z-[130] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border-2 border-brand-orange dark:border-brand-orange/50 text-center">
              <div class="mb-4"><div class="w-16 h-16 bg-brand-orange rounded-full flex items-center justify-center mx-auto shadow-lg shadow-brand-orange/30"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div></div>
@@ -569,7 +569,6 @@
                         let firstCycle = 'N/A';
                         if(p.details && p.details.batteries && p.details.batteries.length > 0) { firstCycle = p.details.batteries[0]; } else if (p.cycles) { firstCycle = p.cycles; }
 
-                        // Lógica de Preço Condicional (Novo)
                         let priceHtml = '';
                         if (isVisitor) {
                              priceHtml = `<div class="pt-4 border-t dark:border-zinc-800"><p class="text-[8px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Investimento</p><p class="text-xl font-black text-gray-400 italic tracking-tighter leading-none">CONSULTE</p></div>`;
@@ -639,7 +638,7 @@
                              <div class="pt-4 border-t dark:border-zinc-800">
                                 <h4 class="text-lg font-black text-brand-green uppercase italic mb-4">Informações Comerciais</h4>
                                 <div class="grid grid-cols-2 gap-4"><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">CNPJ</label><input value="48.429.698/0001-91" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Sede</label><input value="Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div></div>
-                                <div class="mt-4"><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Endereço</label><input value="Setor Aeroviário, Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div>
+                                <div class="mt-4"><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Endereço</label><input value="R. 16, 304 - Qd.10 Lt.24 - Setor Aeroviario, Goiânia - GO, 74435-240Setor Aeroviário, Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div>
                                 <button onclick="Actions.shareCommercial()" class="w-full mt-4 bg-brand-orange/10 text-brand-orange py-4 rounded-2xl font-black uppercase text-[10px] border border-brand-orange/20 hover:bg-brand-orange hover:text-white transition-all">Compartilhar Dados Comerciais</button>
                              </div>
                         </div>
@@ -801,7 +800,7 @@
                     STATE.loginAttempts++;
                     if (STATE.loginAttempts >= 3) {
                         STATE.isLocked = true;
-                        STATE.lockoutTimer = Date.now() + 30000; // 30 seconds
+                        STATE.lockoutTimer = Date.now() + 30000; 
                         document.getElementById('btn-login-submit').disabled = true;
                         const msgEl = document.getElementById('login-lockout-msg');
                         msgEl.classList.remove('hidden');
@@ -871,33 +870,19 @@
                 }
             },
 
-            downloadAsset: (url) => {
-                if(url.startsWith('http')) {
-                    window.open(url, '_blank');
-                } else {
-                    alert('Arquivo não encontrado no servidor.');
-                }
-            },
-
             openMarketingModal: (idx) => {
                 const asset = STATE.marketingAssets[idx];
                 document.getElementById('mkt-modal-title').textContent = asset.title;
-                
                 const variations = asset.variations || [{name: 'Padrão', url: asset.downloadUrl, preview: asset.preview}];
-                
                 const list = document.getElementById('mkt-variations-list');
                 list.innerHTML = variations.map((v, i) => `
                     <label class="relative flex items-center p-3 rounded-xl bg-gray-50 dark:bg-zinc-800 cursor-pointer transition-all hover:bg-gray-100 dark:hover:bg-zinc-700 group overflow-hidden">
                         <input type="checkbox" value="${v.url}" class="peer sr-only mkt-checkbox-input">
-                        <!-- Active State Overlay (Border & Background) -->
                         <div class="absolute inset-0 border-2 border-transparent peer-checked:border-brand-orange peer-checked:bg-brand-orange/5 rounded-xl pointer-events-none transition-all"></div>
-                        <!-- Icon Box -->
                         <div class="w-12 h-12 bg-white dark:bg-zinc-600 rounded-lg flex items-center justify-center mr-4 border dark:border-zinc-600 relative z-10">
                             <img src="${v.preview || asset.preview || 'https://imgur.com/2PNy5CS.png'}" class="w-8 h-8 object-contain">
                         </div>
-                        <!-- Text -->
                         <span class="flex-1 text-xs font-bold text-slate-700 dark:text-white uppercase relative z-10">${v.name}</span>
-                        <!-- Checkbox Circle -->
                         <div class="w-6 h-6 rounded-full border-2 border-gray-300 dark:border-zinc-500 peer-checked:bg-brand-orange peer-checked:border-brand-orange flex items-center justify-center transition-all relative z-10">
                             <svg class="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                         </div>
@@ -928,27 +913,38 @@
             },
 
             confirmShare: () => {
-                const p = STATE.currentShareProduct; const mode = STATE.shareMode;
+                const p = STATE.currentShareProduct; 
+                const mode = STATE.shareMode;
                 let detailsText = "";
+                
+                // Cálculo do Sinal de Reserva (30%) - SEMPRE incluído na proposta de novos
+                const reservationVal = p.price * 0.30;
+                const reservationMsg = `\n📉 *Sinal de Reserva (30%):* *${Utils.fmtBRL.format(reservationVal)}* (Abatido no total / Não reembolsável)`;
 
                 if (mode === 'vista') {
-                    const discountInput = document.getElementById('share-discount'); let disc = parseFloat(discountInput.value);
+                    const discountInput = document.getElementById('share-discount'); 
+                    let disc = parseFloat(discountInput.value);
                     if (!isNaN(disc) && disc > 0) {
                         if(disc > 10) disc = 10;
                         const finalPrice = p.price * (1 - (disc/100));
-                        // Destaque solicitado para o valor com desconto
                         detailsText = `\n\n🔥 *Condição à Vista:* ${disc}% OFF\n✅ *VALOR COM DESCONTO:* *${Utils.fmtBRL.format(finalPrice)}*`;
                     }
                 } else {
                     const n = parseInt(document.getElementById('share-installments').value);
                     if (n) {
-                        const rate = CONFIG.installmentRates[n] || 0; const totalWithRate = p.price * (1 + (rate/100)); const parcelVal = totalWithRate / n;
+                        const rate = CONFIG.installmentRates[n] || 0; 
+                        const totalWithRate = p.price * (1 + (rate/100)); 
+                        const parcelVal = totalWithRate / n;
                         detailsText = `\n\n💳 *Condição Parcelada:* ${n}x\n*Parcela:* ${Utils.fmtBRL.format(parcelVal)}\n*Total:* ${Utils.fmtBRL.format(totalWithRate)}`;
                     }
                 }
 
-                // Mensagem do brinde sempre incluída
-                let finalMessage = `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor:* ${Utils.fmtBRL.format(p.price)}${detailsText}\n\n🎁 *Bônus Especial:*\nLembrando, ao comprar um Drone, você ganha uma *Aula de Pilotagem* de brinde e já sai sabendo pilotar seu drone! 🚀`;
+                let finalMessage = `🚀 *PROPOSTA GALVÃO DRONES*\n\n`;
+                finalMessage += `*Produto:* ${p.name}\n`;
+                finalMessage += `*Valor Base:* ${Utils.fmtBRL.format(p.price)}`;
+                finalMessage += detailsText;
+                finalMessage += `\n${reservationMsg}\n\n`;
+                finalMessage += `🎁 *Bônus Especial:*\nAo investir conosco, você ganha uma *AULA DE PILOTAGEM* prática presencial. Aprenda a dominar seu DJI com quem é especialista! 🚁`;
                 
                 window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
                 UI.closeModal('share-modal');
@@ -957,12 +953,9 @@
             shareUsedCard: (idx) => {
                 const p = STATE.usedProducts[idx];
                 const isVisitor = STATE.currentUser.role === 'Visitante';
-                
-                // Valores
                 const priceVal = Utils.cleanCurrency(p.price);
                 const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(priceVal);
                 
-                // Cálculo do Sinal (30%)
                 let signalMsg = "";
                 if (!isVisitor) {
                     const signalVal = priceVal * 0.30;
@@ -973,14 +966,13 @@
                 const details = p.details || {};
                 const check = "✅"; const uncheck = "❌";
                 const images = Array.isArray(p.images) ? p.images : [p.image];
-                
                 const includePhoto = confirm("Incluir link das fotos na mensagem?");
                 
                 let msg = `🔥 *OPORTUNIDADE GALVÃO DRONES*\n\n`;
                 msg += `🚁 *Modelo:* ${p.name}\n`;
                 msg += `💎 *Condição:* ${p.condition}\n`;
                 msg += `💰 *Investimento:* ${priceFormatted}\n`;
-                if(signalMsg) msg += signalMsg; // Adiciona o sinal se calculado
+                if(signalMsg) msg += signalMsg;
                 msg += `\n`;
                 
                 msg += `🔋 *Status Baterias (Ciclos):*\n`;
@@ -998,9 +990,7 @@
                 
                 if(includePhoto && images.length > 0) {
                     msg += `📸 *Fotos:*\n`;
-                    images.forEach((img, i) => {
-                        msg += `${i+1}. ${img}\n`;
-                    });
+                    images.forEach((img, i) => { msg += `${i+1}. ${img}\n`; });
                 }
 
                 if (navigator.share) {
@@ -1021,56 +1011,36 @@
                 if(STATE.contactOption === 'reserve') {
                     const cName = document.getElementById('res-name-used').value.trim();
                     const cPhone = document.getElementById('res-phone-used').value.trim();
-                    
                     if(!cName || !cPhone) { alert('Por favor, preencha o Nome e Telefone do cliente para a reserva.'); return; }
-
-                    // CALCULO SINAL NO WHATSAPP DA CENTRAL
                     const signalVal = priceVal * 0.30;
                     const signalFormatted = Utils.fmtBRL.format(signalVal);
-
-                    msg = `🛑 *SOLICITAÇÃO DE RESERVA*\n\n*Modelo:* ${p.name} (${p.condition})\n*Valor Total:* ${priceFormatted}\n\n📉 *Sinal Obrigatório (30%):* ${signalFormatted}\n(Valor abatido no total, não reembolsável em caso de desistência)\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}`;
+                    msg = `🛑 *SOLICITAÇÃO DE RESERVA*\n\n*Modelo:* ${p.name} (${p.condition})\n*Valor Total:* ${priceFormatted}\n\n📉 *Sinal Obrigatório (30%):* ${signalFormatted}\n(Abatido no total, não reembolsável)\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}`;
                 } else {
                     msg = `🔍 *CONSULTA DE DISPONIBILIDADE*\n\n*Modelo:* ${p.name} (${p.condition})\n*Valor:* ${priceFormatted}\n\nGostaria de saber se este item ainda está disponível.`;
                 }
-                
                 window.open(`https://wa.me/55${CONFIG.central}?text=${encodeURIComponent(msg)}`, '_blank');
             },
 
             openAvailability: (name) => {
                 STATE.currentProduct = name;
                 document.getElementById('modal-product-name').textContent = name;
-                
                 const sellers = ['central', 'mikhaell', 'maikhon', 'ryan'];
-                
                 document.getElementById('modal-sellers-list').innerHTML = sellers.map(k => {
                     let displayName = k.toUpperCase();
                     let subInfo = 'ENTERPRISE/AGRAS';
-                    
-                    if(k === 'central') {
-                        displayName = 'CENTRAL GALVÃO DRONES';
-                        subInfo = 'ATENDIMENTO GERAL';
-                    } else if (k === 'ryan') {
-                        subInfo = 'VENDAS GERAL';
-                    }
-                    
+                    if(k === 'central') { displayName = 'CENTRAL GALVÃO DRONES'; subInfo = 'ATENDIMENTO GERAL'; } 
+                    else if (k === 'ryan') { subInfo = 'VENDAS GERAL'; }
                     return `<label class="vendedor-option block cursor-pointer group"><input type="checkbox" name="vend_chk" value="${k}" class="hidden"><div class="p-4 border-2 border-gray-100 dark:border-zinc-800 rounded-2xl flex justify-between transition-all"><div class="text-left"><span class="block font-black text-sm dark:text-white uppercase">${displayName}</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest">${subInfo}</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full"></div></div></label>`;
                 }).join('');
-                
                 UI.selectNewContactOption('availability');
-                
                 document.getElementById('res-name-new').value = '';
                 document.getElementById('res-phone-new').value = '';
-
                 document.getElementById('availability-modal').classList.remove('hidden');
             },
 
             sendAvailabilityRequest: () => {
                 const selectedSellers = Array.from(document.querySelectorAll('input[name="vend_chk"]:checked')).map(cb => cb.value);
-                
-                if(selectedSellers.length === 0) {
-                    alert('Selecione pelo menos um vendedor.');
-                    return;
-                }
+                if(selectedSellers.length === 0) { alert('Selecione pelo menos um vendedor.'); return; }
 
                 let msgPrefix = "";
                 let clientDetails = "";
@@ -1080,9 +1050,7 @@
                 } else if (STATE.newContactOption === 'reserve') {
                     const cName = document.getElementById('res-name-new').value.trim();
                     const cPhone = document.getElementById('res-phone-new').value.trim();
-                    
                     if(!cName || !cPhone) { alert('Por favor, preencha o Nome e Telefone do cliente para a reserva.'); return; }
-                    
                     msgPrefix = "🛑 *SOLICITAÇÃO DE RESERVA (30%)*";
                     clientDetails = `\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}\n⚠ *Condição:* Sinal sem devolução confirmado.`;
                 } else {
@@ -1090,7 +1058,6 @@
                 }
 
                 const finalMsg = `${msgPrefix}: ${STATE.currentProduct}${clientDetails}`;
-
                 selectedSellers.forEach((seller, i) => {
                     setTimeout(() => window.open(`https://wa.me/55${CONFIG.contacts[seller]}?text=${encodeURIComponent(finalMsg)}`, '_blank'), i*800);
                 });
@@ -1105,7 +1072,6 @@
                         let current = 0;
                         const el = document.getElementById(`card-img-${idx}`);
                         if(!el) return;
-                        
                         const interval = setInterval(() => {
                             current = (current + 1) % images.length;
                             el.style.backgroundImage = `url('${images[current]}')`;
@@ -1116,13 +1082,12 @@
             },
 
             openUsedDetails: (idx) => {
-                STATE.currentUsedIdx = idx; // Store current index
+                STATE.currentUsedIdx = idx;
                 const p = STATE.usedProducts[idx];
                 const images = Array.isArray(p.images) ? p.images : [p.image];
                 const details = p.details || {};
                 const isVisitor = STATE.currentUser.role === 'Visitante';
 
-                // Popula Imagem Principal e Thumbs
                 const mainImg = document.getElementById('modal-used-main-img');
                 mainImg.style.backgroundImage = `url('${images[0]}')`;
                 
@@ -1134,10 +1099,7 @@
                     </div>
                 `).join('');
 
-                // Textos Básicos
                 document.getElementById('modal-used-title').textContent = p.name;
-                
-                // Formatação BRL Condicional
                 const priceEl = document.getElementById('modal-used-price');
                 if (isVisitor) {
                     priceEl.textContent = "CONSULTE";
@@ -1150,7 +1112,6 @@
                 }
 
                 document.getElementById('modal-used-desc').textContent = p.desc;
-                
                 const badge = document.getElementById('modal-used-badge');
                 badge.className = 'px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest';
                 if(p.condition.includes('Seminovo')) badge.classList.add('badge-seminovo');
@@ -1158,12 +1119,10 @@
                 else badge.classList.add('badge-revisado');
                 badge.textContent = p.condition;
 
-                // Baterias
                 const batsContainer = document.getElementById('modal-used-batteries');
                 const bats = details.batteries || [];
-                if(bats.length === 0) {
-                    batsContainer.innerHTML = '<span class="text-xs text-gray-400 italic">Sem informação de bateria</span>';
-                } else {
+                if(bats.length === 0) { batsContainer.innerHTML = '<span class="text-xs text-gray-400 italic">Sem informação de bateria</span>'; } 
+                else {
                     batsContainer.innerHTML = bats.map((cycle, i) => `
                         <div class="flex flex-col items-center p-3 bg-white dark:bg-zinc-900 rounded-xl border dark:border-zinc-700 w-20">
                             <svg class="w-6 h-6 text-green-500 mb-1" fill="currentColor" viewBox="0 0 20 20"><path d="M16 6H4a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 00-2-2zM4 8h12v6H4V8zm14 2h.5a1.5 1.5 0 110 3H18v-3z"></path></svg>
@@ -1173,11 +1132,9 @@
                     `).join('');
                 }
 
-                // Acessórios Checklist
                 const accContainer = document.getElementById('modal-used-accessories');
                 const checkIcon = '<span class="text-green-500 mr-2">✔</span>';
                 const xIcon = '<span class="text-red-400 mr-2">✖</span>';
-                
                 accContainer.innerHTML = `
                     <li class="flex items-center">${details.hub ? checkIcon : xIcon} Hub de Carregamento</li>
                     <li class="flex items-center">${details.cables ? checkIcon : xIcon} Cabos / Conectores</li>
@@ -1185,13 +1142,9 @@
                     <li class="flex items-center"><span class="text-brand-orange mr-2">⚙</span> Hélices: ${details.propellers || 'Padrão'}</li>
                 `;
 
-                // Reset do Botão de Contato
                 document.getElementById('modal-used-init-contact').classList.remove('hidden');
                 document.getElementById('modal-used-options').classList.add('hidden');
-                
-                // Botões de Ação
                 document.getElementById('modal-used-share').onclick = () => Actions.shareUsedCard(idx);
-
                 document.getElementById('used-details-modal').classList.remove('hidden');
             }
         };
@@ -1227,7 +1180,6 @@
                     const d = index!==null ? STATE.usedProducts[index] : {name:'',price:'',condition:'Seminovo', images:[], details:{batteries:[], hub:false, cables:false, propellers:'', bag:false}, desc:''};
                     const imgs = Array.isArray(d.images) ? d.images.join(', ') : d.image || '';
                     const bats = d.details.batteries ? d.details.batteries.join(', ') : '';
-                    
                     html = `
                         <input id="af-name" value="${d.name}" placeholder="Modelo" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
                         <div class="grid grid-cols-2 gap-3 mb-3">
@@ -1239,7 +1191,6 @@
                             </select>
                         </div>
                         <input id="af-images" value="${imgs}" placeholder="URLs das Imagens (separadas por vírgula)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
-                        
                         <div class="bg-gray-50 dark:bg-zinc-800/50 p-3 rounded-xl mb-3">
                             <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Detalhes Técnicos</label>
                             <input id="af-bats" value="${bats}" placeholder="Ciclos Baterias (ex: 12, 15, 10)" class="w-full p-3 rounded-lg border dark:bg-zinc-800 text-sm mb-2">
@@ -1250,24 +1201,22 @@
                                 <label class="flex items-center text-xs"><input type="checkbox" id="af-bag" ${d.details.bag?'checked':''} class="mr-2"> Bag</label>
                             </div>
                         </div>
-
                         <textarea id="af-desc" placeholder="Descrição Geral" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${d.desc}</textarea>
                     `;
                 } else if (type === 'marketing') {
                     const d = index!==null ? STATE.marketingAssets[index] : {title:'',type:'Logo',preview:'',variations:[]};
                     const varStr = d.variations ? d.variations.map(v => `${v.name}|${v.url}`).join('\n') : '';
                     html = `
-                        <input id="af-title" value="${d.title}" placeholder="Título (Ex: Logo Vetor)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
+                        <input id="af-title" value="${d.title}" placeholder="Título" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
                         <select id="af-type" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3 bg-white dark:bg-zinc-900">
                             <option value="Logo" ${d.type === 'Logo' ? 'selected' : ''}>Logo</option>
                             <option value="Campanha" ${d.type === 'Campanha' ? 'selected' : ''}>Campanha</option>
                             <option value="Institucional" ${d.type === 'Institucional' ? 'selected' : ''}>Institucional</option>
                         </select>
-                        <input id="af-preview" value="${d.preview}" placeholder="URL Preview (Imagem)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
+                        <input id="af-preview" value="${d.preview}" placeholder="URL Preview" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3">
                         <textarea id="af-variations" placeholder="Variações (Nome|URL por linha)" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${varStr}</textarea>
                     `;
                 }
-
                 document.getElementById('admin-dynamic-form').innerHTML = html;
                 document.getElementById('admin-form-modal').classList.remove('hidden');
             },
@@ -1275,64 +1224,27 @@
             saveItem: () => {
                 const t = STATE.adminEdit.type; const i = STATE.adminEdit.index;
                 let newItem = {};
-                
-                if (t==='user') { 
-                    newItem = { name: document.getElementById('af-name').value, username: document.getElementById('af-user').value, password: document.getElementById('af-pass').value, avatar: document.getElementById('af-avatar').value, role: "Vendedor" };
-                } else if (t==='product') { 
-                    newItem = { name: document.getElementById('af-name').value, sell: document.getElementById('af-sell').value, line: document.getElementById('af-line').value };
-                } else if (t==='used') {
-                    const imgStr = document.getElementById('af-images').value;
-                    const batStr = document.getElementById('af-bats').value;
-                    newItem = { 
-                        name: document.getElementById('af-name').value, 
-                        price: document.getElementById('af-price').value, 
-                        condition: document.getElementById('af-condition').value, 
-                        images: imgStr.split(',').map(s=>s.trim()).filter(s=>s),
-                        details: {
-                            batteries: batStr.split(',').map(s=>s.trim()).filter(s=>s),
-                            propellers: document.getElementById('af-props').value,
-                            hub: document.getElementById('af-hub').checked,
-                            cables: document.getElementById('af-cables').checked,
-                            bag: document.getElementById('af-bag').checked
-                        },
-                        desc: document.getElementById('af-desc').value 
-                    };
+                if (t==='user') { newItem = { name: document.getElementById('af-name').value, username: document.getElementById('af-user').value, password: document.getElementById('af-pass').value, avatar: document.getElementById('af-avatar').value, role: "Vendedor" }; } 
+                else if (t==='product') { newItem = { name: document.getElementById('af-name').value, sell: document.getElementById('af-sell').value, line: document.getElementById('af-line').value }; } 
+                else if (t==='used') {
+                    const imgStr = document.getElementById('af-images').value; const batStr = document.getElementById('af-bats').value;
+                    newItem = { name: document.getElementById('af-name').value, price: document.getElementById('af-price').value, condition: document.getElementById('af-condition').value, images: imgStr.split(',').map(s=>s.trim()).filter(s=>s), details: { batteries: batStr.split(',').map(s=>s.trim()).filter(s=>s), propellers: document.getElementById('af-props').value, hub: document.getElementById('af-hub').checked, cables: document.getElementById('af-cables').checked, bag: document.getElementById('af-bag').checked }, desc: document.getElementById('af-desc').value };
                 } else if (t==='marketing') {
                     const varStr = document.getElementById('af-variations').value;
-                    const variations = varStr.split('\n').map(line => {
-                        const [name, url] = line.split('|');
-                        return name && url ? { name: name.trim(), url: url.trim() } : null;
-                    }).filter(v => v);
-
-                    newItem = { 
-                        title: document.getElementById('af-title').value, 
-                        type: document.getElementById('af-type').value, 
-                        preview: document.getElementById('af-preview').value, 
-                        variations: variations
-                    };
+                    const variations = varStr.split('\n').map(line => { const [name, url] = line.split('|'); return name && url ? { name: name.trim(), url: url.trim() } : null; }).filter(v => v);
+                    newItem = { title: document.getElementById('af-title').value, type: document.getElementById('af-type').value, preview: document.getElementById('af-preview').value, variations: variations };
                 }
-
                 const targetArr = t==='user' ? STATE.users : t==='product' ? STATE.products : t==='used' ? STATE.usedProducts : STATE.marketingAssets;
                 if(i !== null) targetArr[i] = newItem; else targetArr.push(newItem);
                 UI.closeModal('admin-form-modal'); UI.renderAdmin();
             },
 
-            askDelete: (type, index) => {
-                STATE.deleteTarget = { type, index };
-                document.getElementById('delete-confirm-modal').classList.remove('hidden');
-            },
-
+            askDelete: (type, index) => { STATE.deleteTarget = { type, index }; document.getElementById('delete-confirm-modal').classList.remove('hidden'); },
             confirmDelete: () => {
                 const { type, index } = STATE.deleteTarget;
                 const targetArr = type==='user' ? STATE.users : type==='product' ? STATE.products : type==='used' ? STATE.usedProducts : STATE.marketingAssets;
                 targetArr.splice(index, 1);
-                UI.closeModal('delete-confirm-modal');
-                UI.renderAdmin();
-            },
-
-            deleteItem: (type, index) => {
-                // Legacy wrapper if needed, now redirecting to askDelete
-                Admin.askDelete(type, index);
+                UI.closeModal('delete-confirm-modal'); UI.renderAdmin();
             }
         };
 
@@ -1347,20 +1259,11 @@
                         fetch('pas.json').then(r => r.ok?r.json():null),
                         fetch('drive.json').then(r => r.ok?r.json():null)
                     ]);
-                    
                     if(u?.users) STATE.users = u.users;
                     if(p?.products) STATE.products = p.products;
                     if(us?.usedProducts) STATE.usedProducts = us.usedProducts; else STATE.usedProducts = [];
-                    // Ensure fallback has variations structure if simple structure was loaded or failed
                     if(m?.marketingAssets) {
-                        STATE.marketingAssets = m.marketingAssets.map(asset => {
-                            if(!asset.variations && asset.downloadUrl) {
-                                return { ...asset, variations: [{name: 'Padrão', url: asset.downloadUrl}] };
-                            }
-                            return asset;
-                        });
-                    } else { 
-                        STATE.marketingAssets = []; 
+                        STATE.marketingAssets = m.marketingAssets.map(asset => { if(!asset.variations && asset.downloadUrl) { return { ...asset, variations: [{name: 'Padrão', url: asset.downloadUrl}] }; } return asset; });
                     }
                     if(pass) STATE.passwords = pass;
                     if(d?.links) STATE.driveLinks = d.links;
@@ -1373,7 +1276,6 @@
             UI.init();
             if(localStorage.getItem('gd_user')) { document.getElementById('username-input').value = localStorage.getItem('gd_user'); document.getElementById('password-input').value = localStorage.getItem('gd_pass'); document.getElementById('remember-me').checked = true; }
             document.getElementById('admin-save-btn').onclick = Admin.saveItem;
-            
             const saleInput = document.getElementById('popup-sale-value');
             if(saleInput) saleInput.oninput = () => {
                 const val = parseFloat(saleInput.value) || 0; const inst = parseInt(document.getElementById('popup-installments').value) || 0;
@@ -1386,12 +1288,7 @@
             };
         });
 
-        // Make functions globally available for inline handlers
-        window.UI = UI;
-        window.Actions = Actions;
-        window.Admin = Admin;
-        window.Utils = Utils;
-        window.Bypass = Bypass;
+        window.UI = UI; window.Actions = Actions; window.Admin = Admin; window.Utils = Utils; window.Bypass = Bypass;
     </script>
 </body>
 </html>
