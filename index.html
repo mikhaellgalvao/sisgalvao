@@ -71,7 +71,7 @@
                 <h1 class="text-2xl font-black text-brand-green dark:text-white uppercase tracking-tighter italic">Portal Galvão Drones</h1>
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400 font-medium tracking-wide">Gestão Técnica & Comercial DJI</p>
             </div>
-            <form onsubmit="Actions.login(event)" class="space-y-5">
+            <form onsubmit="Actions.confirmShare(); Actions.login(event)" class="space-y-5">
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2 pl-1">Acesso</label>
                     <input type="text" id="username-input" required class="w-full rounded-2xl border-0 bg-gray-100 dark:bg-zinc-800/80 px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange transition-all placeholder-gray-400" placeholder="Usuário">
@@ -228,8 +228,8 @@
     <!-- Share Options Modal -->
     <div id="share-modal" ondblclick="if(event.target === this) UI.closeModal('share-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
-            <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-4">Compartilhar</h3>
-            <p id="share-product-name" class="text-xs font-bold text-gray-500 mb-6 uppercase tracking-widest dark:text-gray-400"></p>
+            <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-2">Compartilhar</h3>
+            <p id="share-product-name" class="text-[11px] font-bold text-gray-400 mb-6 uppercase tracking-widest dark:text-zinc-500"></p>
             <div class="flex gap-2 mb-6 bg-gray-100 dark:bg-zinc-800 p-1 rounded-2xl">
                 <button onclick="UI.setShareMode('vista')" id="btn-mode-vista" class="flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all bg-white shadow-sm text-brand-orange">À Vista</button>
                 <button onclick="UI.setShareMode('parcelado')" id="btn-mode-parcelado" class="flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-gray-400 hover:text-gray-600">Parcelado</button>
@@ -638,7 +638,7 @@
                              <div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">WhatsApp</label><input value="${u.phone || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl font-bold text-sm dark:text-white" readonly></div>
                              <div class="pt-4 border-t dark:border-zinc-800">
                                 <h4 class="text-lg font-black text-brand-green uppercase italic mb-4">Informações Comerciais</h4>
-                                <div class="grid grid-cols-2 gap-4"><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">CNPJ</label><input value="48.429.698/0001-91" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Sede</label><input value="Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div></div>
+                                <div class="grid grid-cols-2 gap-4"><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">CNPJ</label><input value="60.102.179/0001-10" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Sede</label><input value="Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div></div>
                                 <div class="mt-4"><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Endereço</label><input value="Setor Aeroviário, Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div>
                                 <button onclick="Actions.shareCommercial()" class="w-full mt-4 bg-brand-orange/10 text-brand-orange py-4 rounded-2xl font-black uppercase text-[10px] border border-brand-orange/20 hover:bg-brand-orange hover:text-white transition-all">Compartilhar Dados Comerciais</button>
                              </div>
@@ -707,12 +707,12 @@
                 if (mode === 'vista') {
                     btnVista.classList.remove('text-gray-400', 'hover:text-gray-600'); btnVista.classList.add('bg-white', 'shadow-sm', 'text-brand-orange');
                     btnParcelado.classList.add('text-gray-400', 'hover:text-gray-600'); btnParcelado.classList.remove('bg-white', 'shadow-sm', 'text-brand-orange');
-                    container.innerHTML = `<div class="text-left"><label class="block text-[10px] font-bold uppercase text-gray-400 mb-2 pl-1">Desconto (%)</label><input type="number" id="share-discount" placeholder="Ex: 5" min="0" max="10" class="w-full rounded-2xl border-0 bg-gray-100 dark:bg-zinc-800 px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange font-bold outline-none text-center text-lg"></div>`;
+                    container.innerHTML = `<div class="text-left animate-fade-in"><label class="block text-[10px] font-black uppercase text-gray-400 mb-2 pl-1 tracking-widest">Desconto (%)</label><input type="number" id="share-discount" placeholder="Ex: 5" min="0" max="10" class="w-full rounded-2xl border-0 bg-gray-50 dark:bg-zinc-800 px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange font-black outline-none text-center text-2xl placeholder:text-gray-300"></div>`;
                 } else {
                     btnParcelado.classList.remove('text-gray-400', 'hover:text-gray-600'); btnParcelado.classList.add('bg-white', 'shadow-sm', 'text-brand-orange');
                     btnVista.classList.add('text-gray-400', 'hover:text-gray-600'); btnVista.classList.remove('bg-white', 'shadow-sm', 'text-brand-orange');
                     let opts = `<option value="">Selecione...</option>`; for(let i=2; i<=12; i++) opts += `<option value="${i}">${i}x</option>`;
-                    container.innerHTML = `<div class="text-left"><label class="block text-[10px] font-bold uppercase text-gray-400 mb-2 pl-1">Parcelamento</label><select id="share-installments" class="w-full rounded-2xl border-0 bg-gray-100 dark:bg-zinc-800 px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange font-bold outline-none text-center text-lg appearance-none">${opts}</select></div>`;
+                    container.innerHTML = `<div class="text-left animate-fade-in"><label class="block text-[10px] font-black uppercase text-gray-400 mb-2 pl-1 tracking-widest">Parcelamento</label><select id="share-installments" class="w-full rounded-2xl border-0 bg-gray-50 dark:bg-zinc-800 px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-orange font-black outline-none text-center text-2xl appearance-none">${opts}</select></div>`;
                 }
             },
 
@@ -928,28 +928,36 @@
             },
 
             confirmShare: () => {
-                const p = STATE.currentShareProduct; const mode = STATE.shareMode;
-                let hasCondition = false; let detailsText = "";
+                const p = STATE.currentShareProduct;
+                const mode = STATE.shareMode;
+                let finalPrice = p.price;
+                let detailsText = "";
 
                 if (mode === 'vista') {
-                    const discountInput = document.getElementById('share-discount'); let disc = parseFloat(discountInput.value);
-                    if (!isNaN(disc) && disc > 0) {
-                        hasCondition = true; if(disc > 10) disc = 10;
-                        const finalPrice = p.price * (1 - (disc/100));
-                        detailsText = `\n\n🔥 *Condição à Vista:* ${disc}% OFF\n*Valor Final:* ${Utils.fmtBRL.format(finalPrice)}`;
-                    }
+                    const discountInput = document.getElementById('share-discount');
+                    let disc = parseFloat(discountInput.value) || 0;
+                    if (disc > 10) disc = 10;
+                    finalPrice = p.price * (1 - (disc / 100));
+                    detailsText = `💰 *Valor à Vista:* ${Utils.fmtBRL.format(finalPrice)}` + (disc > 0 ? ` (${disc}% OFF)` : "");
                 } else {
                     const n = parseInt(document.getElementById('share-installments').value);
                     if (n) {
-                        hasCondition = true;
-                        const rate = CONFIG.installmentRates[n] || 0; const totalWithRate = p.price * (1 + (rate/100)); const parcelVal = totalWithRate / n;
-                        detailsText = `\n\n💳 *Condição Parcelada:* ${n}x\n*Parcela:* ${Utils.fmtBRL.format(parcelVal)}\n*Total:* ${Utils.fmtBRL.format(totalWithRate)}`;
+                        const rate = CONFIG.installmentRates[n] || 0;
+                        finalPrice = p.price * (1 + (rate / 100));
+                        const parcelVal = finalPrice / n;
+                        detailsText = `💳 *Condição Parcelada:* ${n}x de ${Utils.fmtBRL.format(parcelVal)}\n*Total:* ${Utils.fmtBRL.format(finalPrice)}`;
+                    } else {
+                        detailsText = `💰 *Valor:* ${Utils.fmtBRL.format(p.price)}`;
                     }
                 }
 
-                let finalMessage = hasCondition 
-                    ? `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor Base:* ${Utils.fmtBRL.format(p.price)}${detailsText}\n\n🎁 *Bônus Especial:*\nLembrando, ao comprar um Drone, você ganha uma *Aula de Pilotagem* de brinde e já sai sabendo pilotar seu drone! 🚀`
-                    : `🚁 *Proposta Galvão Drones*\n\n*Produto:* ${p.name}\n*Valor:* ${Utils.fmtBRL.format(p.price)}`;
+                // Cálculo Automático do Sinal (30%)
+                const signalVal = finalPrice * 0.30;
+                const signalFormatted = Utils.fmtBRL.format(signalVal);
+
+                const bonusText = `\n\n🎁 Bônus Exclusivo *Galvão Drones*\nAo adquirir seu equipamento conosco, você não leva apenas a caixa para casa. Você ganha:\n\n🎓 *Aula Exclusiva de Pilotagem:* Um treinamento prático para você dominar todos os comandos.\n🚀 *Decolagem Imediata:* Você já sai da nossa unidade sabendo operar o drone com total segurança e precisão.`;
+
+                const finalMessage = `🚁 *PROPOSTA OFICIAL GALVÃO DRONES*\n\n📦 *Equipamento:* ${p.name}\n${detailsText}\n\n🛑 *Sinal de Reserva (30%):* ${signalFormatted}\n_(Valor necessário para garantir a reserva do item em estoque)_${bonusText}`;
                 
                 window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
                 UI.closeModal('share-modal');
@@ -959,16 +967,14 @@
                 const p = STATE.usedProducts[idx];
                 const isVisitor = STATE.currentUser.role === 'Visitante';
                 
-                // Valores
                 const priceVal = Utils.cleanCurrency(p.price);
                 const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(priceVal);
                 
-                // Cálculo do Sinal (30%)
                 let signalMsg = "";
                 if (!isVisitor) {
                     const signalVal = priceVal * 0.30;
                     const signalFormatted = Utils.fmtBRL.format(signalVal);
-                    signalMsg = `📝 *Sinal de Reserva (30%):* ${signalFormatted} (Não reembolsável)\n`;
+                    signalMsg = `🛑 *Sinal de Reserva (30%):* ${signalFormatted}\n_(Valor abatido no total, não reembolsável)_\n`;
                 }
 
                 const details = p.details || {};
@@ -976,12 +982,14 @@
                 const images = Array.isArray(p.images) ? p.images : [p.image];
                 
                 const includePhoto = confirm("Incluir link das fotos na mensagem?");
+
+                const bonusText = `\n\n🎁 Bônus Exclusivo *Galvão Drones*\nAo adquirir seu equipamento conosco, você não leva apenas a caixa para casa. Você ganha:\n\n🎓 *Aula Exclusiva de Pilotagem:* Um treinamento prático para você dominar todos os comandos.\n🚀 *Decolagem Imediata:* Você já sai da nossa unidade sabendo operar o drone com total segurança e precisão.`;
                 
                 let msg = `🔥 *OPORTUNIDADE GALVÃO DRONES*\n\n`;
                 msg += `🚁 *Modelo:* ${p.name}\n`;
                 msg += `💎 *Condição:* ${p.condition}\n`;
                 msg += `💰 *Investimento:* ${priceFormatted}\n`;
-                if(signalMsg) msg += signalMsg; // Adiciona o sinal se calculado
+                if(signalMsg) msg += signalMsg;
                 msg += `\n`;
                 
                 msg += `🔋 *Status Baterias (Ciclos):*\n`;
@@ -995,10 +1003,12 @@
                 msg += `${details.bag ? check : uncheck} Bolsa / Case\n`;
                 msg += `⚙ Hélices: ${details.propellers || 'Padrão'}\n\n`;
                 
-                if(p.desc) msg += `📝 *Detalhes:* ${p.desc}\n\n`;
+                if(p.desc) msg += `📝 *Detalhes:* ${p.desc}\n`;
+
+                msg += bonusText;
                 
                 if(includePhoto && images.length > 0) {
-                    msg += `📸 *Fotos:*\n`;
+                    msg += `\n\n📸 *Fotos:*\n`;
                     images.forEach((img, i) => {
                         msg += `${i+1}. ${img}\n`;
                     });
@@ -1025,7 +1035,6 @@
                     
                     if(!cName || !cPhone) { alert('Por favor, preencha o Nome e Telefone do cliente para a reserva.'); return; }
 
-                    // CALCULO SINAL NO WHATSAPP DA CENTRAL
                     const signalVal = priceVal * 0.30;
                     const signalFormatted = Utils.fmtBRL.format(signalVal);
 
