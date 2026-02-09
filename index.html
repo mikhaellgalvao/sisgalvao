@@ -67,7 +67,6 @@
 
     <div id="sidebar-overlay" onclick="UI.closeSidebar()"></div>
 
-    <!-- VIEW: LOGIN -->
     <div id="login-view" class="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-brand-green to-zinc-950">
         <div id="login-card" class="w-full max-w-md p-8 glass-card rounded-[2.5rem] shadow-2xl border border-white/20 dark:border-white/5 animate-fade-in">
             <div class="text-center mb-8">
@@ -103,9 +102,7 @@
         </div>
     </div>
 
-    <!-- VIEW: DASHBOARD -->
     <div id="dashboard-view" class="hidden flex h-screen overflow-hidden bg-gray-50 dark:bg-black">
-        <!-- SIDEBAR -->
         <aside id="sidebar-menu" class="fixed inset-y-0 left-0 w-72 bg-white dark:bg-zinc-900 shadow-2xl transform -translate-x-full lg:relative lg:translate-x-0 transition-transform duration-300 z-40 flex flex-col border-r border-gray-100 dark:border-zinc-800">
             <div class="p-8 border-b border-gray-100 dark:border-zinc-800 flex flex-col items-center">
                 <a href="#" onclick="UI.navigate('perfil')" id="sidebar-profile-header" class="flex flex-col items-center gap-4 group cursor-pointer w-full">
@@ -137,7 +134,6 @@
             </nav>
         </aside>
 
-        <!-- CONTENT -->
         <div class="flex-1 flex flex-col min-w-0 overflow-y-auto font-sans relative">
             <header class="h-20 bg-white/90 dark:bg-black/90 backdrop-blur-lg border-b border-gray-100 dark:border-zinc-800 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30">
                 <div class="flex items-center gap-3">
@@ -153,14 +149,10 @@
             </header>
 
             <main id="main-content" class="p-4 sm:p-8 space-y-6">
-                <!-- Conteúdo Injetado via JS -->
-            </main>
+                </main>
         </div>
     </div>
 
-    <!-- MODAIS E POPUPS -->
-
-    <!-- Webview Modal (DRIVE) -->
     <div id="drive-webview-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-xl z-[200] flex flex-col fade-in">
         <header class="h-20 bg-zinc-900 border-b border-white/10 px-6 flex items-center justify-between">
             <div class="flex items-center gap-4">
@@ -187,7 +179,6 @@
         </div>
     </div>
 
-    <!-- Marketing Variations Modal -->
     <div id="marketing-modal" ondblclick="if(event.target === this) UI.closeModal('marketing-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-lg p-8 shadow-2xl border dark:border-white/10 text-center flex flex-col max-h-[85vh]">
             <div class="flex justify-between items-center mb-6">
@@ -199,7 +190,6 @@
         </div>
     </div>
 
-    <!-- Details Modal (SEMINOVOS) -->
     <div id="used-details-modal" ondblclick="if(event.target === this) UI.closeModal('used-details-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-4xl p-6 sm:p-8 shadow-2xl border dark:border-white/10 flex flex-col md:flex-row gap-8 max-h-[90vh] overflow-y-auto">
             <div class="w-full md:w-1/2 space-y-4">
@@ -253,7 +243,6 @@
         </div>
     </div>
     
-    <!-- Share Options Modal -->
     <div id="share-modal" ondblclick="if(event.target === this) UI.closeModal('share-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
             <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-4">Compartilhar</h3>
@@ -270,7 +259,6 @@
         </div>
     </div>
 
-    <!-- Calculadora -->
     <div id="calculator-popup" class="hidden fixed bottom-24 right-6 w-80 sm:w-96 glass-card rounded-[2rem] shadow-2xl border dark:border-zinc-700 p-6 z-50 transition-all duration-300 transform origin-bottom-right">
         <div class="flex justify-between items-center mb-6"><h3 class="font-black text-brand-green dark:text-white uppercase italic text-xl tracking-tighter">Simulador Galvão</h3><button onclick="UI.toggleCalculator()" class="text-gray-400 text-2xl hover:text-red-500">×</button></div>
         <div class="space-y-4">
@@ -286,7 +274,6 @@
     </div>
     <button id="calculator-fab" onclick="UI.toggleCalculator()" class="hidden fixed bottom-6 right-6 w-16 h-16 bg-brand-orange text-white rounded-full shadow-2xl flex items-center justify-center z-50 transition-all hover:scale-110 active:scale-90"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-width="2"></path></svg></button>
 
-    <!-- Admin Keypad (MODAL QUE ESTAVA FALTANDO) -->
     <div id="admin-login-modal" ondblclick="if(event.target === this) UI.closeModal('admin-login-modal')" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-[120] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
             <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-2">Acesso Restrito</h3>
@@ -300,7 +287,6 @@
         </div>
     </div>
 
-    <!-- Admin Form Modal (MODAL QUE ESTAVA FALTANDO) -->
     <div id="admin-form-modal" ondblclick="if(event.target === this) UI.closeModal('admin-form-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-lg p-8 shadow-2xl border dark:border-white/10 text-left">
             <div class="flex justify-between items-center mb-6">
@@ -315,7 +301,6 @@
         </div>
     </div>
 
-    <!-- Delete Confirm Modal (MODAL QUE ESTAVA FALTANDO) -->
     <div id="delete-confirm-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[130] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
             <div class="mb-4"><div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto"><svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></div></div>
@@ -328,7 +313,6 @@
         </div>
     </div>
 
-    <!-- Availability Modal (Painel de Ação - Restaurado) -->
     <div id="availability-modal" ondblclick="if(event.target === this) UI.closeModal('availability-modal')" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border dark:border-white/10 text-center">
             <h3 class="text-xl font-black text-brand-green dark:text-white uppercase italic tracking-tighter mb-2">Painel de Ação</h3>
@@ -357,7 +341,6 @@
         </div>
     </div>
 
-    <!-- Bypass Login Modal (Restaura funcionalidade técnica) -->
     <div id="bypass-login-modal" ondblclick="if(event.target === this) UI.closeModal('bypass-login-modal')" class="hidden fixed inset-0 bg-black/95 backdrop-blur-xl z-[130] flex items-center justify-center p-4 fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border-2 border-brand-orange dark:border-brand-orange/50 text-center">
              <div class="mb-4"><div class="w-16 h-16 bg-brand-orange rounded-full flex items-center justify-center mx-auto shadow-lg shadow-brand-orange/30"><svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div></div>
@@ -715,58 +698,119 @@
                 checked.forEach((cb, i) => { setTimeout(() => { window.open(cb.value, '_blank'); }, i * 1000); }); UI.closeModal('marketing-modal');
             },
             openShareModal: (name, price) => { STATE.currentShareProduct = { name, price }; document.getElementById('share-product-name').textContent = name; UI.setShareMode('vista'); document.getElementById('share-modal').classList.remove('hidden'); },
-            confirmShare: () => {
-                const p = STATE.currentShareProduct; const mode = STATE.shareMode;
+            
+            confirmShare: async () => {
+                const p = STATE.currentShareProduct; 
+                const mode = STATE.shareMode;
+                
                 if (STATE.currentUser.role === 'Vendas externa' && mode === 'vista') {
                     const disc = parseFloat(document.getElementById('share-discount')?.value || 0);
                     if (disc > 0) { UI.showError('Para aplicar desconto, entre em contato com a administração.'); return; }
                 }
-                let detailsText = ""; const reservationVal = p.price * 0.30; const reservationMsg = `\n📉 *Sinal de Reserva (30%):* *${Utils.fmtBRL.format(reservationVal)}* (Abatido no total / Não reembolsável)`;
+
+                let detailsText = ""; 
+                const reservationVal = p.price * 0.30; 
+                const reservationMsg = `\n📉 *Sinal de Reserva (30%):* *${Utils.fmtBRL.format(reservationVal)}* (Abatido no total / Não reembolsável)`;
+                
                 if (mode === 'vista') {
-                    const discountInput = document.getElementById('share-discount'); let disc = parseFloat(discountInput.value);
-                    if (!isNaN(disc) && disc > 0) { if(disc > 10) disc = 10; const finalPrice = p.price * (1 - (disc/100)); detailsText = `\n\n🔥 *Condição à Vista:* ${disc}% OFF\n✅ *VALOR COM DESCONTO:* *${Utils.fmtBRL.format(finalPrice)}*`; }
+                    const discountInput = document.getElementById('share-discount'); 
+                    let disc = parseFloat(discountInput.value);
+                    if (!isNaN(disc) && disc > 0) { 
+                        if(disc > 10) disc = 10; 
+                        const finalPrice = p.price * (1 - (disc/100)); 
+                        detailsText = `\n\n🔥 *Condição à Vista:* ${disc}% OFF\n✅ *VALOR COM DESCONTO:* *${Utils.fmtBRL.format(finalPrice)}*`; 
+                    }
                 } else {
                     const n = parseInt(document.getElementById('share-installments').value);
-                    if (n) { const rate = CONFIG.installmentRates[n] || 0; const totalWithRate = p.price * (1 + (rate/100)); const parcelVal = totalWithRate / n; detailsText = `\n\n💳 *Condição Parcelada:* ${n}x\n*Parcela:* ${Utils.fmtBRL.format(parcelVal)}\n*Total:* ${Utils.fmtBRL.format(totalWithRate)}`; }
+                    if (n) { 
+                        const rate = CONFIG.installmentRates[n] || 0; 
+                        const totalWithRate = p.price * (1 + (rate/100)); 
+                        const parcelVal = totalWithRate / n; 
+                        detailsText = `\n\n💳 *Condição Parcelada:* ${n}x\n*Parcela:* ${Utils.fmtBRL.format(parcelVal)}\n*Total:* ${Utils.fmtBRL.format(totalWithRate)}`; 
+                    }
                 }
+                
                 let finalMessage = `🚀 *PROPOSTA GALVÃO DRONES*\n\n*Produto:* ${p.name}\n*Valor Base:* ${Utils.fmtBRL.format(p.price)}${detailsText}\n${reservationMsg}\n\n🎁 *Bônus Especial:*\nAo investir conosco, você ganha uma *AULA DE PILOTAGEM* prática presencial. Aprenda a dominar seu DJI com quem é especialista! 🚁`;
                 
-                // Prioritize native sharing
-                if (navigator.share) {
-                    navigator.share({
-                        title: `Proposta Galvão Drones - ${p.name}`,
-                        text: finalMessage
-                    }).then(() => {
+                const shareData = {
+                    title: `Proposta Galvão Drones - ${p.name}`,
+                    text: finalMessage
+                };
+
+                try {
+                    // Verifica suporte e se é HTTPS
+                    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+                        await navigator.share(shareData);
                         UI.closeModal('share-modal');
-                    }).catch((error) => {
-                        console.log('Erro ao compartilhar', error);
-                    });
-                } else {
-                    // Fallback only if native share is not supported
-                    window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
-                    UI.closeModal('share-modal');
+                    } else {
+                        throw new Error("Web Share API indisponível (Possivelmente falta HTTPS)");
+                    }
+                } catch (error) {
+                    // Se o erro não for cancelamento do usuário, abre WhatsApp
+                    if (error.name !== 'AbortError') {
+                        console.warn("Fallback para WhatsApp:", error);
+                        window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
+                        UI.closeModal('share-modal');
+                    }
                 }
             },
-            shareUsedCard: (idx) => {
-                const p = STATE.usedProducts[idx]; const isVisitor = STATE.currentUser.role === 'Visitante'; const priceVal = Utils.cleanCurrency(p.price); const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(priceVal);
-                let signalMsg = ""; if (!isVisitor) { const signalVal = priceVal * 0.30; const signalFormatted = Utils.fmtBRL.format(signalVal); signalMsg = `📝 *Sinal de Reserva (30%):* ${signalFormatted} (Não reembolsável)\n`; }
-                const details = p.details || {}; const check = "✅"; const uncheck = "❌"; const images = Array.isArray(p.images) ? p.images : [p.image]; const includePhoto = confirm("Incluir link das fotos na mensagem?");
-                let msg = `🔥 *OPORTUNIDADE GALVÃO DRONES*\n\n🚁 *Modelo:* ${p.name}\n💎 *Condição:* ${p.condition}\n💰 *Investimento:* ${priceFormatted}\n${signalMsg}\n🔋 *Status Baterias (Ciclos):*\n`;
-                if(details.batteries && details.batteries.length) { msg += details.batteries.map((c, i) => `- Bat ${i+1}: ${c}`).join('\n') + `\n\n`; } else { msg += `- Não informado\n\n`; }
-                msg += `📦 *Incluso:*\n${details.hub ? check : uncheck} Hub de Carregamento\n${details.cables ? check : uncheck} Cabos / Conectores\n${details.bag ? check : uncheck} Bolsa / Case\n⚙ Hélices: ${details.propellers || 'Padrão'}\n\n`;
-                if(p.desc) msg += `📝 *Detalhes:* ${p.desc}\n\n`;
-                if(includePhoto && images.length > 0) { msg += `📸 *Fotos:*\n`; images.forEach((img, i) => { msg += `${i+1}. ${img}\n`; }); }
+
+            shareUsedCard: async (idx) => {
+                const p = STATE.usedProducts[idx]; 
+                const isVisitor = STATE.currentUser.role === 'Visitante'; 
+                const priceVal = Utils.cleanCurrency(p.price); 
+                const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(priceVal);
                 
-                // Prioritize native sharing
-                if (navigator.share) { 
-                    navigator.share({ 
-                        title: `Galvão Drones - ${p.name}`, 
-                        text: msg 
-                    }).catch(console.error); 
+                let signalMsg = ""; 
+                if (!isVisitor) { 
+                    const signalVal = priceVal * 0.30; 
+                    const signalFormatted = Utils.fmtBRL.format(signalVal); 
+                    signalMsg = `📝 *Sinal de Reserva (30%):* ${signalFormatted} (Não reembolsável)\n`; 
+                }
+                
+                const details = p.details || {}; 
+                const check = "✅"; 
+                const uncheck = "❌"; 
+                const images = Array.isArray(p.images) ? p.images : [p.image]; 
+                
+                const includePhoto = confirm("Incluir link das fotos na mensagem?");
+                
+                let msg = `🔥 *OPORTUNIDADE GALVÃO DRONES*\n\n🚁 *Modelo:* ${p.name}\n💎 *Condição:* ${p.condition}\n💰 *Investimento:* ${priceFormatted}\n${signalMsg}\n🔋 *Status Baterias (Ciclos):*\n`;
+                
+                if(details.batteries && details.batteries.length) { 
+                    msg += details.batteries.map((c, i) => `- Bat ${i+1}: ${c}`).join('\n') + `\n\n`; 
                 } else { 
-                    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank'); 
+                    msg += `- Não informado\n\n`; 
+                }
+                
+                msg += `📦 *Incluso:*\n${details.hub ? check : uncheck} Hub de Carregamento\n${details.cables ? check : uncheck} Cabos / Conectores\n${details.bag ? check : uncheck} Bolsa / Case\n⚙ Hélices: ${details.propellers || 'Padrão'}\n\n`;
+                
+                if(p.desc) msg += `📝 *Detalhes:* ${p.desc}\n\n`;
+                
+                if(includePhoto && images.length > 0) { 
+                    msg += `📸 *Fotos:*\n`; 
+                    images.forEach((img, i) => { msg += `${i+1}. ${img}\n`; }); 
+                }
+                
+                const shareData = {
+                    title: `Galvão Drones - ${p.name}`,
+                    text: msg
+                };
+
+                try {
+                    // Verifica suporte e se é HTTPS
+                    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+                        await navigator.share(shareData);
+                    } else {
+                        throw new Error("Web Share API indisponível");
+                    }
+                } catch (error) {
+                    if (error.name !== 'AbortError') {
+                        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+                    }
                 }
             },
+            
             proceedContact: () => {
                 if(STATE.currentUsedIdx === null) return; const p = STATE.usedProducts[STATE.currentUsedIdx]; const isVisitor = STATE.currentUser.role === 'Visitante'; const priceVal = Utils.cleanCurrency(p.price); const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(priceVal);
                 let msg = ""; if(STATE.contactOption === 'reserve') { const cName = document.getElementById('res-name-used').value.trim(); const cPhone = document.getElementById('res-phone-used').value.trim(); if(!cName || !cPhone) { alert('Por favor, preencha o Nome e Telefone do cliente para a reserva.'); return; } const signalVal = priceVal * 0.30; const signalFormatted = Utils.fmtBRL.format(signalVal); msg = `🛑 *SOLICITAÇÃO DE RESERVA*\n\n*Modelo:* ${p.name} (${p.condition})\n*Valor Total:* ${priceFormatted}\n\n📉 *Sinal Obrigatório (30%):* ${signalFormatted}\n(Abatido no total, não reembolsável)\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}`; } 
