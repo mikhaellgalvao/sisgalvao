@@ -265,7 +265,7 @@
             <div id="share-input-container" class="mb-6"></div>
             <div class="grid grid-cols-2 gap-3">
                 <button onclick="UI.closeModal('share-modal')" class="py-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-500 active:scale-95 transition-all">Cancelar</button>
-                <button onclick="Actions.confirmShare()" class="py-4 bg-brand-orange text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all">Enviar WhatsApp</button>
+                <button onclick="Actions.confirmShare()" class="py-4 bg-brand-orange text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all">Enviar</button>
             </div>
         </div>
     </div>
@@ -730,8 +730,20 @@
                     if (n) { const rate = CONFIG.installmentRates[n] || 0; const totalWithRate = p.price * (1 + (rate/100)); const parcelVal = totalWithRate / n; detailsText = `\n\n💳 *Condição Parcelada:* ${n}x\n*Parcela:* ${Utils.fmtBRL.format(parcelVal)}\n*Total:* ${Utils.fmtBRL.format(totalWithRate)}`; }
                 }
                 let finalMessage = `🚀 *PROPOSTA GALVÃO DRONES*\n\n*Produto:* ${p.name}\n*Valor Base:* ${Utils.fmtBRL.format(p.price)}${detailsText}\n${reservationMsg}\n\n🎁 *Bônus Especial:*\nAo investir conosco, você ganha uma *AULA DE PILOTAGEM* prática presencial. Aprenda a dominar seu DJI com quem é especialista! 🚁`;
-                window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
-                UI.closeModal('share-modal');
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: `Proposta Galvão Drones - ${p.name}`,
+                        text: finalMessage
+                    }).then(() => {
+                        UI.closeModal('share-modal');
+                    }).catch((error) => {
+                        console.log('Erro ao compartilhar', error);
+                    });
+                } else {
+                    window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
+                    UI.closeModal('share-modal');
+                }
             },
             shareUsedCard: (idx) => {
                 const p = STATE.usedProducts[idx]; const isVisitor = STATE.currentUser.role === 'Visitante'; const priceVal = Utils.cleanCurrency(p.price); const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(priceVal);
