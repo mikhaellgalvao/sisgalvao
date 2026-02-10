@@ -153,7 +153,7 @@
                 
                 <div class="pt-6 mt-2 border-t border-gray-100 dark:border-zinc-800 space-y-2">
                     <button onclick="UI.navigate('admin')" id="admin-link" class="sidebar-link hidden flex items-center w-full px-6 py-4 rounded-2xl font-bold text-red-500 transition-all text-sm uppercase tracking-tighter italic text-left">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 00-1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 001.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 00-1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 001.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         Administração
                     </button>
                     
@@ -514,7 +514,6 @@
                 UI.renderAdmin(); 
             },
 
-            // NOVA LÓGICA DE QUICK ADD SEM IA
             processQuickAdd: () => {
                 const textEl = document.getElementById('quick-paste');
                 if (!textEl) return;
@@ -529,17 +528,14 @@
                 if (btnLoader) btnLoader.classList.remove('hidden');
                 if (btn) btn.disabled = true;
 
-                // Simple Parser: Assume format "Name | Cost | Sell | Line" or "Name, Cost, Sell, Line"
                 const lines = text.split('\n');
                 const newProducts = [];
                 
                 lines.forEach(line => {
                     if(!line.trim()) return;
-                    // Tenta separar por pipe (|) ou vírgula (,)
                     let parts = line.includes('|') ? line.split('|') : line.split(',');
                     if(parts.length >= 1) {
                         const name = parts[0].trim();
-                        // Tenta extrair números de custo e venda, removendo R$ e espaços
                         const cost = parts[1] ? parts[1].replace(/[R$\s]/g, '').trim() : "0,00";
                         const sell = parts[2] ? parts[2].replace(/[R$\s]/g, '').trim() : "0,00";
                         const category = parts[3] ? parts[3].trim() : "Consumer";
@@ -612,7 +608,7 @@
                     const ws = XLSX.utils.json_to_sheet(STATE.products);
                     const wb = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(wb, ws, "Produtos");
-                    XLSX.writeFile(wb, "produtos.xlsx"); // Nome ajustado para facilitar update
+                    XLSX.writeFile(wb, "produtos.xlsx"); 
                     Inventory.notify("Download iniciado!");
                 }, 500);
             },
@@ -625,6 +621,95 @@
                     toast.classList.remove('translate-y-20', 'opacity-0');
                     setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
                 }
+            }
+        };
+
+        const Admin = {
+            showLogin: () => {
+                STATE.adminPassBuffer = ""; 
+                document.getElementById('keypad-display').textContent = ""; 
+                const vk = document.getElementById('virtual-keypad'); 
+                vk.innerHTML = '';
+                [0,1,2,3,4,5,6,7,8,9].sort(()=>Math.random()-0.5).forEach(n => { 
+                    const b = document.createElement('button'); 
+                    b.className = 'key-btn'; 
+                    b.textContent = n; 
+                    if(n === 0) b.style.gridColumn = "2"; 
+                    b.onclick = () => Admin.handleKey(n); 
+                    vk.appendChild(b); 
+                });
+                document.getElementById('admin-login-modal').classList.remove('hidden');
+            },
+            handleKey: (n) => {
+                STATE.adminPassBuffer += n; 
+                document.getElementById('keypad-display').textContent = "*".repeat(STATE.adminPassBuffer.length);
+                const targetPass = STATE.passwords.admin || "1111"; // Fallback para desenvolvimento
+                
+                if(STATE.adminPassBuffer === targetPass) { 
+                    setTimeout(() => { 
+                        STATE.adminSession = true; 
+                        UI.closeModal('admin-login-modal'); 
+                        UI.navigate('admin'); 
+                    }, 300); 
+                } 
+                else if(STATE.adminPassBuffer.length === 4) { 
+                    setTimeout(() => { 
+                        STATE.adminPassBuffer = ""; 
+                        document.getElementById('keypad-display').textContent = ""; 
+                    }, 300); 
+                }
+            },
+            clearPass: () => { 
+                STATE.adminPassBuffer = ""; 
+                document.getElementById('keypad-display').textContent = ""; 
+            },
+            openForm: (type, index = null) => {
+                STATE.adminEdit = { type, index }; 
+                document.getElementById('admin-modal-title').textContent = (index !== null ? `Editar ${type}` : `Novo ${type}`).toUpperCase();
+                let html = "";
+                
+                if(type === 'user') {
+                     const d = index!==null ? STATE.users[index] : {name:'',username:'',password:'',avatar:'',role:'Vendedor'};
+                     html = `<input id="af-name" value="${d.name}" placeholder="Nome" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-user" value="${d.username}" placeholder="User" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-pass" value="${d.password}" placeholder="Pass" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-avatar" value="${d.avatar||''}" placeholder="Img URL" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><select id="af-role" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm bg-white dark:bg-zinc-900"><option value="Vendedor" ${d.role === 'Vendedor' ? 'selected' : ''}>Vendedor</option><option value="Vendas externa" ${d.role === 'Vendas externa' ? 'selected' : ''}>Vendas externa</option><option value="Técnico" ${d.role === 'Técnico' ? 'selected' : ''}>Técnico</option><option value="Administrador" ${d.role === 'Administrador' ? 'selected' : ''}>Administrador</option></select>`;
+                } else if (type === 'product') { 
+                     const d = index!==null ? STATE.products[index] : {name:'', cost:'', sell:'', line:'Consumer'}; 
+                     html = `<input id="af-name" value="${d.name}" placeholder="Nome do Drone" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><div class="grid grid-cols-2 gap-3 mb-3"><input id="af-cost" value="${d.cost||''}" placeholder="Custo (R$)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm"><input id="af-sell" value="${d.sell}" placeholder="Venda (R$)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm"></div><select id="af-line" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3 bg-white dark:bg-zinc-900"><option value="Consumer" ${d.line === 'Consumer' ? 'selected' : ''}>Consumer</option><option value="Enterprise" ${d.line === 'Enterprise' ? 'selected' : ''}>Enterprise</option><option value="Agriculture" ${d.line === 'Agriculture' ? 'selected' : ''}>Agriculture</option></select>`; 
+                } else if (type === 'used') {
+                     const d = index!==null ? STATE.usedProducts[index] : {name:'',price:'',condition:'Seminovo', images:[], details:{batteries:[], hub:false, cables:false, propellers:'', bag:false}, desc:''}; 
+                     const imgs = Array.isArray(d.images) ? d.images.join(', ') : d.image || ''; 
+                     const bats = d.details && d.details.batteries ? d.details.batteries.join(', ') : ''; 
+                     html = `<input id="af-name" value="${d.name}" placeholder="Modelo" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><div class="grid grid-cols-2 gap-3 mb-3"><input id="af-price" value="${d.price}" placeholder="Preço (R$)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm"><select id="af-condition" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm bg-white dark:bg-zinc-900"><option value="Seminovo" ${d.condition === 'Seminovo' ? 'selected' : ''}>Seminovo</option><option value="Open Box" ${d.condition === 'Open Box' ? 'selected' : ''}>Open Box</option><option value="Revisado" ${d.condition === 'Revisado' ? 'selected' : ''}>Revisado</option></select></div><input id="af-images" value="${imgs}" placeholder="URLs das Imagens" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><div class="bg-gray-50 dark:bg-zinc-800/50 p-3 rounded-xl mb-3"><label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Detalhes Técnicos</label><input id="af-bats" value="${bats}" placeholder="Ciclos Baterias" class="w-full p-3 rounded-lg border dark:bg-zinc-800 text-sm mb-2"><input id="af-props" value="${d.details?.propellers||''}" placeholder="Hélices" class="w-full p-3 rounded-lg border dark:bg-zinc-800 text-sm mb-2"><div class="flex gap-4"><label class="flex items-center text-xs"><input type="checkbox" id="af-hub" ${d.details?.hub?'checked':''} class="mr-2"> Hub</label><label class="flex items-center text-xs"><input type="checkbox" id="af-cables" ${d.details?.cables?'checked':''} class="mr-2"> Cabos</label><label class="flex items-center text-xs"><input type="checkbox" id="af-bag" ${d.details?.bag?'checked':''} class="mr-2"> Bag</label></div></div><textarea id="af-desc" placeholder="Descrição Geral" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${d.desc}</textarea>`; 
+                } else if (type === 'marketing') {
+                     const d = index!==null ? STATE.marketingAssets[index] : {title:'',type:'Logo',preview:'',variations:[]}; 
+                     const varStr = d.variations ? d.variations.map(v => `${v.name}|${v.url}`).join('\n') : ''; 
+                     html = `<input id="af-title" value="${d.title}" placeholder="Título" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><select id="af-type" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3 bg-white dark:bg-zinc-900"><option value="Logo" ${d.type === 'Logo' ? 'selected' : ''}>Logo</option><option value="Campanha" ${d.type === 'Campanha' ? 'selected' : ''}>Campanha</option><option value="Institucional" ${d.type === 'Institucional' ? 'selected' : ''}>Institucional</option></select><input id="af-preview" value="${d.preview}" placeholder="URL Preview" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><textarea id="af-variations" placeholder="Variações" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${varStr}</textarea>`;
+                }
+                
+                document.getElementById('admin-dynamic-form').innerHTML = html; 
+                document.getElementById('admin-form-modal').classList.remove('hidden');
+            },
+            saveItem: () => {
+                const t = STATE.adminEdit.type; const i = STATE.adminEdit.index; let newItem = {};
+                
+                if (t==='user') { newItem = { name: document.getElementById('af-name').value, username: document.getElementById('af-user').value, password: document.getElementById('af-pass').value, avatar: document.getElementById('af-avatar').value, role: document.getElementById('af-role').value }; } 
+                else if (t==='product') { newItem = { name: document.getElementById('af-name').value, cost: document.getElementById('af-cost').value, sell: document.getElementById('af-sell').value, line: document.getElementById('af-line').value }; } 
+                else if (t==='used') { const imgStr = document.getElementById('af-images').value; const batStr = document.getElementById('af-bats').value; newItem = { name: document.getElementById('af-name').value, price: document.getElementById('af-price').value, condition: document.getElementById('af-condition').value, images: imgStr.split(',').map(s=>s.trim()).filter(s=>s), details: { batteries: batStr.split(',').map(s=>s.trim()).filter(s=>s), propellers: document.getElementById('af-props').value, hub: document.getElementById('af-hub').checked, cables: document.getElementById('af-cables').checked, bag: document.getElementById('af-bag').checked }, desc: document.getElementById('af-desc').value }; } 
+                else if (t==='marketing') { const varStr = document.getElementById('af-variations').value; const variations = varStr.split('\n').map(line => { const [name, url] = line.split('|'); return name && url ? { name: name.trim(), url: url.trim() } : null; }).filter(v => v); newItem = { title: document.getElementById('af-title').value, type: document.getElementById('af-type').value, preview: document.getElementById('af-preview').value, variations: variations }; }
+                
+                const targetArr = t==='user' ? STATE.users : t==='product' ? STATE.products : t==='used' ? STATE.usedProducts : STATE.marketingAssets;
+                if(i !== null) targetArr[i] = newItem; else targetArr.push(newItem);
+                UI.closeModal('admin-form-modal'); UI.renderAdmin();
+            },
+            askDelete: (type, index) => { 
+                STATE.deleteTarget = { type, index }; 
+                document.getElementById('delete-confirm-modal').classList.remove('hidden'); 
+            },
+            confirmDelete: () => { 
+                const { type, index } = STATE.deleteTarget; 
+                const targetArr = type==='user' ? STATE.users : type==='product' ? STATE.products : type==='used' ? STATE.usedProducts : STATE.marketingAssets; 
+                targetArr.splice(index, 1); 
+                UI.closeModal('delete-confirm-modal'); 
+                UI.renderAdmin(); 
             }
         };
 
@@ -656,11 +741,8 @@
                     Bypass.buffer += n; document.getElementById('bypass-keypad-display').textContent = "•".repeat(Bypass.buffer.length);
                     if(Bypass.buffer.length === 4) {
                         setTimeout(() => {
-                            if(Bypass.buffer === STATE.passwords.admin || Bypass.buffer === Bypass.targetCode) { 
-                                STATE.adminSession = true; 
-                                UI.closeModal('admin-login-modal'); 
-                                UI.navigate('admin'); 
-                            } else { 
+                            if(Bypass.buffer === Bypass.targetCode) { Actions.loginBypass(); } 
+                            else { 
                                 const display = document.getElementById('bypass-keypad-display');
                                 display.style.borderColor = "red"; display.style.color = "red";
                                 setTimeout(() => { Bypass.clearPass(); display.style.borderColor = ""; display.style.color = ""; }, 500);
@@ -932,225 +1014,94 @@
             },
 
             // ... other existing methods ...
+        };
+
+        const Admin = {
+             showLogin: () => {
+                STATE.adminPassBuffer = ""; 
+                document.getElementById('keypad-display').textContent = ""; 
+                const vk = document.getElementById('virtual-keypad'); 
+                vk.innerHTML = '';
+                [0,1,2,3,4,5,6,7,8,9].sort(()=>Math.random()-0.5).forEach(n => { 
+                    const b = document.createElement('button'); 
+                    b.className = 'key-btn'; 
+                    b.textContent = n; 
+                    if(n === 0) b.style.gridColumn = "2"; 
+                    b.onclick = () => Admin.handleKey(n); 
+                    vk.appendChild(b); 
+                });
+                document.getElementById('admin-login-modal').classList.remove('hidden');
+            },
+            handleKey: (n) => {
+                STATE.adminPassBuffer += n; 
+                document.getElementById('keypad-display').textContent = "*".repeat(STATE.adminPassBuffer.length);
+                const targetPass = STATE.passwords.admin || "1111"; // Fallback para desenvolvimento
+                
+                if(STATE.adminPassBuffer === targetPass) { 
+                    setTimeout(() => { 
+                        STATE.adminSession = true; 
+                        UI.closeModal('admin-login-modal'); 
+                        UI.navigate('admin'); 
+                    }, 300); 
+                } 
+                else if(STATE.adminPassBuffer.length === 4) { 
+                    setTimeout(() => { 
+                        STATE.adminPassBuffer = ""; 
+                        document.getElementById('keypad-display').textContent = ""; 
+                    }, 300); 
+                }
+            },
+            clearPass: () => { 
+                STATE.adminPassBuffer = ""; 
+                document.getElementById('keypad-display').textContent = ""; 
+            },
+            openForm: (type, index = null) => {
+                STATE.adminEdit = { type, index }; 
+                document.getElementById('admin-modal-title').textContent = (index !== null ? `Editar ${type}` : `Novo ${type}`).toUpperCase();
+                let html = "";
+                
+                if(type === 'user') {
+                     const d = index!==null ? STATE.users[index] : {name:'',username:'',password:'',avatar:'',role:'Vendedor'};
+                     html = `<input id="af-name" value="${d.name}" placeholder="Nome" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-user" value="${d.username}" placeholder="User" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-pass" value="${d.password}" placeholder="Pass" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><input id="af-avatar" value="${d.avatar||''}" placeholder="Img URL" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><select id="af-role" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm bg-white dark:bg-zinc-900"><option value="Vendedor" ${d.role === 'Vendedor' ? 'selected' : ''}>Vendedor</option><option value="Vendas externa" ${d.role === 'Vendas externa' ? 'selected' : ''}>Vendas externa</option><option value="Técnico" ${d.role === 'Técnico' ? 'selected' : ''}>Técnico</option><option value="Administrador" ${d.role === 'Administrador' ? 'selected' : ''}>Administrador</option></select>`;
+                } else if (type === 'product') { 
+                     const d = index!==null ? STATE.products[index] : {name:'', cost:'', sell:'', line:'Consumer'}; 
+                     html = `<input id="af-name" value="${d.name}" placeholder="Nome do Drone" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><div class="grid grid-cols-2 gap-3 mb-3"><input id="af-cost" value="${d.cost||''}" placeholder="Custo (R$)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm"><input id="af-sell" value="${d.sell}" placeholder="Venda (R$)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm"></div><select id="af-line" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3 bg-white dark:bg-zinc-900"><option value="Consumer" ${d.line === 'Consumer' ? 'selected' : ''}>Consumer</option><option value="Enterprise" ${d.line === 'Enterprise' ? 'selected' : ''}>Enterprise</option><option value="Agriculture" ${d.line === 'Agriculture' ? 'selected' : ''}>Agriculture</option></select>`; 
+                } else if (type === 'used') {
+                     const d = index!==null ? STATE.usedProducts[index] : {name:'',price:'',condition:'Seminovo', images:[], details:{batteries:[], hub:false, cables:false, propellers:'', bag:false}, desc:''}; 
+                     const imgs = Array.isArray(d.images) ? d.images.join(', ') : d.image || ''; 
+                     const bats = d.details && d.details.batteries ? d.details.batteries.join(', ') : ''; 
+                     html = `<input id="af-name" value="${d.name}" placeholder="Modelo" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><div class="grid grid-cols-2 gap-3 mb-3"><input id="af-price" value="${d.price}" placeholder="Preço (R$)" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm"><select id="af-condition" class="p-4 border rounded-xl dark:bg-zinc-800 text-sm bg-white dark:bg-zinc-900"><option value="Seminovo" ${d.condition === 'Seminovo' ? 'selected' : ''}>Seminovo</option><option value="Open Box" ${d.condition === 'Open Box' ? 'selected' : ''}>Open Box</option><option value="Revisado" ${d.condition === 'Revisado' ? 'selected' : ''}>Revisado</option></select></div><input id="af-images" value="${imgs}" placeholder="URLs das Imagens" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><div class="bg-gray-50 dark:bg-zinc-800/50 p-3 rounded-xl mb-3"><label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Detalhes Técnicos</label><input id="af-bats" value="${bats}" placeholder="Ciclos Baterias" class="w-full p-3 rounded-lg border dark:bg-zinc-800 text-sm mb-2"><input id="af-props" value="${d.details?.propellers||''}" placeholder="Hélices" class="w-full p-3 rounded-lg border dark:bg-zinc-800 text-sm mb-2"><div class="flex gap-4"><label class="flex items-center text-xs"><input type="checkbox" id="af-hub" ${d.details?.hub?'checked':''} class="mr-2"> Hub</label><label class="flex items-center text-xs"><input type="checkbox" id="af-cables" ${d.details?.cables?'checked':''} class="mr-2"> Cabos</label><label class="flex items-center text-xs"><input type="checkbox" id="af-bag" ${d.details?.bag?'checked':''} class="mr-2"> Bag</label></div></div><textarea id="af-desc" placeholder="Descrição Geral" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${d.desc}</textarea>`; 
+                } else if (type === 'marketing') {
+                     const d = index!==null ? STATE.marketingAssets[index] : {title:'',type:'Logo',preview:'',variations:[]}; 
+                     const varStr = d.variations ? d.variations.map(v => `${v.name}|${v.url}`).join('\n') : ''; 
+                     html = `<input id="af-title" value="${d.title}" placeholder="Título" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><select id="af-type" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3 bg-white dark:bg-zinc-900"><option value="Logo" ${d.type === 'Logo' ? 'selected' : ''}>Logo</option><option value="Campanha" ${d.type === 'Campanha' ? 'selected' : ''}>Campanha</option><option value="Institucional" ${d.type === 'Institucional' ? 'selected' : ''}>Institucional</option></select><input id="af-preview" value="${d.preview}" placeholder="URL Preview" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm mb-3"><textarea id="af-variations" placeholder="Variações" class="w-full p-4 rounded-xl border dark:bg-zinc-800 text-sm h-24">${varStr}</textarea>`;
+                }
+                
+                document.getElementById('admin-dynamic-form').innerHTML = html; 
+                document.getElementById('admin-form-modal').classList.remove('hidden');
+            },
             saveItem: () => {
                 const t = STATE.adminEdit.type; const i = STATE.adminEdit.index; let newItem = {};
+                
                 if (t==='user') { newItem = { name: document.getElementById('af-name').value, username: document.getElementById('af-user').value, password: document.getElementById('af-pass').value, avatar: document.getElementById('af-avatar').value, role: document.getElementById('af-role').value }; } 
                 else if (t==='product') { newItem = { name: document.getElementById('af-name').value, cost: document.getElementById('af-cost').value, sell: document.getElementById('af-sell').value, line: document.getElementById('af-line').value }; } 
                 else if (t==='used') { const imgStr = document.getElementById('af-images').value; const batStr = document.getElementById('af-bats').value; newItem = { name: document.getElementById('af-name').value, price: document.getElementById('af-price').value, condition: document.getElementById('af-condition').value, images: imgStr.split(',').map(s=>s.trim()).filter(s=>s), details: { batteries: batStr.split(',').map(s=>s.trim()).filter(s=>s), propellers: document.getElementById('af-props').value, hub: document.getElementById('af-hub').checked, cables: document.getElementById('af-cables').checked, bag: document.getElementById('af-bag').checked }, desc: document.getElementById('af-desc').value }; } 
                 else if (t==='marketing') { const varStr = document.getElementById('af-variations').value; const variations = varStr.split('\n').map(line => { const [name, url] = line.split('|'); return name && url ? { name: name.trim(), url: url.trim() } : null; }).filter(v => v); newItem = { title: document.getElementById('af-title').value, type: document.getElementById('af-type').value, preview: document.getElementById('af-preview').value, variations: variations }; }
+                
                 const targetArr = t==='user' ? STATE.users : t==='product' ? STATE.products : t==='used' ? STATE.usedProducts : STATE.marketingAssets;
                 if(i !== null) targetArr[i] = newItem; else targetArr.push(newItem);
                 UI.closeModal('admin-form-modal'); UI.renderAdmin();
             },
-            askDelete: (type, index) => { STATE.deleteTarget = { type, index }; document.getElementById('delete-confirm-modal').classList.remove('hidden'); },
-            confirmDelete: () => { const { type, index } = STATE.deleteTarget; const targetArr = type==='user' ? STATE.users : type==='product' ? STATE.products : type==='used' ? STATE.usedProducts : STATE.marketingAssets; targetArr.splice(index, 1); UI.closeModal('delete-confirm-modal'); UI.renderAdmin(); }
-        };
-
-        const Actions = {
-            login: async (e) => {
-                e.preventDefault();
-                if (STATE.isLocked) { const timeLeft = Math.ceil((STATE.lockoutTimer - Date.now()) / 1000); if (timeLeft > 0) { UI.showError(`Muitas tentativas. Aguarde ${timeLeft}s.`); return; } else { STATE.isLocked = false; STATE.loginAttempts = 0; document.getElementById('btn-login-submit').disabled = false; document.getElementById('login-lockout-msg').classList.add('hidden'); } }
-                const uInput = document.getElementById('username-input').value; const pInput = document.getElementById('password-input').value;
-                const user = STATE.users.find(u => u.username === uInput && u.password === pInput);
-                if (user) { STATE.loginAttempts = 0; Actions.setupSession(user); } 
-                else { 
-                    STATE.loginAttempts++;
-                    if (STATE.loginAttempts >= 3) {
-                        STATE.isLocked = true; STATE.lockoutTimer = Date.now() + 30000; document.getElementById('btn-login-submit').disabled = true;
-                        const msgEl = document.getElementById('login-lockout-msg'); msgEl.classList.remove('hidden');
-                        const interval = setInterval(() => { const timeLeft = Math.ceil((STATE.lockoutTimer - Date.now()) / 1000); if (timeLeft <= 0) { clearInterval(interval); STATE.isLocked = false; STATE.loginAttempts = 0; document.getElementById('btn-login-submit').disabled = false; msgEl.classList.add('hidden'); } else { msgEl.textContent = `BLOQUEADO: ${timeLeft}s`; } }, 1000);
-                        msgEl.textContent = `BLOQUEADO: 30s`;
-                    }
-                    UI.showError("Credenciais Inválidas"); 
-                }
+            askDelete: (type, index) => { 
+                STATE.deleteTarget = { type, index }; 
+                document.getElementById('delete-confirm-modal').classList.remove('hidden'); 
             },
-            setupSession: (user) => {
-                STATE.currentUser = user;
-                if(document.getElementById('remember-me').checked) { if(user.username !== 'tecnico_bypass') { localStorage.setItem('gd_user', user.username); localStorage.setItem('gd_pass', user.password); } } else { localStorage.clear(); }
-                document.getElementById('login-view').classList.add('hidden'); document.getElementById('dashboard-view').classList.remove('hidden'); document.getElementById('calculator-fab').classList.remove('hidden');
-                document.getElementById('sidebar-user-name').textContent = user.name; document.getElementById('sidebar-user-role').textContent = user.role;
-                UI.updateSidebarVisibility();
-                const sbPic = document.getElementById('sidebar-profile-picture');
-                if (user.role === 'Técnico') { sbPic.classList.remove('bg-brand-orange'); sbPic.classList.add('bg-white', 'text-brand-orange'); } 
-                else { sbPic.classList.add('bg-brand-orange', 'text-white'); sbPic.classList.remove('bg-white', 'text-brand-orange'); }
-                if(user.avatar) { sbPic.style.backgroundImage = `url('${user.avatar}')`; document.getElementById('sidebar-profile-placeholder').style.display = 'none'; } 
-                else { sbPic.style.backgroundImage = 'none'; document.getElementById('sidebar-profile-placeholder').style.display = 'flex'; document.getElementById('sidebar-profile-placeholder').textContent = user.name.charAt(0); }
-                UI.navigate('dashboard');
-            },
-            loginVisitor: () => { Actions.setupSession({name: "Visitante", role: "Visitante", username: "consultas", password: ""}); },
-            loginBypass: () => { UI.closeModal('bypass-login-modal'); Actions.setupSession({ name: "Técnico Galvão", role: "Técnico", username: "tecnico_bypass", password: "", avatar: "https://imgur.com/ny5U9KV.png", phone: "6236360668" }); },
-            genQRCode: () => {
-                const isCentral = document.getElementById('qr-central-check').checked; const phone = isCentral ? CONFIG.central : (STATE.currentUser?.phone || CONFIG.central); const qrImg = document.getElementById('profile-qrcode');
-                if (!qrImg) return; const waLink = `https://wa.me/55${phone.replace(/\D/g, '')}`; const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(waLink)}&bgcolor=ffffff&color=0E5847&margin=10&format=png`;
-                qrImg.classList.add('opacity-0'); qrImg.src = apiUrl; qrImg.onload = () => qrImg.classList.remove('opacity-0');
-            },
-            shareCalc: () => { const total = document.getElementById('popup-total-value').textContent; window.open(`https://wa.me/?text=${encodeURIComponent("*Simulação Galvão Drones*\nTotal: "+total)}`, '_blank'); },
-            finalizeSale: (name) => window.open(`https://wa.me/55${CONFIG.central}?text=${encodeURIComponent("🚀 Venda Concluída: " + name)}`, '_blank'),
-            consultUsed: (details) => window.open(`https://wa.me/55${CONFIG.central}?text=${encodeURIComponent("🔍 Interesse em Seminovo: " + details)}`, '_blank'),
-            openDriveLink: (key) => {
-                const url = STATE.driveLinks[key];
-                if(url) {
-                    const modal = document.getElementById('drive-webview-modal'); const iframe = document.getElementById('drive-iframe'); const loader = document.getElementById('drive-loader'); const external = document.getElementById('drive-external-link'); const title = document.getElementById('drive-modal-title');
-                    const labels = { postados: 'Conteúdos Postados', postar: 'Materiais para Postar', editar: 'Arquivos para Editar' }; title.textContent = labels[key] || 'Pasta Galvão';
-                    loader.classList.remove('hidden'); iframe.src = url; external.href = url; modal.classList.remove('hidden');
-                } else { alert("Link não configurado."); }
-            },
-            openMarketingModal: (idx) => {
-                const asset = STATE.marketingAssets[idx]; document.getElementById('mkt-modal-title').textContent = asset.title;
-                const variations = asset.variations || [{name: 'Padrão', url: asset.downloadUrl, preview: asset.preview}];
-                const list = document.getElementById('mkt-variations-list');
-                list.innerHTML = variations.map((v, i) => `<label class="relative flex items-center p-3 rounded-xl bg-gray-50 dark:bg-zinc-800 cursor-pointer transition-all hover:bg-gray-100 dark:hover:bg-zinc-700 group overflow-hidden"><input type="checkbox" value="${v.url}" class="peer sr-only mkt-checkbox-input"><div class="absolute inset-0 border-2 border-transparent peer-checked:border-brand-orange peer-checked:bg-brand-orange/5 rounded-xl pointer-events-none transition-all"></div><div class="w-12 h-12 bg-white dark:bg-zinc-600 rounded-lg flex items-center justify-center mr-4 border dark:border-zinc-600 relative z-10"><img src="${v.preview || asset.preview || 'https://imgur.com/2PNy5CS.png'}" class="w-8 h-8 object-contain"></div><span class="flex-1 text-xs font-bold text-slate-700 dark:text-white uppercase relative z-10">${v.name}</span><div class="w-6 h-6 rounded-full border-2 border-gray-300 dark:border-zinc-500 peer-checked:bg-brand-orange peer-checked:border-brand-orange flex items-center justify-center transition-all relative z-10"><svg class="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></label>`).join('');
-                document.getElementById('marketing-modal').classList.remove('hidden');
-            },
-            downloadSelectedMarketing: () => {
-                const checked = document.querySelectorAll('.mkt-checkbox-input:checked'); if(checked.length === 0) { alert("Selecione pelo menos uma opção para baixar."); return; }
-                checked.forEach((cb, i) => { setTimeout(() => { window.open(cb.value, '_blank'); }, i * 1000); }); UI.closeModal('marketing-modal');
-            },
-            openShareModal: (name, price) => { STATE.currentShareProduct = { name, price }; document.getElementById('share-product-name').textContent = name; UI.setShareMode('vista'); document.getElementById('share-modal').classList.remove('hidden'); },
-            
-            confirmShare: async () => {
-                const p = STATE.currentShareProduct; 
-                const mode = STATE.shareMode;
-                
-                if (STATE.currentUser.role === 'Vendas externa' && mode === 'vista') {
-                    const disc = parseFloat(document.getElementById('share-discount')?.value || 0);
-                    if (disc > 0) { UI.showError('Para aplicar desconto, entre em contato com a administração.'); return; }
-                }
-
-                let detailsText = ""; 
-                const reservationVal = p.price * 0.30; 
-                const reservationMsg = `\n📉 *Sinal de Reserva (30%):* *${Utils.fmtBRL.format(reservationVal)}* (Abatido no total / Não reembolsável)`;
-                
-                if (mode === 'vista') {
-                    const discountInput = document.getElementById('share-discount'); 
-                    let disc = parseFloat(discountInput.value);
-                    if (!isNaN(disc) && disc > 0) { 
-                        if(disc > 10) disc = 10; 
-                        const finalPrice = p.price * (1 - (disc/100)); 
-                        detailsText = `\n\n🔥 *Condição à Vista:* ${disc}% OFF\n✅ *VALOR COM DESCONTO:* *${Utils.fmtBRL.format(finalPrice)}*`; 
-                    }
-                } else {
-                    const n = parseInt(document.getElementById('share-installments').value);
-                    if (n) { 
-                        const rate = CONFIG.installmentRates[n] || 0; 
-                        const totalWithRate = p.price * (1 + (rate/100)); 
-                        const parcelVal = totalWithRate / n; 
-                        detailsText = `\n\n💳 *Condição Parcelada:* ${n}x\n*Parcela:* ${Utils.fmtBRL.format(parcelVal)}\n*Total:* ${Utils.fmtBRL.format(totalWithRate)}`; 
-                    }
-                }
-                
-                let finalMessage = `🚀 *PROPOSTA GALVÃO DRONES*\n\n*Produto:* ${p.name}\n*Valor Base:* ${Utils.fmtBRL.format(p.price)}${detailsText}\n${reservationMsg}\n\n🎁 *Bônus Especial:*\nAo investir conosco, você ganha uma *AULA DE PILOTAGEM* prática presencial. Aprenda a dominar seu DJI com quem é especialista! 🚁`;
-                
-                const shareData = {
-                    title: `Proposta Galvão Drones - ${p.name}`,
-                    text: finalMessage
-                };
-
-                try {
-                    // Fallback para WhatsApp sempre
-                    if (navigator.share) {
-                        await navigator.share(shareData);
-                        UI.closeModal('share-modal');
-                    } else {
-                         throw new Error("Web Share not supported");
-                    }
-                } catch (error) {
-                    window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
-                    UI.closeModal('share-modal');
-                }
-            },
-
-            shareUsedCard: async (idx) => {
-                const p = STATE.usedProducts[idx]; 
-                const isVisitor = STATE.currentUser.role === 'Visitante'; 
-                const priceVal = Utils.cleanCurrency(p.price); 
-                const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(priceVal);
-                
-                let signalMsg = ""; 
-                if (!isVisitor) { 
-                    const signalVal = priceVal * 0.30; 
-                    const signalFormatted = Utils.fmtBRL.format(signalVal); 
-                    signalMsg = `📝 *Sinal de Reserva (30%):* ${signalFormatted} (Não reembolsável)\n`; 
-                }
-                
-                const details = p.details || {}; 
-                const check = "✅"; 
-                const uncheck = "❌"; 
-                const images = Array.isArray(p.images) ? p.images : [p.image]; 
-                
-                const includePhoto = confirm("Incluir link das fotos na mensagem?");
-                
-                let msg = `🔥 *OPORTUNIDADE GALVÃO DRONES*\n\n🚁 *Modelo:* ${p.name}\n💎 *Condição:* ${p.condition}\n💰 *Investimento:* ${priceFormatted}\n${signalMsg}\n🔋 *Status Baterias (Ciclos):*\n`;
-                
-                if(details.batteries && details.batteries.length) { 
-                    msg += details.batteries.map((c, i) => `- Bat ${i+1}: ${c}`).join('\n') + `\n\n`; 
-                } else { 
-                    msg += `- Não informado\n\n`; 
-                }
-                
-                msg += `📦 *Incluso:*\n${details.hub ? check : uncheck} Hub de Carregamento\n${details.cables ? check : uncheck} Cabos / Conectores\n${details.bag ? check : uncheck} Bolsa / Case\n⚙ Hélices: ${details.propellers || 'Padrão'}\n\n`;
-                
-                if(p.desc) msg += `📝 *Detalhes:* ${p.desc}\n\n`;
-                
-                if(includePhoto && images.length > 0) { 
-                    msg += `📸 *Fotos:*\n`; 
-                    images.forEach((img, i) => { msg += `${i+1}. ${img}\n`; }); 
-                }
-                
-                const shareData = {
-                    title: `Galvão Drones - ${p.name}`,
-                    text: msg
-                };
-
-                try {
-                    if (navigator.share) {
-                        await navigator.share(shareData);
-                    } else {
-                         throw new Error("Web Share not supported");
-                    }
-                } catch (error) {
-                    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-                }
-            },
-            
-            proceedContact: () => {
-                if(STATE.currentUsedIdx === null) return; const p = STATE.usedProducts[STATE.currentUsedIdx]; const isVisitor = STATE.currentUser.role === 'Visitante'; const priceVal = Utils.cleanCurrency(p.price); const priceFormatted = isVisitor ? 'Sob Consulta' : Utils.fmtBRL.format(priceVal);
-                let msg = ""; if(STATE.contactOption === 'reserve') { const cName = document.getElementById('res-name-used').value.trim(); const cPhone = document.getElementById('res-phone-used').value.trim(); if(!cName || !cPhone) { alert('Por favor, preencha o Nome e Telefone do cliente para a reserva.'); return; } const signalVal = priceVal * 0.30; const signalFormatted = Utils.fmtBRL.format(signalVal); msg = `🛑 *SOLICITAÇÃO DE RESERVA*\n\n*Modelo:* ${p.name} (${p.condition})\n*Valor Total:* ${priceFormatted}\n\n📉 *Sinal Obrigatório (30%):* ${signalFormatted}\n(Abatido no total, não reembolsável)\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}`; } 
-                else { msg = `🔍 *CONSULTA DE DISPONIBILIDADE*\n\n*Modelo:* ${p.name} (${p.condition})\n*Valor:* ${priceFormatted}\n\nGostaria de saber se este item ainda está disponível.`; }
-                window.open(`https://wa.me/55${CONFIG.central}?text=${encodeURIComponent(msg)}`, '_blank');
-            },
-            openAvailability: (name) => {
-                STATE.currentProduct = name; document.getElementById('modal-product-name').textContent = name; const sellers = ['central', 'mikhaell', 'maikhon', 'ryan'];
-                document.getElementById('modal-sellers-list').innerHTML = sellers.map(k => { let displayName = k.toUpperCase(); let subInfo = 'ENTERPRISE/AGRAS'; if(k === 'central') { displayName = 'CENTRAL GALVÃO DRONES'; subInfo = 'ATENDIMENTO GERAL'; } else if (k === 'ryan') { subInfo = 'VENDAS GERAL'; } return `<label class="vendedor-option block cursor-pointer group"><input type="checkbox" name="vend_chk" value="${k}" class="hidden"><div class="p-4 border-2 border-gray-100 dark:border-zinc-800 rounded-2xl flex justify-between transition-all"><div class="text-left"><span class="block font-black text-sm dark:text-white uppercase">${displayName}</span><span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest">${subInfo}</span></div><div class="check-indicator w-5 h-5 border-2 rounded-full"></div></div></label>`; }).join('');
-                UI.selectNewContactOption('availability'); document.getElementById('res-name-new').value = ''; document.getElementById('res-phone-new').value = ''; document.getElementById('availability-modal').classList.remove('hidden');
-            },
-            sendAvailabilityRequest: () => {
-                const selectedSellers = Array.from(document.querySelectorAll('input[name="vend_chk"]:checked')).map(cb => cb.value); if(selectedSellers.length === 0) { alert('Selecione pelo menos um vendedor.'); return; }
-                let msgPrefix = ""; let clientDetails = "";
-                if(STATE.newContactOption === 'sale') { msgPrefix = "🚀 *VENDA CONCLUÍDA*"; } 
-                else if (STATE.newContactOption === 'reserve') { const cName = document.getElementById('res-name-new').value.trim(); const cPhone = document.getElementById('res-phone-new').value.trim(); if(!cName || !cPhone) { alert('Por favor, preencha o Nome e Telefone do cliente para a reserva.'); return; } msgPrefix = "🛑 *SOLICITAÇÃO DE RESERVA (30%)*"; clientDetails = `\n\n👤 *Cliente:* ${cName}\n📱 *Tel:* ${cPhone}\n⚠ *Condição:* Sinal sem devolução confirmado.`; } 
-                else { msgPrefix = "🔍 *CONSULTA DE ESTOQUE*"; }
-                const finalMsg = `${msgPrefix}: ${STATE.currentProduct}${clientDetails}`; selectedSellers.forEach((seller, i) => { setTimeout(() => window.open(`https://wa.me/55${CONFIG.contacts[seller]}?text=${encodeURIComponent(finalMsg)}`, '_blank'), i*800); }); UI.closeModal('availability-modal');
-            },
-            startCarousels: () => { STATE.intervals.forEach(clearInterval); STATE.intervals = []; STATE.usedProducts.forEach((p, idx) => { const images = Array.isArray(p.images) ? p.images : [p.image]; if(images.length > 1) { let current = 0; const el = document.getElementById(`card-img-${idx}`); if(!el) return; const interval = setInterval(() => { current = (current + 1) % images.length; el.style.backgroundImage = `url('${images[current]}')`; }, 3000); STATE.intervals.push(interval); } }); },
-            openUsedDetails: (idx) => {
-                STATE.currentUsedIdx = idx; const p = STATE.usedProducts[idx]; const images = Array.isArray(p.images) ? p.images : [p.image]; const details = p.details || {}; const isVisitor = STATE.currentUser.role === 'Visitante';
-                const mainImg = document.getElementById('modal-used-main-img'); mainImg.style.backgroundImage = `url('${images[0]}')`;
-                const thumbsContainer = document.getElementById('modal-used-thumbnails'); thumbsContainer.innerHTML = images.map(img => `<div class="w-20 h-20 flex-shrink-0 bg-gray-100 dark:bg-zinc-800 rounded-xl bg-cover bg-center border-2 border-transparent hover:border-brand-orange cursor-pointer transition-all" style="background-image: url('${img}')" onclick="document.getElementById('modal-used-main-img').style.backgroundImage = 'url(\\'${img}\\')'"></div>`).join('');
-                document.getElementById('modal-used-title').textContent = p.name; const priceEl = document.getElementById('modal-used-price');
-                if (isVisitor) { priceEl.textContent = "CONSULTE"; priceEl.classList.remove('text-3xl', 'text-brand-orange'); priceEl.classList.add('text-2xl', 'text-gray-400'); } 
-                else { priceEl.textContent = Utils.fmtBRL.format(Utils.cleanCurrency(p.price)); priceEl.classList.add('text-3xl', 'text-brand-orange'); priceEl.classList.remove('text-2xl', 'text-gray-400'); }
-                document.getElementById('modal-used-desc').textContent = p.desc; const badge = document.getElementById('modal-used-badge'); badge.className = 'px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest';
-                if(p.condition.includes('Seminovo')) badge.classList.add('badge-seminovo'); else if(p.condition.includes('Open Box')) badge.classList.add('badge-openbox'); else badge.classList.add('badge-revisado');
-                badge.textContent = p.condition;
-                const batsContainer = document.getElementById('modal-used-batteries'); const bats = details.batteries || []; if(bats.length === 0) { batsContainer.innerHTML = '<span class="text-xs text-gray-400 italic">Sem informação de bateria</span>'; } else { batsContainer.innerHTML = bats.map((cycle, i) => `<div class="flex flex-col items-center p-3 bg-white dark:bg-zinc-900 rounded-xl border dark:border-zinc-700 w-20"><svg class="w-6 h-6 text-green-500 mb-1" fill="currentColor" viewBox="0 0 20 20"><path d="M16 6H4a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 00-2-2zM4 8h12v6H4V8zm14 2h.5a1.5 1.5 0 110 3H18v-3z"></path></svg><span class="text-[10px] font-black text-gray-500 uppercase">Bat ${i+1}</span><span class="text-sm font-bold dark:text-white">${cycle}</span></div>`).join(''); }
-                const accContainer = document.getElementById('modal-used-accessories'); const checkIcon = '<span class="text-green-500 mr-2">✔</span>'; const xIcon = '<span class="text-red-400 mr-2">✖</span>';
-                accContainer.innerHTML = `<li class="flex items-center">${details.hub ? checkIcon : xIcon} Hub de Carregamento</li><li class="flex items-center">${details.cables ? checkIcon : xIcon} Cabos / Conectores</li><li class="flex items-center">${details.bag ? checkIcon : xIcon} Bolsa / Case</li><li class="flex items-center"><span class="text-brand-orange mr-2">⚙</span> Hélices: ${details.propellers || 'Padrão'}</li>`;
-                document.getElementById('modal-used-init-contact').classList.remove('hidden'); document.getElementById('modal-used-options').classList.add('hidden');
-                document.getElementById('modal-used-share').onclick = () => Actions.shareUsedCard(idx); document.getElementById('used-details-modal').classList.remove('hidden');
-            },
-            exportItem: (type) => {
-                alert(`Exportando ${type} para Excel... (Funcionalidade simulada)`);
+            confirmDelete: () => { 
+                const { type, index } = STATE.deleteTarget; 
+                const targetArr = type==='user' ? STATE.users : type==='product' ? STATE.products : type==='used' ? STATE.usedProducts : STATE.marketingAssets; 
+                targetArr.splice(index, 1); 
+                UI.closeModal('delete-confirm-modal'); 
+                UI.renderAdmin(); 
             }
         };
 
