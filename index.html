@@ -153,7 +153,7 @@
                 
                 <div class="pt-6 mt-2 border-t border-gray-100 dark:border-zinc-800 space-y-2">
                     <button onclick="UI.navigate('admin')" id="admin-link" class="sidebar-link hidden flex items-center w-full px-6 py-4 rounded-2xl font-bold text-red-500 transition-all text-sm uppercase tracking-tighter italic text-left">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 00-1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 001.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 00-1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 001.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         Administração
                     </button>
                     
@@ -418,7 +418,7 @@
             currentUser: null, adminSession: false, adminPassBuffer: "", currentProduct: "", 
             currentShareProduct: { name: "", price: 0 }, shareMode: 'vista',
             adminEdit: { type: null, index: null }, 
-            passwords: { admin: "1111", download: "" }, 
+            passwords: { admin: "", download: "" }, 
             intervals: [],
             contactOption: 'availability', newContactOption: 'availability', currentUsedIdx: null,
             loginAttempts: 0, isLocked: false, lockoutTimer: null, deleteTarget: null,
@@ -656,8 +656,11 @@
                     Bypass.buffer += n; document.getElementById('bypass-keypad-display').textContent = "•".repeat(Bypass.buffer.length);
                     if(Bypass.buffer.length === 4) {
                         setTimeout(() => {
-                            if(Bypass.buffer === Bypass.targetCode) { Actions.loginBypass(); } 
-                            else { 
+                            if(Bypass.buffer === STATE.passwords.admin || Bypass.buffer === Bypass.targetCode) { 
+                                STATE.adminSession = true; 
+                                UI.closeModal('admin-login-modal'); 
+                                UI.navigate('admin'); 
+                            } else { 
                                 const display = document.getElementById('bypass-keypad-display');
                                 display.style.borderColor = "red"; display.style.color = "red";
                                 setTimeout(() => { Bypass.clearPass(); display.style.borderColor = ""; display.style.color = ""; }, 500);
@@ -846,11 +849,35 @@
 
             renderAdmin: () => {
                 let html = `<div class="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm flex justify-between items-center mb-6"><div><h2 class="text-2xl font-black text-red-600 uppercase italic">Gestão</h2><p class="text-xs text-gray-500">Controle Central</p></div></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">`;
-                const makeList = (title, items, type, renderRow) => `<div class="bg-white dark:bg-zinc-900 rounded-[2rem] border dark:border-zinc-800 overflow-hidden flex flex-col h-[500px]"><div class="p-5 border-b dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/50 flex justify-between items-center"><h3 class="font-black uppercase text-[10px] tracking-widest text-brand-green italic">${title}</h3><div class="flex gap-2"><button onclick="Actions.exportItem('${type}')" class="p-2 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-lg active:scale-90"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button><button onclick="Admin.openForm('${type}')" class="p-2 bg-brand-green text-white rounded-lg active:scale-90"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3"></path></svg></button></div></div><div class="flex-1 overflow-y-auto p-4 space-y-2 hide-scrollbar">${items.map((item, idx) => `<div class="flex items-center justify-between p-3 border-b dark:border-zinc-800 text-left">${renderRow(item)}<div class="flex gap-1"><button onclick="Admin.openForm('${type}', ${idx})" class="text-blue-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button><button onclick="Admin.askDelete('${type}', ${idx})" class="text-red-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9z"></path></svg></button></div></div>`).join('')}</div></div>`;
+                
+                // Função auxiliar para criar listas de administração
+                const makeList = (title, items, type, renderRow) => {
+                    return `<div class="bg-white dark:bg-zinc-900 rounded-[2rem] border dark:border-zinc-800 overflow-hidden flex flex-col h-[500px]">
+                        <div class="p-5 border-b dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/50 flex justify-between items-center">
+                            <h3 class="font-black uppercase text-[10px] tracking-widest text-brand-green italic">${title}</h3>
+                            <div class="flex gap-2">
+                                <button onclick="Actions.exportItem('${type}')" class="p-2 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-lg active:scale-90"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+                                <button onclick="Admin.openForm('${type}')" class="p-2 bg-brand-green text-white rounded-lg active:scale-90"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3"></path></svg></button>
+                            </div>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-4 space-y-2 hide-scrollbar">
+                            ${items.map((item, idx) => `
+                                <div class="flex items-center justify-between p-3 border-b dark:border-zinc-800 text-left">
+                                    ${renderRow(item)}
+                                    <div class="flex gap-1">
+                                        <button onclick="Admin.openForm('${type}', ${idx})" class="text-blue-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button>
+                                        <button onclick="Admin.askDelete('${type}', ${idx})" class="text-red-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9z"></path></svg></button>
+                                    </div>
+                                </div>`).join('')}
+                        </div>
+                    </div>`;
+                };
+
                 html += makeList("Equipe", STATE.users, 'user', u => `<div class="overflow-hidden"><p class="text-xs font-bold truncate dark:text-white">${u.name}</p><p class="text-[9px] text-gray-500 uppercase">${u.role}</p></div>`);
                 html += makeList("Novos", STATE.products, 'product', p => `<div class="overflow-hidden"><p class="text-xs font-bold truncate dark:text-white">${p.name}</p><div class="flex gap-2"><p class="text-[9px] text-red-400 font-bold">C: ${Utils.fmtBRL.format(Utils.cleanCurrency(p.cost))}</p><p class="text-[9px] text-brand-green font-bold">V: ${Utils.fmtBRL.format(Utils.cleanCurrency(p.sell))}</p></div></div>`);
                 html += makeList("Usados", STATE.usedProducts, 'used', u => `<div class="overflow-hidden"><p class="text-xs font-bold truncate dark:text-white">${u.name}</p><p class="text-[9px] text-brand-orange">${u.condition}</p></div>`);
                 html += makeList("Mkt", STATE.marketingAssets, 'marketing', m => `<div class="overflow-hidden"><p class="text-xs font-bold truncate dark:text-white">${m.title}</p><p class="text-[9px] text-gray-500">${m.type}</p></div>`);
+                
                 html += `</div>
                 <!-- Inventory Manager Section -->
                 <div class="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm">
