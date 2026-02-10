@@ -47,7 +47,6 @@
         .dark .key-btn { background: #27272a; color: white; border: 1px solid rgba(255,255,255,0.05); }
         .key-btn:active { transform: scale(0.95); background: #EF7E13; color: white; border-color: #EF7E13; box-shadow: none; }
         
-        /* Dropzone */
         .drop-zone { border: 2px dashed #cbd5e1; transition: all 0.3s ease; }
         .drop-zone.active { border-color: #EF7E13; background-color: rgba(239, 126, 19, 0.05); }
     </style>
@@ -135,16 +134,26 @@
         </div>
     </div>
 
+    <!-- Bypass Keypad Modal -->
+    <div id="bypass-login-modal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-xl z-[130] flex items-center justify-center p-4 fade-in">
+        <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl border-2 border-brand-orange text-center">
+             <h3 class="text-xl font-black text-brand-orange uppercase italic mb-2">Acesso Técnico</h3>
+             <p class="text-[9px] text-gray-400 uppercase tracking-widest mb-6">Digite o código de segurança</p>
+             <div id="bypass-keypad-display" class="w-full h-16 mb-8 flex items-center justify-center bg-gray-100 dark:bg-zinc-800 rounded-2xl text-3xl font-black tracking-[1rem] text-brand-orange border dark:border-zinc-700"></div>
+             <div id="bypass-virtual-keypad" class="keypad-grid mb-8"></div>
+             <button onclick="UI.closeModal('bypass-login-modal')" class="w-full py-4 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-2xl font-black uppercase text-[10px]">Cancelar</button>
+        </div>
+    </div>
+
     <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 translate-y-20 opacity-0 transition-all duration-500 bg-brand-green text-white px-8 py-4 rounded-2xl shadow-2xl z-[300]">
         <span id="toast-msg">Sucesso!</span>
     </div>
 
-    <!-- Script Section -->
     <script>
         const STATE = {
             products: [], usedProducts: [], marketingAssets: [], users: [], suppliers: [], 
             currentUser: null, adminSession: false, adminPassBuffer: "", 
-            passwords: { admin: "" }, driveLinks: {}, intervals: []
+            bypassPassBuffer: "", passwords: { admin: "" }, driveLinks: {}, intervals: []
         };
 
         const CONFIG = {
@@ -176,55 +185,32 @@
             }
         };
 
-        const Inventory = {
-            init: () => {
-                const dz = document.getElementById('drop-zone');
-                if (dz) {
-                    dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('active'); });
-                    dz.addEventListener('drop', (e) => { e.preventDefault(); Inventory.handleFile(e.dataTransfer.files[0]); });
-                }
-                Inventory.renderTable();
-            },
-            handleFile: (file) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const data = JSON.parse(e.target.result);
-                        STATE.products = data.products || data;
-                        Inventory.renderTable();
-                        Inventory.notify("Inventário Atualizado!");
-                    } catch(err) { alert("Arquivo inválido"); }
-                };
-                reader.readAsText(file);
-            },
-            renderTable: () => {
-                const body = document.getElementById('table-body');
-                if (!body) return;
-                body.innerHTML = STATE.products.map(p => `<tr class="border-b dark:border-zinc-800"><td class="p-3 text-sm">${p.name}</td><td class="p-3 text-sm font-bold text-brand-green">${p.sell}</td></tr>`).join('');
-            },
-            processQuickAdd: () => {
-                const text = document.getElementById('quick-paste').value;
-                if(!text) return;
-                const lines = text.split('\n');
-                lines.forEach(l => {
-                    const parts = l.split('|');
-                    if(parts[0]) STATE.products.push({ name: parts[0].trim(), cost: parts[1]?.trim() || "0", sell: parts[2]?.trim() || "0", line: parts[3]?.trim() || "Consumer" });
+        const Bypass = {
+            show: () => {
+                STATE.bypassPassBuffer = "";
+                document.getElementById('bypass-keypad-display').innerText = "";
+                const vk = document.getElementById('bypass-virtual-keypad');
+                vk.innerHTML = '';
+                [1,2,3,4,5,6,7,8,9,0].forEach(n => {
+                    const b = document.createElement('button');
+                    b.className = 'key-btn'; b.innerText = n;
+                    b.onclick = () => Bypass.handleKey(n);
+                    vk.appendChild(b);
                 });
-                Inventory.renderTable();
-                document.getElementById('quick-paste').value = '';
-                Inventory.notify("Itens adicionados!");
+                document.getElementById('bypass-login-modal').classList.remove('hidden');
             },
-            notify: (msg) => {
-                const t = document.getElementById('toast');
-                document.getElementById('toast-msg').innerText = msg;
-                t.classList.remove('translate-y-20', 'opacity-0');
-                setTimeout(() => t.classList.add('translate-y-20', 'opacity-0'), 3000);
-            },
-            exportData: () => {
-                const ws = XLSX.utils.json_to_sheet(STATE.products);
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "Produtos");
-                XLSX.writeFile(wb, "produtos_galvao.xlsx");
+            handleKey: (n) => {
+                STATE.bypassPassBuffer += n;
+                document.getElementById('bypass-keypad-display').innerText = "•".repeat(STATE.bypassPassBuffer.length);
+                const targetPass = STATE.passwords.admin || "0639"; // Usa a senha de pas.json
+                
+                if (STATE.bypassPassBuffer === targetPass) {
+                    UI.closeModal('bypass-login-modal');
+                    Actions.loginBypass();
+                } else if (STATE.bypassPassBuffer.length >= 4) {
+                    STATE.bypassPassBuffer = "";
+                    document.getElementById('bypass-keypad-display').innerText = "";
+                }
             }
         };
 
@@ -248,10 +234,6 @@
                 const targetPass = STATE.passwords.admin;
                 
                 if (targetPass && STATE.adminPassBuffer === targetPass) {
-                    STATE.adminSession = true;
-                    UI.closeModal('admin-login-modal');
-                    UI.navigate('admin');
-                } else if (STATE.adminPassBuffer === "0639") { // Bypass Técnico
                     STATE.adminSession = true;
                     UI.closeModal('admin-login-modal');
                     UI.navigate('admin');
@@ -284,89 +266,99 @@
             }
         };
 
-        const UI = {
-            init: async () => {
-                await Data.load();
-                // Removido o navigate dashboard automático para evitar erro de null pointer
+        const Inventory = {
+            init: () => {
+                const dz = document.getElementById('drop-zone');
+                if (dz) {
+                    dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('active'); });
+                    dz.addEventListener('drop', (e) => { e.preventDefault(); Inventory.handleFile(e.dataTransfer.files[0]); });
+                }
+                Inventory.renderTable();
             },
+            handleFile: (file) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        STATE.products = data.products || data;
+                        Inventory.renderTable();
+                    } catch(err) { alert("Arquivo inválido"); }
+                };
+                reader.readAsText(file);
+            },
+            renderTable: () => {
+                const body = document.getElementById('table-body');
+                if (!body) return;
+                body.innerHTML = STATE.products.map(p => `<tr class="border-b dark:border-zinc-800"><td class="p-3 text-sm">${p.name}</td><td class="p-3 text-sm font-bold text-brand-green">${p.sell}</td></tr>`).join('');
+            },
+            processQuickAdd: () => {
+                const text = document.getElementById('quick-paste').value;
+                if(!text) return;
+                const lines = text.split('\n');
+                lines.forEach(l => {
+                    const parts = l.split('|');
+                    if(parts[0]) STATE.products.push({ name: parts[0].trim(), sell: parts[2]?.trim() || "0" });
+                });
+                Inventory.renderTable();
+                document.getElementById('quick-paste').value = '';
+            },
+            exportData: () => {
+                const ws = XLSX.utils.json_to_sheet(STATE.products);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Produtos");
+                XLSX.writeFile(wb, "produtos_galvao.xlsx");
+            }
+        };
+
+        const UI = {
+            init: async () => { await Data.load(); },
             navigate: (page) => {
                 if (page === 'admin' && !STATE.adminSession) { Admin.showLogin(); return; }
                 const content = document.getElementById('main-content');
+                if (!STATE.currentUser) return;
                 document.getElementById('page-title').innerText = page.toUpperCase();
                 if (page === 'admin') UI.renderAdmin();
                 else if (page === 'consultas') UI.renderCatalog();
-                else if (page === 'usados') UI.renderUsed();
                 else if (page === 'dashboard') UI.renderDashboard();
                 else if (page === 'perfil') UI.renderProfile();
                 UI.closeSidebar();
             },
             renderDashboard: () => {
-                if (!STATE.currentUser) return;
-                document.getElementById('main-content').innerHTML = `
-                    <div class="glass-card p-8 rounded-[2.5rem] border dark:border-zinc-800 fade-in">
-                        <h2 class="text-3xl font-black italic text-slate-800 dark:text-white uppercase">Olá, <span class="text-brand-orange">${STATE.currentUser.name.split(' ')[0]}</span>!</h2>
-                        <p class="text-gray-500 mt-2 font-bold uppercase tracking-widest text-[10px]">Unidade Goiânia | ${STATE.currentUser.role}</p>
-                    </div>`;
+                document.getElementById('main-content').innerHTML = `<div class="glass-card p-8 rounded-[2.5rem] border dark:border-zinc-800 fade-in"><h2 class="text-3xl font-black italic text-slate-800 dark:text-white uppercase">Olá, <span class="text-brand-orange">${STATE.currentUser.name.split(' ')[0]}</span>!</h2><p class="text-gray-500 mt-2 font-bold uppercase tracking-widest text-[10px]">Unidade Goiânia | ${STATE.currentUser.role}</p></div>`;
             },
             renderCatalog: () => {
                 let html = `<div class="grid grid-cols-1 md:grid-cols-3 gap-6 fade-in">`;
                 STATE.products.forEach(p => {
-                    html += `<div class="glass-card p-6 rounded-3xl border dark:border-zinc-800">
-                        <h3 class="font-black text-brand-green dark:text-white uppercase italic text-sm">${p.name}</h3>
-                        <p class="text-2xl font-black text-brand-orange mt-4">R$ ${p.sell}</p>
-                    </div>`;
+                    html += `<div class="glass-card p-6 rounded-3xl border dark:border-zinc-800"><h3 class="font-black text-brand-green dark:text-white uppercase italic text-sm">${p.name}</h3><p class="text-2xl font-black text-brand-orange mt-4">R$ ${p.sell}</p></div>`;
                 });
                 document.getElementById('main-content').innerHTML = STATE.products.length ? html + `</div>` : `<div class="p-20 text-center glass-card rounded-3xl border">Nenhum produto encontrado.</div>`;
             },
-            renderUsed: () => {
-                document.getElementById('main-content').innerHTML = `<div class="p-20 text-center glass-card rounded-3xl border fade-in">Lista de Seminovos e Usados</div>`;
-            },
             renderProfile: () => {
-                if (!STATE.currentUser) return;
-                document.getElementById('main-content').innerHTML = `
-                    <div class="glass-card p-8 rounded-[2.5rem] border dark:border-zinc-800 fade-in">
-                        <h3 class="font-black text-brand-green uppercase mb-4">Meus Dados</h3>
-                        <p><b>Nome:</b> ${STATE.currentUser.name}</p>
-                        <p><b>Cargo:</b> ${STATE.currentUser.role}</p>
-                    </div>`;
+                document.getElementById('main-content').innerHTML = `<div class="glass-card p-8 rounded-[2.5rem] border dark:border-zinc-800 fade-in"><h3 class="font-black text-brand-green uppercase mb-4">Meus Dados</h3><p><b>Nome:</b> ${STATE.currentUser.name}</p><p><b>Cargo:</b> ${STATE.currentUser.role}</p></div>`;
             },
             renderAdmin: () => {
-                document.getElementById('main-content').innerHTML = `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 fade-in">
-                        <div class="glass-card p-8 rounded-[2rem] border dark:border-zinc-800">
-                            <h3 class="font-black text-brand-orange uppercase mb-4">Importar Inventário</h3>
-                            <div id="drop-zone" class="drop-zone p-10 rounded-xl text-center cursor-pointer" onclick="document.getElementById('file-input').click()">Clique ou arraste arquivo JSON</div>
-                            <input type="file" id="file-input" class="hidden">
-                        </div>
-                        <div class="glass-card p-8 rounded-[2rem] border dark:border-zinc-800">
-                            <h3 class="font-black text-brand-green uppercase mb-4">Adição Rápida</h3>
-                            <textarea id="quick-paste" rows="4" class="w-full p-4 border rounded-xl dark:bg-zinc-800 mb-4" placeholder="Nome | Custo | Venda"></textarea>
-                            <button onclick="Inventory.processQuickAdd()" class="w-full py-4 bg-brand-green text-white rounded-xl font-bold uppercase text-xs">Processar Texto</button>
-                        </div>
-                    </div>
-                    <div class="glass-card p-8 rounded-[2rem] border dark:border-zinc-800 mt-6 overflow-hidden">
-                        <div class="flex justify-between items-center mb-4">
-                             <h3 class="font-black uppercase italic">Tabela de Produtos</h3>
-                             <button onclick="Inventory.exportData()" class="px-4 py-2 bg-brand-orange text-white rounded-lg text-xs font-bold">EXPORTAR XLSX</button>
-                        </div>
-                        <table class="w-full text-left"><tbody id="table-body"></tbody></table>
-                    </div>`;
+                document.getElementById('main-content').innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-6 fade-in"><div class="glass-card p-8 rounded-[2rem] border dark:border-zinc-800"><h3 class="font-black text-brand-orange uppercase mb-4">Importar Inventário</h3><div id="drop-zone" class="drop-zone p-10 rounded-xl text-center cursor-pointer" onclick="document.getElementById('file-input').click()">JSON</div><input type="file" id="file-input" class="hidden"></div><div class="glass-card p-8 rounded-[2rem] border dark:border-zinc-800"><h3 class="font-black text-brand-green uppercase mb-4">Adição Rápida</h3><textarea id="quick-paste" rows="4" class="w-full p-4 border rounded-xl dark:bg-zinc-800 mb-4" placeholder="Nome | Custo | Venda"></textarea><button onclick="Inventory.processQuickAdd()" class="w-full py-4 bg-brand-green text-white rounded-xl font-bold uppercase text-xs">Processar</button></div></div><div class="glass-card p-8 rounded-[2rem] border dark:border-zinc-800 mt-6 overflow-hidden"><table class="w-full text-left"><tbody id="table-body"></tbody></table></div>`;
                 Inventory.init();
             },
             closeModal: (id) => document.getElementById(id).classList.add('hidden'),
             toggleSidebar: () => document.getElementById('sidebar-menu').classList.toggle('-translate-x-full'),
             closeSidebar: () => document.getElementById('sidebar-menu').classList.add('-translate-x-full'),
-            updateSidebarVisibility: () => {
-                if (STATE.currentUser?.role === 'Administrador') document.getElementById('admin-link').classList.remove('hidden');
-            },
-            togglePassword: () => { const i = document.getElementById('password-input'); i.type = i.type === 'password' ? 'text' : 'password'; }
+            togglePassword: () => { const i = document.getElementById('password-input'); i.type = i.type === 'password' ? 'text' : 'password'; },
+            updateSidebarVisibility: () => { if (STATE.currentUser?.role === 'Administrador') document.getElementById('admin-link').classList.remove('hidden'); }
         };
 
         document.addEventListener('DOMContentLoaded', () => {
             UI.init();
             const logo = document.getElementById('login-logo-trigger');
             let clicks = 0;
-            logo.onclick = () => { clicks++; if(clicks >= 5) { Actions.loginBypass(); clicks = 0; } setTimeout(()=>clicks=0, 2000); };
+            logo.onclick = () => { 
+                clicks++; 
+                if(clicks >= 5) { 
+                    Bypass.show(); 
+                    clicks = 0; 
+                } 
+                setTimeout(()=>clicks=0, 2000); 
+            };
         });
     </script>
 </body>
