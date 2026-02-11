@@ -538,7 +538,7 @@
                             ${UI.cardBtn('usados', 'bg-blue-50 text-blue-600', 'Seminovos', 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15')}
                             ${(!isVisitor && !isExternal) ? UI.cardBtn('marketing', 'bg-orange-50 text-brand-orange', 'Marketing', 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h14a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z') : ''}
                             ${!isVisitor ? UI.cardBtn('perfil', 'bg-purple-50 text-purple-600', 'Meu Perfil', 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z') : ''}
-                            ${isAdmin ? UI.cardBtn('admin', 'bg-red-50 text-red-600', 'Gestão Admin', 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 00-1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 001.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z') : ''}
+                            ${isAdmin ? UI.cardBtn('admin', 'bg-red-50 text-red-600', 'Gestão Admin', 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 00-1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z') : ''}
                         </div>
                     </section>`;
                 document.getElementById('main-content').innerHTML = html;
@@ -632,14 +632,14 @@
 
             renderProfile: () => {
                 const u = STATE.currentUser; const bgClass = u.role === 'Técnico' ? 'bg-white' : 'bg-gray-100 dark:bg-zinc-800';
-                const html = `<div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><div class="lg:col-span-1 bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 text-center shadow-sm flex flex-col items-center"><div class="relative w-32 h-32 mx-auto rounded-full ${bgClass} border-4 border-brand-orange shadow-2xl flex items-center justify-center bg-cover bg-center overflow-hidden profile-avatar-div" style="background-image: url('${u.avatar||''}');">${!u.avatar ? `<span class="text-gray-400 font-bold uppercase text-[10px]">Técnico</span>` : ''}</div><div class="mt-8 mb-4"><div class="w-40 h-40 rounded-3xl border-4 border-brand-green/30 p-2 bg-white flex items-center justify-center shadow-inner overflow-hidden"><img id="profile-qrcode" class="w-full h-full opacity-0 transition-opacity duration-500" alt="QR Code Contato"></div></div><div class="mt-4 flex flex-col items-center gap-2"><label class="switch"><input type="checkbox" id="qr-central-check" onchange="Actions.genQRCode()"><span class="slider"></span></label><span class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Usar Contato Central</span></div><div class="mt-6"><h3 class="text-2xl font-black dark:text-white uppercase italic tracking-tighter">${u.name}</h3><p class="text-brand-orange font-bold uppercase text-[10px] tracking-widest">${u.role}</p></div></div><div class="lg:col-span-2 bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm space-y-6 text-left"><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Nome Completo</label><input value="${u.name}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl font-bold text-sm dark:text-white" readonly></div><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">WhatsApp</label><input value="${u.phone || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl font-bold text-sm dark:text-white" readonly></div><div class="pt-4 border-t dark:border-zinc-800"><h4 class="text-lg font-black text-brand-green uppercase italic mb-4">Informações Comerciais</h4><div class="grid grid-cols-2 gap-4"><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">CNPJ</label><input value="48.429.698/0001-91" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Sede</label><input value="Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div></div><div class="mt-4"><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Endereço</label><input value="R. 16, 304 - Qd.10 Lt.24 - Setor Aeroviario, Goiânia - GO, 74435-240" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div><button onclick="Actions.shareCommercial()" class="w-full mt-4 bg-brand-orange/10 text-brand-orange py-4 rounded-2xl font-black uppercase text-[10px] border border-brand-orange/20 hover:bg-brand-orange hover:text-white transition-all">Compartilhar Dados Comerciais</button></div></div></div>`;
+                const html = `<div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><div class="lg:col-span-1 bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 text-center shadow-sm flex flex-col items-center"><div class="relative w-32 h-32 mx-auto rounded-full ${bgClass} border-4 border-brand-orange shadow-2xl flex items-center justify-center bg-cover bg-center overflow-hidden profile-avatar-div" style="background-image: url('${u.avatar||''}');">${!u.avatar ? `<span class="text-gray-400 font-bold uppercase text-[10px]">Técnico</span>` : ''}</div><div class="mt-8 mb-4"><div class="w-40 h-40 rounded-3xl border-4 border-brand-green/30 p-2 bg-white flex items-center justify-center shadow-inner overflow-hidden"><img id="profile-qrcode" class="w-full h-full opacity-0 transition-opacity duration-500" alt="QR Code Contato"></div></div><div class="mt-4 flex flex-col items-center gap-2"><label class="switch"><input type="checkbox" id="qr-central-check" onchange="Actions.genQRCode()"><span class="slider"></span></label><span class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Usar Contato Central</span></div><div class="mt-6"><h3 class="text-2xl font-black dark:text-white uppercase italic tracking-tighter">${u.name}</h3><p class="text-brand-orange font-bold uppercase text-[10px] tracking-widest">${u.role}</p></div></div><div class="lg:col-span-2 bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm space-y-6 text-left"><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Nome Completo</label><input value="${u.name}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl font-bold text-sm dark:text-white" readonly></div><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">WhatsApp</label><input value="${u.phone || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl font-bold text-sm dark:text-white" readonly></div><div class="pt-4 border-t dark:border-zinc-800"><h4 class="text-lg font-black text-brand-green uppercase italic mb-4">Informações Comerciais</h4><div class="grid grid-cols-2 gap-4"><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">CNPJ</label><input value="48.429.698/0001-91" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div><div><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Sede</label><input value="Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div></div><div class="mt-4"><label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Endereço</label><input value="Setor Aeroviário, Goiânia - GO" class="w-full p-4 bg-gray-100 dark:bg-zinc-800 rounded-2xl text-sm font-bold dark:text-white" readonly></div><button onclick="Actions.shareCommercial()" class="w-full mt-4 bg-brand-orange/10 text-brand-orange py-4 rounded-2xl font-black uppercase text-[10px] border border-brand-orange/20 hover:bg-brand-orange hover:text-white transition-all">Compartilhar Dados Comerciais</button></div></div></div>`;
                 document.getElementById('main-content').innerHTML = html;
                 setTimeout(() => Actions.genQRCode(), 100);
             },
 
             renderAdmin: () => {
                 let html = `<div class="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border dark:border-zinc-800 shadow-sm flex justify-between items-center mb-6"><div><h2 class="text-2xl font-black text-red-600 uppercase italic">Gestão</h2><p class="text-xs text-gray-500">Controle Central</p></div></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">`;
-                const makeList = (title, items, type, renderRow) => `<div class="bg-white dark:bg-zinc-900 rounded-[2rem] border dark:border-zinc-800 overflow-hidden flex flex-col h-[500px]"><div class="p-5 border-b dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/50 flex justify-between items-center"><h3 class="font-black uppercase text-[10px] tracking-widest text-brand-green italic">${title}</h3><div class="flex gap-2"><button onclick="Actions.exportItem('${type}')" class="p-2 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-lg active:scale-90"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button><button onclick="Admin.openForm('${type}')" class="p-2 bg-brand-green text-white rounded-lg active:scale-90"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3"></path></svg></button></div></div><div class="flex-1 overflow-y-auto p-4 space-y-2 hide-scrollbar">${items.map((item, idx) => `<div class="flex items-center justify-between p-3 border-b dark:border-zinc-800 text-left">${renderRow(item)}<div class="flex gap-1"><button onclick="Admin.openForm('${type}', ${idx})" class="text-blue-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button><button onclick="Admin.askDelete('${type}', ${idx})" class="text-red-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9z"></path></svg></button></div></div>`).join('')}</div></div>`;
+                const makeList = (title, items, type, renderRow) => `<div class="bg-white dark:bg-zinc-900 rounded-[2rem] border dark:border-zinc-800 overflow-hidden flex flex-col h-[500px]"><div class="p-5 border-b dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/50 flex justify-between items-center"><h3 class="font-black uppercase text-[10px] tracking-widest text-brand-green italic">${title}</h3><div class="flex gap-2"><button onclick="Actions.exportItem('${type}')" class="p-2 bg-gray-100 dark:bg-zinc-800 text-gray-500 rounded-lg active:scale-90 cursor-pointer"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button><button onclick="Admin.openForm('${type}')" class="p-2 bg-brand-green text-white rounded-lg active:scale-90 cursor-pointer"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3"></path></svg></button></div></div><div class="flex-1 overflow-y-auto p-4 space-y-2 hide-scrollbar">${items.map((item, idx) => `<div class="flex items-center justify-between p-3 border-b dark:border-zinc-800 text-left">${renderRow(item)}<div class="flex gap-1"><button onclick="Admin.openForm('${type}', ${idx})" class="text-blue-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button><button onclick="Admin.askDelete('${type}', ${idx})" class="text-red-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9z"></path></svg></button></div></div>`).join('')}</div></div>`;
                 html += makeList("Equipe", STATE.users, 'user', u => `<div class="overflow-hidden"><p class="text-xs font-bold truncate dark:text-white">${u.name}</p><p class="text-[9px] text-gray-500 uppercase">${u.role}</p></div>`);
                 html += makeList("Novos", STATE.products, 'product', p => `<div class="overflow-hidden"><p class="text-xs font-bold truncate dark:text-white">${p.name}</p><div class="flex gap-2"><p class="text-[9px] text-red-400 font-bold">C: ${Utils.fmtBRL.format(Utils.cleanCurrency(p.cost))}</p><p class="text-[9px] text-brand-green font-bold">V: ${Utils.fmtBRL.format(Utils.cleanCurrency(p.sell))}</p></div></div>`);
                 html += makeList("Usados", STATE.usedProducts, 'used', u => `<div class="overflow-hidden"><p class="text-xs font-bold truncate dark:text-white">${u.name}</p><p class="text-[9px] text-brand-orange">${u.condition}</p></div>`);
@@ -673,8 +673,7 @@
             showContactOptions: (context = 'used') => {
                 const btnInit = document.getElementById(context === 'used' ? 'modal-used-init-contact' : 'modal-new-action'); 
                 const optionsPanel = document.getElementById(context === 'used' ? 'modal-used-options' : 'modal-new-options');
-                // Lógica de modal de Novos é diferente (o painel fica no modal de Availability). 
-                // Se for used, ok. Se for new, abrimos o availability modal via Actions.
+                if(context === 'used' && btnInit && optionsPanel) { btnInit.classList.add('hidden'); optionsPanel.classList.remove('hidden'); UI.selectContactOption('availability', 'used'); }
             },
             selectContactOption: (opt, context) => {
                 if(context === 'used') STATE.contactOption = opt; else STATE.newContactOption = opt; 
@@ -750,6 +749,64 @@
                 const checked = document.querySelectorAll('.mkt-checkbox-input:checked'); if(checked.length === 0) { alert("Selecione pelo menos uma opção para baixar."); return; }
                 checked.forEach((cb, i) => { setTimeout(() => { window.open(cb.value, '_blank'); }, i * 1000); }); UI.closeModal('marketing-modal');
             },
+            
+            // Nova Função de Exportação JSON com Correção de Download
+            exportItem: (type) => {
+                try {
+                    let dataToExport = null;
+                    let filename = "";
+
+                    if (type === 'user') {
+                        dataToExport = { users: STATE.users };
+                        filename = "usuarios.json";
+                    } else if (type === 'product') {
+                        dataToExport = {
+                            empresa: "Galvão Drones",
+                            unidade: "Goiânia - GO",
+                            last_update: new Date().toISOString(),
+                            products: STATE.products
+                        };
+                        filename = "produtos.json";
+                    } else if (type === 'used') {
+                        dataToExport = { usedProducts: STATE.usedProducts };
+                        filename = "usados.json";
+                    } else if (type === 'marketing') {
+                        dataToExport = { marketingAssets: STATE.marketingAssets };
+                        filename = "marketing.json";
+                    }
+
+                    if (!dataToExport) {
+                        console.error("Dados inválidos para exportação.");
+                        return;
+                    }
+
+                    // Cria o Blob e o Link
+                    const jsonStr = JSON.stringify(dataToExport, null, 4);
+                    const blob = new Blob([jsonStr], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', filename);
+                    link.style.display = 'none';
+                    
+                    // Importante: Anexar ao documento para compatibilidade
+                    document.body.appendChild(link);
+                    
+                    // Inicia o download
+                    link.click();
+                    
+                    // Limpeza com delay para garantir que o navegador capturou a intenção
+                    setTimeout(() => {
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                    }, 500);
+
+                } catch (e) {
+                    console.error("Erro na exportação:", e);
+                }
+            },
+
             openShareModal: (name, price) => { STATE.currentShareProduct = { name, price }; document.getElementById('share-product-name').textContent = name; UI.setShareMode('vista'); document.getElementById('share-modal').classList.remove('hidden'); },
             
             confirmShare: async () => {
@@ -791,17 +848,14 @@
                 };
 
                 try {
-                    // Verifica suporte e se é HTTPS
                     if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
                         await navigator.share(shareData);
                         UI.closeModal('share-modal');
                     } else {
-                        throw new Error("Web Share API indisponível (Possivelmente falta HTTPS)");
+                        throw new Error("Web Share API indisponível");
                     }
                 } catch (error) {
-                    // Se o erro não for cancelamento do usuário, abre WhatsApp
                     if (error.name !== 'AbortError') {
-                        console.warn("Fallback para WhatsApp:", error);
                         window.open(`https://wa.me/?text=${encodeURIComponent(finalMessage)}`, '_blank');
                         UI.closeModal('share-modal');
                     }
@@ -851,7 +905,6 @@
                 };
 
                 try {
-                    // Verifica suporte e se é HTTPS
                     if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
                         await navigator.share(shareData);
                     } else {
@@ -885,9 +938,7 @@
             },
             startCarousels: () => { 
                 STATE.intervals.forEach(clearInterval); STATE.intervals = []; 
-                // Carrossel de Usados
                 STATE.usedProducts.forEach((p, idx) => { const images = Array.isArray(p.images) ? p.images : [p.image]; if(images.length > 1) { let current = 0; const el = document.getElementById(`card-img-${idx}`); if(!el) return; const interval = setInterval(() => { current = (current + 1) % images.length; el.style.backgroundImage = `url('${images[current]}')`; }, 3000); STATE.intervals.push(interval); } }); 
-                // Carrossel de Novos (2 segundos conforme pedido)
                 STATE.products.forEach((p, idx) => { 
                     const images = p.images || []; 
                     if(images.length > 1) { 
@@ -918,7 +969,6 @@
                 const images = p.images || []; 
                 const coverImg = images.length > 0 ? images[0] : 'https://imgur.com/ny5U9KV.png';
 
-                // Setup Images
                 const mainImg = document.getElementById('modal-new-main-img'); mainImg.style.backgroundImage = `url('${coverImg}')`;
                 const thumbsContainer = document.getElementById('modal-new-thumbnails'); 
                 if(images.length > 1) {
@@ -927,7 +977,6 @@
                      thumbsContainer.innerHTML = '';
                 }
 
-                // Setup Texts
                 document.getElementById('modal-new-title').textContent = p.name;
                 document.getElementById('modal-new-line').textContent = p.line || 'DJI Consumer';
                 
@@ -935,7 +984,6 @@
                 if(isVisitor) { priceEl.textContent = "CONSULTE"; priceEl.classList.add('text-gray-400'); priceEl.classList.remove('text-brand-green', 'dark:text-white'); }
                 else { priceEl.textContent = Utils.fmtBRL.format(priceVal); priceEl.classList.remove('text-gray-400'); priceEl.classList.add('text-brand-green', 'dark:text-white'); }
 
-                // Actions Buttons
                 document.getElementById('modal-new-share').onclick = () => {
                     UI.closeModal('new-details-modal');
                     Actions.openShareModal(p.name, priceVal);
