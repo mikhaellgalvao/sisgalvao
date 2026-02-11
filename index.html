@@ -936,15 +936,24 @@
                 else { priceEl.textContent = Utils.fmtBRL.format(priceVal); priceEl.classList.remove('text-gray-400'); priceEl.classList.add('text-brand-green', 'dark:text-white'); }
 
                 // Actions Buttons
-                document.getElementById('modal-new-share').onclick = () => Actions.openShareModal(p.name, priceVal);
+                document.getElementById('modal-new-share').onclick = () => {
+                    UI.closeModal('new-details-modal');
+                    Actions.openShareModal(p.name, priceVal);
+                };
                 
                 const contactBtn = document.getElementById('modal-new-action');
                 if(isVisitor) {
                     contactBtn.textContent = "Consultar Disponibilidade";
-                    contactBtn.onclick = () => Actions.finalizeSale(p.name);
+                    contactBtn.onclick = () => {
+                        UI.closeModal('new-details-modal');
+                        Actions.finalizeSale(p.name);
+                    };
                 } else {
                     contactBtn.textContent = "Entrar em Contato";
-                    contactBtn.onclick = () => Actions.openAvailability(p.name);
+                    contactBtn.onclick = () => {
+                        UI.closeModal('new-details-modal');
+                        Actions.openAvailability(p.name);
+                    };
                 }
 
                 document.getElementById('new-details-modal').classList.remove('hidden');
